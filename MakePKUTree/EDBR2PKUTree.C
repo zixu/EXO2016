@@ -92,7 +92,7 @@ vector<Double_t> generate_weights(TH1* data_npu_estimated, Int_t isForSynch){
 }
 
 
-void EDBR2PKUTree::Loop(TString channel, Double_t XS, Double_t totaleventnumber, Int_t IsData) {
+void EDBR2PKUTree::Loop(TString channelname, Double_t XS, Double_t totaleventnumber, Int_t IsData) {
 
 	std::vector<Double_t> weights_pu1; //these are made with our recipe
 	std::vector<Double_t> weights_pu2; //these are made with the official recipe
@@ -136,7 +136,7 @@ void EDBR2PKUTree::Loop(TString channel, Double_t XS, Double_t totaleventnumber,
 	Double_t npt_mu = 0;
 	Double_t nmet_mu = 0; 
 	Double_t nnum_bJet_mu = 0; 
-	Double_t nbtb_mu = 0; 
+	//Double_t nbtb_mu = 0; 
 
 	Double_t nptVhad = 0;
 	Double_t yields = 0;
@@ -145,6 +145,8 @@ void EDBR2PKUTree::Loop(TString channel, Double_t XS, Double_t totaleventnumber,
 	Double_t pi_2=1.57079632679;
 	Long64_t npp = fChain->GetEntries("theWeight>0.");
 	Long64_t nmm = fChain->GetEntries("theWeight<0.");
+		cout<<"npp="<<npp<<" nmm="<<nmm<<" totaleventnumber="<<totaleventnumber<<endl;
+
 	Double_t nn;
 	Double_t eff_and_pu_Weight;
 	Double_t eff_and_pu_Weight1;
@@ -152,7 +154,7 @@ void EDBR2PKUTree::Loop(TString channel, Double_t XS, Double_t totaleventnumber,
 	//	Float_t Identical_lumiWeight = XS/totaleventnumber;//All the events inside a sample are same lumiweight
 
 	Long64_t nbytes = 0, nb = 0;
-	//for (Long64_t jentry=0; jentry<1000;jentry++)
+	//for (Long64_t jentry=0; jentry<10;jentry++)
 	for (Long64_t jentry=0; jentry<nentries;jentry++) 
 	{
 		Long64_t ientry = LoadTree(jentry);
@@ -219,16 +221,13 @@ void EDBR2PKUTree::Loop(TString channel, Double_t XS, Double_t totaleventnumber,
 		//Weight Calculation Done
 
 		//number of bjet calculation
-		Int_t num_bJet=0.;
-		Int_t num_bJet_loose=0.;
-		Int_t num_bJet_tight=0.;
+		num_bJet=0.;
+		num_bJet_loose=0.;
+		num_bJet_tight=0.;
 		for(Int_t i=0; i<8; i++)  {
 			if(ak4jet_pt[i]>30 && ak4jet_icsv[i]>0.890 && fabs(ak4jet_eta[i])<2.4 && ak4jet_IDLoose[i]>0 && deltaRAK4AK8[i]>=0.8 ) {num_bJet=num_bJet+1;}
 			if(ak4jet_pt[i]>30 && ak4jet_icsv[i]>0.605 && fabs(ak4jet_eta[i])<2.4 && ak4jet_IDLoose[i]>0 && deltaRAK4AK8[i]>=0.8 ) {num_bJet_loose=num_bJet_loose+1;}
 			if(ak4jet_pt[i]>30 && ak4jet_icsv[i]>0.970 && fabs(ak4jet_eta[i])<2.4 && ak4jet_IDLoose[i]>0 && deltaRAK4AK8[i]>=0.8 ) {num_bJet_tight=num_bJet_tight+1;}
-			//if(ak4jet_pt[i]>30 && ak4jet_icsv[i]>0.890 && fabs(ak4jet_eta[i])<2.4 && ak4jet_IDLoose[i]>0 && deltaRAK4AK8[i]<2 && deltaRAK4AK8[i]>=0.8 ) {num_bJet=num_bJet+1;}
-			//if(ak4jet_pt[i]>30 && ak4jet_icsv[i]>0.605 && fabs(ak4jet_eta[i])<2.4 && ak4jet_IDLoose[i]>0 && deltaRAK4AK8[i]>=0.8 && deltaRAK4AK8[i] <2. ) {num_bJet_loose=num_bJet_loose+1;}
-			//if(ak4jet_pt[i]>30 && ak4jet_icsv[i]>0.970 && fabs(ak4jet_eta[i])<2.4 && ak4jet_IDLoose[i]>0 && deltaRAK4AK8[i]>=0.8 && deltaRAK4AK8[i]<2.) {num_bJet_tight=num_bJet_tight+1;}
 		}
 		nbtag=num_bJet;
 		//number of bjet calculation Done
@@ -238,10 +237,10 @@ void EDBR2PKUTree::Loop(TString channel, Double_t XS, Double_t totaleventnumber,
 		Double_t isAnaHP=1.;
 		Double_t isAnaLP=1.;
 		Double_t isTTBarControl=1.;
-		//Double_t isMatch=1.;
-		//if(jetV.DeltaR(genjetV) >= 0.3) {isMatch=-1;}
+		Int_t tmp_categoryID_channel=0;
+		if( channelname=="el" ){
+		tmp_categoryID_channel=-1;// -1 for el; 1 for mu
 
-		if( channel=="el" ){
 			//HP: 0<tau21<=0.5;
 			if (isAnaHP>0 && lep==11 && HLT_Ele105>0 && isHEEP>0 && nLooseLep==1){ nID_e = nID_e+1; } else{ isAnaHP=-1; }
 			if (isAnaHP>0 && ptlep1>120 && fabs(etalep1)<2.5){ npt_e = npt_e+1; } else{ isAnaHP=-1; }
@@ -252,33 +251,26 @@ void EDBR2PKUTree::Loop(TString channel, Double_t XS, Double_t totaleventnumber,
 			if (isAnaHP>0 && deltaRlepjet>pi_2) {n_deltaRlepjet = n_deltaRlepjet+1; } else{ isAnaHP=-1; }
 			if (isAnaHP>0 && fabs(delPhijetmet) >2.0)  {n_delPhijetmet = n_delPhijetmet+1; } else{ isAnaHP=-1; }
 			if (isAnaHP>0 && fabs(delPhijetlep)>2.0) {n_delPhijetlep = n_delPhijetlep +1; } else{ isAnaHP=-1; }
-			if (isAnaHP>0 && tau21>0. && tau21<0.45) {ntau = ntau+1; } else{ isAnaHP=-1; }
-			//if (isAnaHP>0 && (( massVhad >40&& massVhad< 60 )|| ( massVhad >95&& massVhad< 130 )) && m_lvj>100 && m_lvj<10000)
-			if (isAnaHP>0 && massVhadJEC>40 && massVhadJEC <150 )//&& m_lvj>200 && m_lvj<5000)
+			if (isAnaHP>0 && tau21>0. && tau21<0.5) {ntau = ntau+1; } else{ isAnaHP=-1; }
+			if (isAnaHP>0 && massVhadJEC>30 && massVhadJEC <150)// && m_lvj>200 && m_lvj<5000)
 			{
 				nmassVhad = nmassVhad +1;
 				yields = yields + weight;
 				(*file_cutflow)<<"event:"<<event<<endl;
 			} else{ isAnaHP=-1; }
 
-
 			//LP: 0.5<tau21<=0.75;
-			if ( lep==11 && HLT_Ele105>0 && isHEEP>0 && nLooseLep==1 && ptlep1>120 && fabs(etalep1)<2.5 && MET_et>80 && ptVlepJEC > 200.  && ptVhad>200 && fabs(yVhad)<2.4 && IDLoose>0 && num_bJet<1 && deltaRlepjet>pi_2 && fabs(delPhijetmet) >2.0 && fabs(delPhijetlep)>2.0 && tau21>0.45 && tau21<=0.75 && (( massVhadJEC >40 &&  massVhadJEC< 150 )) )
-			  //if ( lep==11 && isHEEP>0 && nLooseLep==1 && ptlep1>90 && met>80 && ptVlepJEC > 200.  && ptVhad>200 && fabs(yVhad)<2.4 && IDLoose>0 && num_bJet<1 && deltaRlepjet>pi_2 && fabs(delPhijetmet) >2.0 && fabs(delPhijetlep)>2.0 && tau21>0.5 && tau21<=0.75 && massVhad>40 && massVhad <200)
+			if ( lep==11 && HLT_Ele105>0 && isHEEP>0 && nLooseLep==1 && ptlep1>120 && fabs(etalep1)<2.5 && MET_et>80 && ptVlepJEC > 200.  && ptVhad>200 && fabs(yVhad)<2.4 && IDLoose>0 && num_bJet<1 && deltaRlepjet>pi_2 && fabs(delPhijetmet) >2.0 && fabs(delPhijetlep)>2.0 && tau21>0.5 && tau21<=0.75 && (( massVhadJEC >30 &&  massVhadJEC< 150 )) )
 			{ isAnaLP=1.; } 
 			else{ isAnaLP=-1.; }
 
 			//TTbar control
-			if ( lep==11 && HLT_Ele105>0 && isHEEP>0 && nLooseLep==1 && ptlep1>120 && fabs(etalep1)<2.5 && MET_et>80 && ptVlepJEC > 200. &&ptVhad>200 && fabs(yVhad)<2.4 && IDLoose>0  && num_bJet>0 &&  massVhadJEC>40 && massVhadJEC <150)
-			  //if ( lep==11 && isHEEP>0 && nLooseLep==1 && ptlep1>90 && met>80 && ptVlepJEC > 100. &&ptVhad>100 && fabs(yVhad)<2.4  && num_bJet>0 &&  massVhad>40 && massVhad <200)
-			  //if ( lep==11 && isHEEP>0 && nLooseLep==1 && ptlep1>90 && met>80 && ptVlepJEC > 100. &&ptVhad>100 && fabs(yVhad)<2.4  && num_bJet>0 && tau21>0. && massVhad>40 && massVhad <200)
-			  //if ( lep==11 && isHEEP>0 && nLooseLep==1 && ptlep1>90 && met>80 && ptVlepJEC > 100. &&ptVhad>100 && fabs(yVhad)<2.4  && num_bJet>0 && deltaRlepjet>pi_2 && fabs(delPhijetmet) >2.0 && fabs(delPhijetlep)>2.0 && tau21>0. && tau21<0.5 && massVhad>40 && massVhad <200)
+			if ( lep==11 && HLT_Ele105>0 && isHEEP>0 && nLooseLep==1 && ptlep1>120 && fabs(etalep1)<2.5 && MET_et>80 && ptVlepJEC > 200. &&ptVhad>200 && fabs(yVhad)<2.4 && IDLoose>0  && num_bJet>0 &&  massVhadJEC>30 && massVhadJEC <150)
 			{ isTTBarControl=1.; } 
 			else{ isTTBarControl=-1.; }
 		}
-
-		//mu channel
-		if( channel=="mu" ){
+		else if( channelname=="mu" ){
+		tmp_categoryID_channel=1;// -1 for el; 1 for mu
 			//HP: 0<tau21<=0.5;
 			if (isAnaHP>0 && lep==13 && HLT_Mu45_v1>0 && isHighPt>0 && trackIso/ptlep1<0.1 && fabs(etalep1)<2.1 && nLooseLep==1 ) { nID_mu = nID_mu+1; } else{ isAnaHP=-1; }
 			if (isAnaHP>0 && ptlep1>53){ npt_mu = npt_mu+1; }else{ isAnaHP=-1; }
@@ -289,34 +281,26 @@ void EDBR2PKUTree::Loop(TString channel, Double_t XS, Double_t totaleventnumber,
 			if (isAnaHP>0 && deltaRlepjet>pi_2) {n_deltaRlepjet = n_deltaRlepjet+1; } else{ isAnaHP=-1; }
 			if (isAnaHP>0 && fabs(delPhijetmet) >2.0)  {n_delPhijetmet = n_delPhijetmet+1; } else{ isAnaHP=-1; }
 			if (isAnaHP>0 && fabs(delPhijetlep)>2.0) {n_delPhijetlep = n_delPhijetlep +1; } else{ isAnaHP=-1; }
-			if (isAnaHP>0 && tau21>0. && tau21<0.45) {ntau = ntau+1;} else{ isAnaHP=-1; }
-			if (isAnaHP>0 && (( massVhad >40&& massVhad< 150 )))// && m_lvj>100 && m_lvj<5000 )
+			if (isAnaHP>0 && tau21>0. && tau21<0.5) {ntau = ntau+1;} else{ isAnaHP=-1; }
+			if (isAnaHP>0 && (( massVhad >30&& massVhad< 150 )))// && m_lvj>100 && m_lvj<5000 )
 			{ 
 				nmassVhad = nmassVhad +1; 
 				(*file_cutflow)<<"event:"<<event<<endl;
 			} else{ isAnaHP=-1; }
 
 			//LP: 0.5<tau21<=0.75;
-			if (lep==13 && HLT_Mu45_v1>0 && isHighPt>0 && trackIso/ptlep1<0.1 && fabs(etalep1)<2.1 && nLooseLep==1 && ptlep1>53 && MET_et>40 && ptVlepJEC>200 && ptVhad>200 && fabs(yVhad)<2.4 && IDLoose>0 && num_bJet<1 && deltaRlepjet>pi_2 && fabs(delPhijetmet) >2.0 && fabs(delPhijetlep)>2.0 && tau21>0.45 && tau21<0.75 && (( massVhad >40&& massVhad< 150 )))
-			  //if (lep==13 && 1.11>0 && isHighPt>0 && trackIso/ptlep1<0.1 && fabs(etalep1)<2.1 && nLooseLep==1 && ptlep1>50 && met>40 && ptVlepJEC>200 && ptVhad>200 && fabs(yVhad)<2.4 && num_bJet<1 && deltaRlepjet>pi_2 && fabs(delPhijetmet) >2.0 && fabs(delPhijetlep)>2.0 && tau21>0.5 && tau21<0.75 && massVhad>40 && massVhad <200)
-			  //if (lep==13 && isHighPt>0 && trackIso/ptlep1<0.1 && fabs(etalep1)<2.1 && nLooseLep==1 && ptlep1>50 && met>40 && ptVlepJEC>100 && ptVhad>100 && fabs(yVhad)<2.4 && num_bJet<1 && deltaRlepjet>pi_2 && fabs(delPhijetmet) >2.0 && fabs(delPhijetlep)>2.0 && tau21>0.5 && tau21<0.75 && massVhad>40 && massVhad <200)
-			  //if (isAnaHP>0 && lep==13 && isHighPt>0 && trackIso/ptlep1<0.1 && fabs(etalep1)<2.1 && nLooseLep==1 && ptlep1>50 && met>40 && ptVlepJEC>100 && ptVhad>100 && fabs(yVhad)<2.4 && num_bJet<1 && deltaRlepjet>pi_2 && fabs(delPhijetmet) >2.0 && fabs(delPhijetlep)>2.0 && tau21>0.5 && tau21<0.75 && massVhad>40 && massVhad <200)
+			if (lep==13 && HLT_Mu45_v1>0 && isHighPt>0 && trackIso/ptlep1<0.1 && fabs(etalep1)<2.1 && nLooseLep==1 && ptlep1>53 && MET_et>40 && ptVlepJEC>200 && ptVhad>200 && fabs(yVhad)<2.4 && IDLoose>0 && num_bJet<1 && deltaRlepjet>pi_2 && fabs(delPhijetmet) >2.0 && fabs(delPhijetlep)>2.0 && tau21>0.5 && tau21<0.75 && (( massVhad >30&& massVhad< 150 )))
 			{ isAnaLP=1.; } 
 			else{ isAnaLP=-1.; }
 
 			//TTbar control
-			if (lep==13 && HLT_Mu45_v1>0 && isHighPt>0 && trackIso/ptlep1<0.1 && fabs(etalep1)<2.1 && nLooseLep==1 && ptlep1>53 && MET_et>40 && ptVlepJEC>200 && ptVhad>200 && fabs(yVhad)<2.4 && IDLoose>0 && num_bJet>0 && massVhadJEC>40 && massVhadJEC <150)
-			  //if (lep==13 && isHighPt>0 && trackIso/ptlep1<0.1 && fabs(etalep1)<2.1 && nLooseLep==1 && ptlep1>50 && met>40 && ptVlepJEC>100 && ptVhad>100 && fabs(yVhad)<2.4 && num_bJet>0 && massVhad>40 && massVhad <200)
-			  //if (lep==13 && isHighPt>0 && trackIso/ptlep1<0.1 && fabs(etalep1)<2.1 && nLooseLep==1 && ptlep1>50 && met>40 && ptVlepJEC>100 && ptVhad>100 && fabs(yVhad)<2.4 && num_bJet>0  && tau21>0. && massVhad>40 && massVhad <200)
-			  //if (isAnaHP>0 && lep==13 && isHighPt>0 && trackIso/ptlep1<0.1 && fabs(etalep1)<2.1 && nLooseLep==1 && ptlep1>50 && met>40 && ptVlepJEC>100 && ptVhad>100 && fabs(yVhad)<2.4 && num_bJet>0 && deltaRlepjet>pi_2 && fabs(delPhijetmet) >2.0 && fabs(delPhijetlep)>2.0 && tau21>0. && tau21<0.5 && massVhad>40 && massVhad <200)
+			if (lep==13 && HLT_Mu45_v1>0 && isHighPt>0 && trackIso/ptlep1<0.1 && fabs(etalep1)<2.1 && nLooseLep==1 && ptlep1>53 && MET_et>40 && ptVlepJEC>200 && ptVhad>200 && fabs(yVhad)<2.4 && IDLoose>0 && num_bJet>0 && massVhadJEC>30 && massVhadJEC <150)
 			{ isTTBarControl=1.; } 
 			else{ isTTBarControl=-1.; }
+
+		}else{
+			cout<<"We don't know channelname:"<<channelname<<endl;
 		}
-
-
-		Int_t tmp_categoryID_channel=0;
-		if(channel=="el") tmp_categoryID_channel=-1;
-		if(channel=="mu") tmp_categoryID_channel=1;
 
 		Int_t tmp_categoryID_eventselection=0;
 		if(isAnaHP>0)tmp_categoryID_eventselection=1;
@@ -325,6 +309,7 @@ void EDBR2PKUTree::Loop(TString channel, Double_t XS, Double_t totaleventnumber,
 		else tmp_categoryID_eventselection=100;
 
 		CategoryID=tmp_categoryID_channel* tmp_categoryID_eventselection;
+
 		isMatch=1.;
 		if(deltaRWhadGen >= 0.3) isMatch=-1;
 		//cout << "massVhad" << massVhad << "jet_mass_pruned " << jet_mass_pruned << endl;
@@ -337,11 +322,11 @@ void EDBR2PKUTree::Loop(TString channel, Double_t XS, Double_t totaleventnumber,
 		if(TMath::Abs(CategoryID)<10) ExTree->Fill();
 	}
 
-	if(channel=="el"){ 
+	if(channelname=="el"){ 
 		std::cout << "nID_e" << nID_e << "; npt_e" << npt_e << "; nmet_e" << nmet_e << "; nptVlepJEC" << nptVlepJEC << "; nptVhad" << nptVhad<<"; nnum_bJet_e" << nnum_bJet_e <<"; n_deltaRlepjet"<<n_deltaRlepjet<< "; n_delPhijetmet" << n_delPhijetmet <<"; n_delPhijetlep"<<n_delPhijetlep<<"; ntau"<<ntau<< "; nmassVhad" << nmassVhad << "; number_qq" << number_qq << "; yields " << yields << std::endl;
 		(*file_cutflow) << "nID_e" << nID_e << "; npt_e" << npt_e << "; nmet_e" << nmet_e << "; nptVlepJEC" << nptVlepJEC << "; nptVhad" << nptVhad<<"; nnum_bJet_e" << nnum_bJet_e <<"; n_deltaRlepjet"<<n_deltaRlepjet<< "; n_delPhijetmet" << n_delPhijetmet <<"; n_delPhijetlep"<<n_delPhijetlep<<"; ntau"<<ntau<< "; nmassVhad" << nmassVhad << "; number_qq" << number_qq << std::endl;
 	}
-	if(channel=="mu"){
+	if(channelname=="mu"){
 		std::cout << "nID_mu" << nID_mu << "; npt_mu" << npt_mu << "; nmet_mu" << nmet_mu << "; nptVlepJEC" << nptVlepJEC << "; nptVhad" << nptVhad<< "; nnum_bJet_mu" << nnum_bJet_mu << "; n_deltaRlepjet"<<n_deltaRlepjet<< "; n_delPhijetmet" << n_delPhijetmet <<"; n_delPhijetlep"<<n_delPhijetlep<<"; ntau"<<ntau<< "; nmassVhad" << nmassVhad<< "; number_qq" << number_qq << std::endl;
 		(*file_cutflow) << "nID_mu" << nID_mu << "; npt_mu" << npt_mu << "; nmet_mu" << nmet_mu << "; nptVlepJEC" << nptVlepJEC << "; nptVhad" << nptVhad<< "; nnum_bJet_mu" << nnum_bJet_mu << "; n_deltaRlepjet"<<n_deltaRlepjet<< "; n_delPhijetmet" << n_delPhijetmet <<"; n_delPhijetlep"<<n_delPhijetlep<<"; ntau"<<ntau<< "; nmassVhad" << nmassVhad<< "; number_qq" << number_qq << std::endl;
 	}
