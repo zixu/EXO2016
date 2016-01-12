@@ -145,13 +145,13 @@ void EDBR2PKUTree::Loop(TString channelname, Double_t XS, Double_t totaleventnum
 	Double_t pi_2=1.57079632679;
 	Long64_t npp = fChain->GetEntries("theWeight>0.");
 	Long64_t nmm = fChain->GetEntries("theWeight<0.");
-		cout<<"npp="<<npp<<" nmm="<<nmm<<" totaleventnumber="<<totaleventnumber<<endl;
+	cout<<"npp="<<npp<<" nmm="<<nmm<<" totaleventnumber="<<totaleventnumber<<endl;
 
 	Double_t nn;
 	Double_t eff_and_pu_Weight;
 	Double_t eff_and_pu_Weight1;
 	Float_t Identical_lumiWeight = XS;//All the events inside a sample are same lumiweight
-	//	Float_t Identical_lumiWeight = XS/totaleventnumber;//All the events inside a sample are same lumiweight
+	//Float_t Identical_lumiWeight = XS/totaleventnumber;//All the events inside a sample are same lumiweight
 
 	Long64_t nbytes = 0, nb = 0;
 	//for (Long64_t jentry=0; jentry<10;jentry++)
@@ -282,14 +282,14 @@ void EDBR2PKUTree::Loop(TString channelname, Double_t XS, Double_t totaleventnum
 			if (isAnaHP>0 && fabs(delPhijetmet) >2.0)  {n_delPhijetmet = n_delPhijetmet+1; } else{ isAnaHP=-1; }
 			if (isAnaHP>0 && fabs(delPhijetlep)>2.0) {n_delPhijetlep = n_delPhijetlep +1; } else{ isAnaHP=-1; }
 			if (isAnaHP>0 && tau21>0. && tau21<0.5) {ntau = ntau+1;} else{ isAnaHP=-1; }
-			if (isAnaHP>0 && (( massVhad >30&& massVhad< 150 )))// && m_lvj>100 && m_lvj<5000 )
+			if (isAnaHP>0 && (( massVhadJEC >30&& massVhadJEC< 150 )))// && m_lvj>100 && m_lvj<5000 )
 			{ 
 				nmassVhad = nmassVhad +1; 
 				(*file_cutflow)<<"event:"<<event<<endl;
 			} else{ isAnaHP=-1; }
 
 			//LP: 0.5<tau21<=0.75;
-			if (lep==13 && HLT_Mu45_v1>0 && isHighPt>0 && trackIso/ptlep1<0.1 && fabs(etalep1)<2.1 && nLooseLep==1 && ptlep1>53 && MET_et>40 && ptVlepJEC>200 && ptVhad>200 && fabs(yVhad)<2.4 && IDLoose>0 && num_bJet<1 && deltaRlepjet>pi_2 && fabs(delPhijetmet) >2.0 && fabs(delPhijetlep)>2.0 && tau21>0.5 && tau21<0.75 && (( massVhad >30&& massVhad< 150 )))
+			if (lep==13 && HLT_Mu45_v1>0 && isHighPt>0 && trackIso/ptlep1<0.1 && fabs(etalep1)<2.1 && nLooseLep==1 && ptlep1>53 && MET_et>40 && ptVlepJEC>200 && ptVhad>200 && fabs(yVhad)<2.4 && IDLoose>0 && num_bJet<1 && deltaRlepjet>pi_2 && fabs(delPhijetmet) >2.0 && fabs(delPhijetlep)>2.0 && tau21>0.5 && tau21<0.75 && (( massVhadJEC >30&& massVhadJEC< 150 )))
 			{ isAnaLP=1.; } 
 			else{ isAnaLP=-1.; }
 
