@@ -389,7 +389,7 @@ public :
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
-   virtual void     Loop(TString channel, Double_t XS, Double_t totaleventnumber, Int_t IsData);// channel= "mu" or "el"
+   virtual void     Loop(TString channelname, Double_t XS, Double_t totaleventnumber, Int_t IsData);// channelname= "mu" or "el"
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
    virtual void     endJob() ;
@@ -469,6 +469,7 @@ void EDBR2PKUTree::Init(TTree *tree)
    ExTree->Branch("CategoryID", &CategoryID, "CategoryID/I");
    ExTree->Branch("vTagID", &vTagID, "vTagID/I");
    ExTree->Branch("massVhad", &massVhad, "massVhad/D");
+   ExTree->Branch("massVhadJEC", &massVhadJEC, "massVhadJEC/D");
    ExTree->Branch("sdrop", &sdrop, "sdrop/D");
    //ExTree->Branch("candMass", &candMass, "candMass/D");
    ExTree->Branch("tau21", &tau21, "tau21/D");
