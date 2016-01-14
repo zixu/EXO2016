@@ -1,6 +1,6 @@
 void MakePseudoData(TString channel) {
 
-	Double_t lumi=1.;
+	Double_t lumi=2.2;
 
 	//Get old file, old tree and set top branch address
 	TFile *oldfile = new TFile(channel+"_PKUTree_allBkg_xww.root");
