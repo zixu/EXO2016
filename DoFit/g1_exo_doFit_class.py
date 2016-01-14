@@ -60,8 +60,7 @@ from ROOT import draw_error_band, draw_error_band_extendPdf, draw_error_band_Dec
 
 class doFit_wj_and_wlvj:
 
-    def __init__(self, in_channel,in_signal_sample, in_mlvj_signal_region_min=500, in_mlvj_signal_region_max=700, in_mj_min=60, in_mj_max=140, in_mlvj_min=700., in_mlvj_max=5000., fit_model="ErfExp_v1", fit_model_alter="ErfPow_v1", input_workspace=None):
-    #def __init__(self, in_channel,in_signal_sample, in_mlvj_signal_region_min=500, in_mlvj_signal_region_max=700, in_mj_min=30, in_mj_max=140, in_mlvj_min=400., in_mlvj_max=1400., fit_model="ErfExp_v1", fit_model_alter="ErfPow_v1", input_workspace=None):
+    def __init__(self, in_channel,in_signal_sample, in_mlvj_signal_region_min=500, in_mlvj_signal_region_max=700, in_mj_min=40, in_mj_max=140, in_mlvj_min=400., in_mlvj_max=1400., fit_model="ErfExp_v1", fit_model_alter="ErfPow_v1", input_workspace=None):
 
         self.setTDRStyle();
 
@@ -129,10 +128,10 @@ class doFit_wj_and_wlvj:
         ## different code operation mode -> just normal analysis
         if options.closuretest ==0:
             self.mj_sideband_lo_min = in_mj_min;
-            self.mj_sideband_lo_max = 60;#65;
-            self.mj_signal_min = 60;#65;
-            self.mj_signal_max = 100;#105;
-            self.mj_sideband_hi_min = 100;#105;
+            self.mj_sideband_lo_max = 65;#65;
+            self.mj_signal_min = 65;#65;
+            self.mj_signal_max = 105;#105;
+            self.mj_sideband_hi_min = 105;#105;
             self.mj_sideband_hi_max = in_mj_max;
         if options.closuretest ==1: ##closure test A1->A2
             self.mj_sideband_lo_min = in_mj_min;
@@ -180,9 +179,9 @@ class doFit_wj_and_wlvj:
         #    self.file_data = (self.channel+"_PKUTree_data_xww.root");#keep blind!!!!
 
         #self.file_data = (self.channel+"_PKUTree_pdata_reweight.root");#keep blind!!!!
-        #self.file_data = (self.channel+"_PKUTree_pdata.root");#keep blind!!!!
-        self.file_data = (self.channel+"_PKUTree_15D.root");#keep blind!!!!
-        self.file_pseudodata = (self.channel+"_PKUTree_allBkg_xww.root");#fake data
+        self.file_data = (self.channel+"_PKUTree_pdata.root");#keep blind!!!!
+        #self.file_data = (self.channel+"_PKUTree_15D.root");#keep blind!!!!
+        #self.file_pseudodata = (self.channel+"_PKUTree_allBkg_xww.root");#fake data
         #self.file_signal     = (self.channel+"_PKUTree_%s_xww.root"%(self.signal_sample));
         self.file_signal     = (self.channel+"_PKUTree_%s.root"%(self.signal_sample));
         self.file_WJets0_mc  = (self.channel+"_PKUTree_WJetsPt180_xww.root");
@@ -2073,7 +2072,6 @@ class doFit_wj_and_wlvj:
         rfresult = model.fitTo(rdataset_mj,RooFit.Save(1), RooFit.SumW2Error(kTRUE) ,RooFit.Extended(kTRUE), RooFit.Minimizer("Minuit2") );
         rfresult = model.fitTo(rdataset_mj,RooFit.Save(1), RooFit.SumW2Error(kTRUE) ,RooFit.Extended(kTRUE), RooFit.Minimizer("Minuit2") );
         rfresult.Print();
-        print "xuzj0"
 
         ## Plot the result
         mplot = rrv_mass_j.frame(RooFit.Title(label+" fitted by "+in_model_name), RooFit.Bins(int(rrv_mass_j.getBins()/self.narrow_factor)) );
@@ -2380,7 +2378,6 @@ class doFit_wj_and_wlvj:
         model.fitTo( rdataset, RooFit.Save(1), RooFit.SumW2Error(kTRUE) ,RooFit.Extended(kTRUE) );
         rfresult = model.fitTo( rdataset, RooFit.Save(1), RooFit.SumW2Error(kTRUE) ,RooFit.Extended(kTRUE), RooFit.Minimizer("Minuit2") );
         rfresult.Print();
-        print "xuzj1"
 
         ## set the name of the result of the fit and put it in the workspace   
         rfresult.SetName("rfresult"+label+in_range+"_"+self.channel+"_mlvj")
@@ -2389,10 +2386,8 @@ class doFit_wj_and_wlvj:
         ## plot the result
         mplot = rrv_mass_lvj.frame(RooFit.Title("M_{lvj"+in_range+"} fitted by "+mlvj_model), RooFit.Bins(int(rrv_mass_lvj.getBins()/self.narrow_factor)));
         rdataset.plotOn( mplot , RooFit.MarkerSize(1.5), RooFit.DataError(RooAbsData.SumW2), RooFit.XErrorSize(0) );
-        print "xuzj2"
         ## plot the error band but don't store the canvas (only plotted without -b option
         draw_error_band_extendPdf(rdataset, model, rfresult,mplot,2,"L")
-        print "xuzj3"
         rdataset.plotOn( mplot , RooFit.MarkerSize(1.5), RooFit.DataError(RooAbsData.SumW2), RooFit.XErrorSize(0) );
         model.plotOn( mplot )#, RooFit.VLines()); in order to have the right pull 
 
@@ -2701,7 +2696,6 @@ class doFit_wj_and_wlvj:
     ##### Method to fit data mlvj shape in the sideband -> first step for the background extraction of the shape
     def fit_mlvj_in_Mj_sideband(self, label, mlvj_region, mlvj_model,logy=0):
 
-        print "hahaxuzj5"
 
         print "############### Fit mlvj in mj sideband: ",label," ",mlvj_region,"  ",mlvj_model," ##################"
         rrv_mass_j   = self.workspace4fit_.var("rrv_mass_j")
@@ -2720,7 +2714,6 @@ class doFit_wj_and_wlvj:
         self.workspace4fit_.var("rrv_number_STop_xww_sb_lo_%s_mlvj"%(self.channel)).Print();
         self.workspace4fit_.var("rrv_number_VV_xww_sb_lo_%s_mlvj"%(self.channel)).Print();
 
-        print "hahaxuzj6"
         ### Make the Pdf for the WJets
         model_pdf_WJets = self.make_Pdf("%s_sb_lo_from_fitting"%(label), mlvj_model,"_mlvj");
         model_pdf_WJets.Print();
@@ -2730,7 +2723,6 @@ class doFit_wj_and_wlvj:
         model_pdf_WJets.Print();
         number_WJets_sb_lo.Print()
 
-        print "hahaxuzj7"
         ## Add the other bkg component fixed to the total model
         model_data = RooAddPdf("model_data%s%s_mlvj"%(label,mlvj_region),"model_data%s%s_mlvj"%(label,mlvj_region),RooArgList(model_WJets,model_VV_backgrounds, model_TTbar_backgrounds, model_STop_backgrounds));
         
@@ -2762,7 +2754,6 @@ class doFit_wj_and_wlvj:
 
         getattr(self.workspace4fit_,"import")(rrv_number_data_sb_lo_mlvj)
 
-        print "hahaxuzj8"
         ### plot for WJets default + default shape
         if TString(label).Contains("_WJets0"):
 
@@ -2816,17 +2807,14 @@ class doFit_wj_and_wlvj:
             self.draw_canvas_with_pull( mplot, mplot_pull,parameters_list,"plots_%s_%s_%s_%s_g1/m_lvj_fitting/"%(options.additioninformation, self.channel,self.PS_model,self.wtagger_label), "m_lvj_sb_lo%s"%(label),"",1,1)
 
         #### Decorrelate the parameters in order to have a proper shape in the workspace
-        print "hahaxuzj9"
         wsfit_tmp = RooWorkspace("wsfit_tmp%s_sb_lo_from_fitting_mlvj"%(label));
         Deco      = PdfDiagonalizer("Deco%s_sb_lo_from_fitting_%s_%s_mlvj"%(label,self.channel,self.wtagger_label),wsfit_tmp,rfresult);
         print"#################### diagonalize data sideband fit "
         model_pdf_WJets_deco = Deco.diagonalize(model_pdf_WJets);
-        print "hahaxuzj12"
         print"#################### print parameters "
         model_pdf_WJets_deco.Print("v");
         model_pdf_WJets_deco.getParameters(rdataset_data_mlvj).Print("");
         getattr(self.workspace4fit_,"import")(model_pdf_WJets_deco);
-        print "hahaxuzj13"
 
         #### Call the alpha evaluation in automatic
         self.get_WJets_mlvj_correction_sb_lo_to_signal_region(label,mlvj_model);
@@ -2837,14 +2825,12 @@ class doFit_wj_and_wlvj:
         self.fix_Model("_STop_xww","_signal_region","_mlvj")
         self.fix_Model("_VV_xww","_signal_region","_mlvj")
 
-        print "hahaxuzj10"
         ### Call the evaluation of the normalization in the signal region for signal, TTbar, VV, STop, and WJets after the extrapolation via alpha
         self.get_mlvj_normalization_insignalregion("_%s_xww"%(self.signal_sample));
         self.get_mlvj_normalization_insignalregion("_TTbar_xww");
         self.get_mlvj_normalization_insignalregion("_STop_xww");
         self.get_mlvj_normalization_insignalregion("_VV_xww");
         self.get_mlvj_normalization_insignalregion(label,"model_pdf%s_signal_region_%s_after_correct_mlvj"%(label,self.channel));    
-        print "hahaxuzj11"
 
 
     ##### Function that calculate the normalization inside the mlvj signal region (mass window around the resonance in order to fill datacards)
@@ -2911,7 +2897,6 @@ class doFit_wj_and_wlvj:
         rdataset_WJets_signal_region_mlvj = self.workspace4fit_.data("rdataset4fit%s_signal_region_%s_mlvj"%(label,self.channel))
         rdataset_WJets_sb_lo_mlvj.Print("v");
         rdataset_WJets_signal_region_mlvj.Print("v");
-        print "zjx-1"
 
         ### create a frame for the next plots 
         mplot = rrv_x.frame(RooFit.Title("correlation_pdf"), RooFit.Bins(int(rrv_x.getBins()/self.narrow_factor))) ;
@@ -3116,11 +3101,9 @@ class doFit_wj_and_wlvj:
         combData4fit = self.workspace4fit_.data("combData4fit%s_%s"%(label,self.channel));
         combData4fit.Print("v");
         correct_factor_pdf.Print("v");
-        print "zjx-0: ", mlvj_model
 
         model_pdf_sb_lo_WJets         = self.workspace4fit_.pdf("model_pdf%s_sb_lo_%s_mlvj"%(label,self.channel));
-        model_pdf_signal_region_WJets = RooProdPdf("model_pdf%s_signal_region_%s_mlvj"%(label,self.channel),"model_pdf%s_signal_region_%s_mlvj"%(label,self.channel) ,model_pdf_sb_lo_WJets,correct_factor_pdf);
-        #model_pdf_signal_region_WJets = RooEffProd("model_pdf%s_signal_region_%s_mlvj"%(label,self.channel),"model_pdf%s_signal_region_%s_mlvj"%(label,self.channel) ,model_pdf_sb_lo_WJets,correct_factor_pdf);
+        model_pdf_signal_region_WJets = RooEffProd("model_pdf%s_signal_region_%s_mlvj"%(label,self.channel),"model_pdf%s_signal_region_%s_mlvj"%(label,self.channel) ,model_pdf_sb_lo_WJets,correct_factor_pdf);
 
         simPdf = RooSimultaneous("simPdf","simPdf",self.data_category);
         simPdf.addPdf(model_pdf_sb_lo_WJets,"sideband");
@@ -3131,17 +3114,17 @@ class doFit_wj_and_wlvj:
         model_pdf_signal_region_WJets.getParameters(rdataset_WJets_signal_region_mlvj).Print("v")
 
         print "zjx0"
-        raw_input("ENTER to continue!")
-        rfresult=simPdf.fitTo(combData4fit,RooFit.Save(kTRUE),RooFit.Extended(kFALSE), RooFit.SumW2Error(kTRUE), RooFit.Verbose(kTRUE));
+        #raw_input("ENTER to continue!")
+        #rfresult=simPdf.fitTo(combData4fit,RooFit.Save(kTRUE),RooFit.Extended(kFALSE), RooFit.SumW2Error(kTRUE), RooFit.Verbose(kTRUE));
+        rfresult=simPdf.fitTo(combData4fit,RooFit.Save(kTRUE),RooFit.Extended(kFALSE), RooFit.SumW2Error(kTRUE));
         rfresult.Print();
-        raw_input("ENTER to continue!")
+        #raw_input("ENTER to continue!")
         print "zjx1"
-        rfresult=simPdf.fitTo(combData4fit,RooFit.Save(kTRUE),RooFit.Extended(kFALSE), RooFit.SumW2Error(kTRUE), RooFit.Minimizer("Minuit2"), RooFit.Verbose(kTRUE));
+        #rfresult=simPdf.fitTo(combData4fit,RooFit.Save(kTRUE),RooFit.Extended(kFALSE), RooFit.SumW2Error(kTRUE), RooFit.Minimizer("Minuit2"), RooFit.Verbose(kTRUE));
+        rfresult=simPdf.fitTo(combData4fit,RooFit.Save(kTRUE),RooFit.Extended(kFALSE), RooFit.SumW2Error(kTRUE), RooFit.Minimizer("Minuit2"));
         print "zjx2"
         rfresult.Print();
-        print "zjx3"
         rfresult.covarianceMatrix().Print();
-        print "zjx4"
 
         #### Decorrelate the parameters in the alpha shape
         wsfit_tmp = RooWorkspace("wsfit_tmp%s_sim_mlvj"%(label));
@@ -4125,17 +4108,19 @@ class doFit_wj_and_wlvj:
         model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("STop_line_invisible"), RooFit.Components("STop_xww_%s_%s"%(self.channel,self.wtagger_label)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines());
 
         ### signal scale to be visible in the plots
-        label_tstring = TString(self.signal_sample);
-        if label_tstring.Contains("600") and (not label_tstring.Contains("1600")):
-            signal_scale=20*self.xs_rescale;
-        elif label_tstring.Contains("700") and (not label_tstring.Contains("1700")):
-            signal_scale=20*self.xs_rescale;
-        elif label_tstring.Contains("750") and (not label_tstring.Contains("1750")):
-            signal_scale=20*self.xs_rescale;
-        elif label_tstring.Contains("800") and (not label_tstring.Contains("1800")):
-            signal_scale=20*self.xs_rescale;
-        else:
-            signal_scale=self.xs_rescale;
+        #label_tstring = TString(self.signal_sample);
+        #if label_tstring.Contains("600") and (not label_tstring.Contains("1600")):
+        #    signal_scale=20*self.xs_rescale;
+        #elif label_tstring.Contains("700") and (not label_tstring.Contains("1700")):
+        #    signal_scale=20*self.xs_rescale;
+        #elif label_tstring.Contains("750") and (not label_tstring.Contains("1750")):
+        #    signal_scale=20*self.xs_rescale;
+        #elif label_tstring.Contains("800") and (not label_tstring.Contains("1800")):
+        #    signal_scale=20*self.xs_rescale;
+        #else:
+        #    signal_scale=self.xs_rescale;
+        signal_scale=1000;
+
 
         model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*signal_scale),RooFit.Name("%s #times %s"%(self.signal_sample, signal_scale)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
 
@@ -4154,7 +4139,7 @@ class doFit_wj_and_wlvj:
         self.leg.SetTextSize(0.036);
         mplot.addObject(self.leg);
         
-        mplot.GetYaxis().SetRangeUser(1e-2,mplot.GetMaximum()*1.2);
+        mplot.GetYaxis().SetRangeUser(1e-2,mplot.GetMaximum()*1.8);
             
 
         parameters_list = RooArgList();
@@ -4277,12 +4262,14 @@ class doFit_wj_and_wlvj:
         objName_signal_graviton = "";
         objNameLeg_signal_graviton = "";        
 
-        if   self.categoryID == 0: legHeader="(e#nu)"; #, 1JALLP)";
-        elif self.categoryID == 1: legHeader="(#mu#nu)"; #, 1JALLP)";
-        if   self.categoryID == -2: legHeader="(e#nu, 1JLP)";
-        elif self.categoryID == -1: legHeader="(e#nu, 1JHP)";
-        elif self.categoryID == 2: legHeader="(#mu#nu, 1JLP)";
-        elif self.categoryID == 1: legHeader="(#mu#nu, 1JHP)";
+        ##if   self.categoryID == 0: legHeader="(e#nu)"; #, 1JALLP)";
+        ##elif self.categoryID == 1: legHeader="(#mu#nu)"; #, 1JALLP)";
+        ##elif self.categoryID ==-2: legHeader="(e#nu, 1JLP)";
+        ##elif self.categoryID ==-1: legHeader="(e#nu, 1JHP)";
+        ##elif self.categoryID == 2: legHeader="(#mu#nu, 1JLP)";
+        ##elif self.categoryID == 1: legHeader="(#mu#nu, 1JHP)";
+        if   self.categoryID <0: legHeader="(e#nu)"
+        elif self.categoryID >0: legHeader="(#mu#nu)";
 
         for obj in range(int(plot.numItems()) ):
           objName = plot.nameOf(obj);
@@ -4348,66 +4335,68 @@ objName ==objName_before ):
                     elif TString(objName).Contains("vbfH"): theLeg.AddEntry(theObj, (TString(objName).ReplaceAll("vbfH","qqH")).Data() ,"L");
                     elif TString(objName).Contains("Uncertainty"): theLeg.AddEntry(theObj, objTitle,drawoption);
                     elif TString(objName).Contains("Bulk"):
-                       if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M600") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M600"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "Bulk G* M_{G*}=0.6 TeV #tilde{k}=0.5 (#times100)";
-                       if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M700") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M700"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "Bulk G* M_{G*}=0.7 TeV #tilde{k}=0.5 (#times100)";
-                       if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M800") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M800"):
-                           objName_signal_graviton = theObj ; 
-                           objNameLeg_signal_graviton = "Bulk G* M_{G*}=0.8 TeV #tilde{k}=0.5 (#times100)";
-                       if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M900") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M900"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "Bulk G* M_{G*}=0.9 TeV #tilde{k}=0.5 (#times100)";
-                       if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M1000") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M1000"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "Bulk G* M_{G*}=1 TeV #tilde{k}=0.5 (#times100)";
-                       if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M1100") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M1100"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "Bulk G* M_{G*}=1.1 TeV #tilde{k}=0.5 (#times100)";
-                       if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M1200") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M1200"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "Bulk G* M_{G*}=1.2 TeV #tilde{k}=0.5 (#times100)";
-                       if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M1300") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M1300"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "Bulk G* M_{G*}=1.3 TeV #tilde{k}=0.5 (#times100)";
-                       if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M1400") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M1400"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "Bulk G* M_{G*}=1.4 TeV #tilde{k}=0.5 (#times100)";
-                       if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M1500") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M1500"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "Bulk G* M_{G*}=1.5 TeV #tilde{k}=0.5 (#times100)";
-                       if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M1600") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M1600"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "Bulk G* M_{G*}=1.6 TeV #tilde{k}=0.5 (#times100)";
-                       if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M1700") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M1700"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "Bulk G* M_{G*}=1.7 TeV #tilde{k}=0.5 (#times100)";
-                       if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M1800") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M1800"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "Bulk G* M_{G*}=1.8 TeV #tilde{k}=0.5 (#times100)";
-                       if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M1900") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M1900"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "Bulk G* M_{G*}=1.9 TeV #tilde{k}=0.5 (#times100)";
-                       if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M2000") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M2000"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "Bulk G* M_{G*}=2 TeV #tilde{k}=0.5 (#times100)";
-                       if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M2100") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M2100"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "Bulk G* M_{G*}=2.1 TeV #tilde{k}=0.5 (#times100)";
-                       if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M2200") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M2200"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "Bulk G* M_{G*}=2.2 TeV #tilde{k}=0.5 (#times100)";
-                       if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M2300") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M2300"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "Bulk G* M_{G*}=2.3 TeV #tilde{k}=0.5 (#times100)";
-                       if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M2400") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M2400"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "Bulk G* M_{G*}=2.4 TeV #tilde{k}=0.5 (#times100)";
-                       if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M2500") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M2500"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "Bulk G* M_{G*}=2.5 TeV #tilde{k}=0.5 (#times100)";
+                        objName_signal_graviton = theObj
+                        objNameLeg_signal_graviton = objName
+                       #if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M600") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M600"):
+                       #    objName_signal_graviton = theObj ;
+                       #    objNameLeg_signal_graviton = "Bulk G* M_{G*}=0.6 TeV #tilde{k}=0.5 (#times100)";
+                       #if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M700") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M700"):
+                       #    objName_signal_graviton = theObj ;
+                       #    objNameLeg_signal_graviton = "Bulk G* M_{G*}=0.7 TeV #tilde{k}=0.5 (#times100)";
+                       #if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M800") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M800"):
+                       #    objName_signal_graviton = theObj ; 
+                       #    objNameLeg_signal_graviton = "Bulk G* M_{G*}=0.8 TeV #tilde{k}=0.5 (#times100)";
+                       #if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M900") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M900"):
+                       #    objName_signal_graviton = theObj ;
+                       #    objNameLeg_signal_graviton = "Bulk G* M_{G*}=0.9 TeV #tilde{k}=0.5 (#times100)";
+                       #if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M1000") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M1000"):
+                       #    objName_signal_graviton = theObj ;
+                       #    objNameLeg_signal_graviton = "Bulk G* M_{G*}=1 TeV #tilde{k}=0.5 (#times100)";
+                       #if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M1100") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M1100"):
+                       #    objName_signal_graviton = theObj ;
+                       #    objNameLeg_signal_graviton = "Bulk G* M_{G*}=1.1 TeV #tilde{k}=0.5 (#times100)";
+                       #if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M1200") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M1200"):
+                       #    objName_signal_graviton = theObj ;
+                       #    objNameLeg_signal_graviton = "Bulk G* M_{G*}=1.2 TeV #tilde{k}=0.5 (#times100)";
+                       #if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M1300") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M1300"):
+                       #    objName_signal_graviton = theObj ;
+                       #    objNameLeg_signal_graviton = "Bulk G* M_{G*}=1.3 TeV #tilde{k}=0.5 (#times100)";
+                       #if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M1400") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M1400"):
+                       #    objName_signal_graviton = theObj ;
+                       #    objNameLeg_signal_graviton = "Bulk G* M_{G*}=1.4 TeV #tilde{k}=0.5 (#times100)";
+                       #if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M1500") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M1500"):
+                       #    objName_signal_graviton = theObj ;
+                       #    objNameLeg_signal_graviton = "Bulk G* M_{G*}=1.5 TeV #tilde{k}=0.5 (#times100)";
+                       #if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M1600") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M1600"):
+                       #    objName_signal_graviton = theObj ;
+                       #    objNameLeg_signal_graviton = "Bulk G* M_{G*}=1.6 TeV #tilde{k}=0.5 (#times100)";
+                       #if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M1700") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M1700"):
+                       #    objName_signal_graviton = theObj ;
+                       #    objNameLeg_signal_graviton = "Bulk G* M_{G*}=1.7 TeV #tilde{k}=0.5 (#times100)";
+                       #if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M1800") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M1800"):
+                       #    objName_signal_graviton = theObj ;
+                       #    objNameLeg_signal_graviton = "Bulk G* M_{G*}=1.8 TeV #tilde{k}=0.5 (#times100)";
+                       #if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M1900") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M1900"):
+                       #    objName_signal_graviton = theObj ;
+                       #    objNameLeg_signal_graviton = "Bulk G* M_{G*}=1.9 TeV #tilde{k}=0.5 (#times100)";
+                       #if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M2000") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M2000"):
+                       #    objName_signal_graviton = theObj ;
+                       #    objNameLeg_signal_graviton = "Bulk G* M_{G*}=2 TeV #tilde{k}=0.5 (#times100)";
+                       #if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M2100") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M2100"):
+                       #    objName_signal_graviton = theObj ;
+                       #    objNameLeg_signal_graviton = "Bulk G* M_{G*}=2.1 TeV #tilde{k}=0.5 (#times100)";
+                       #if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M2200") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M2200"):
+                       #    objName_signal_graviton = theObj ;
+                       #    objNameLeg_signal_graviton = "Bulk G* M_{G*}=2.2 TeV #tilde{k}=0.5 (#times100)";
+                       #if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M2300") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M2300"):
+                       #    objName_signal_graviton = theObj ;
+                       #    objNameLeg_signal_graviton = "Bulk G* M_{G*}=2.3 TeV #tilde{k}=0.5 (#times100)";
+                       #if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M2400") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M2400"):
+                       #    objName_signal_graviton = theObj ;
+                       #    objNameLeg_signal_graviton = "Bulk G* M_{G*}=2.4 TeV #tilde{k}=0.5 (#times100)";
+                       #if TString(objName).Contains("BulkG_WW_inclusive_c0p2_M2500") or  TString(objName).Contains("BulkG_WW_lvjj_c0p2_M2500"):
+                       #    objName_signal_graviton = theObj ;
+                       #    objNameLeg_signal_graviton = "Bulk G* M_{G*}=2.5 TeV #tilde{k}=0.5 (#times100)";
                     else : theLeg.AddEntry(theObj, objTitle,drawoption);
                 entryCnt=entryCnt+1;
             objName_before=objName;
@@ -4481,7 +4470,7 @@ objName ==objName_before ):
         Directory = TString(in_directory+self.signal_sample+"_%02d_%02d/"%(options.cprime,options.BRnew));
         if not Directory.EndsWith("/"):Directory = Directory.Append("/");
         if not os.path.isdir(Directory.Data()):
-              os.system("mkdir -p "+Directory.Data());
+             os.system("mkdir -p "+Directory.Data());
 
         rlt_file = TString(Directory.Data()+in_file_name);
         if rlt_file.EndsWith(".root"):
@@ -4602,8 +4591,8 @@ objName ==objName_before ):
     ##### Get Lumi for banner title
     def GetLumi(self):
 
-        if self.channel=="el":   return 2.167;
-        elif self.channel=="mu": return 2.167;#2.198;
+        if self.channel=="el":   return 2.198;
+        elif self.channel=="mu": return 2.198;
         #elif self.channel=="mu": return 0.553;
         elif self.channel=="em": return 1.0;
         #if self.channel=="el":   return 3.0;
@@ -4747,22 +4736,17 @@ objName ==objName_before ):
         ### Fit all MC components in both mj and mlvj
         self.fit_AllSamples_Mj_and_Mlvj();
         ### take the real data
-        print "hahaxuzj4"
         self.get_data()
         ### fit the WJets Normalization into the signal region -> no jet mass fluctuation has been done
         self.fit_WJetsNorm();
         ### fit data in the mlvj low sideband with two different models
-        print "hahaxuzj3"
         self.fit_mlvj_in_Mj_sideband("_WJets01_xww","_sb_lo",self.MODEL_4_mlvj_alter,1)
-        print "hahaxuzj1"
         self.fit_mlvj_in_Mj_sideband("_WJets0_xww","_sb_lo",self.MODEL_4_mlvj,1)
 
         ### Prepare the workspace and datacards     
-        print "hahaxuzj0"
         self.prepare_limit("sideband_correction_method1",1,0,0)
         ### finale plot and check of the workspace
         self.read_workspace(1)
-        print "hahaxuzj2"
 
     ##### Analysis with no shape uncertainty on alpha
     def analysis_sideband_correction_method1_without_shape_and_psmodel_systermatic(self):
@@ -4825,14 +4809,16 @@ def control_single_sb_correction(method, channel, signal_sample="ggH600", in_mlv
 def pre_limit_simple(channel):
     print "######################### pre_limit_simple for %s sampel"%(channel)
 
-    #pre_limit_sb_correction_without_systermatic(channel,"MWp_1000_bb",900,1100,40,130, 800,3500,"ExpN","ExpTail")
-    #pre_limit_sb_correction_without_systermatic(channel,"MWp_2000_bb",1900,2100,40,130, 800,3500,"ExpN","ExpTail")
-    #pre_limit_sb_correction_without_systermatic(channel,"RSGravitonToWW_1000",900,1100,40,130, 700,5000,"ExpN","ExpTail")
-    #pre_limit_sb_correction_without_systermatic(channel,"RSGravitonToWW_2000",1900,2100,40,130, 700,5000,"ExpN","Exp")
-    #pre_limit_sb_correction_without_systermatic(channel,"RSGravitonToWW_3000",2900,3100,40,130, 700,5000,"ExpN","Exp")
-    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW750",650,850,40,130, 400,1000,"ErfExp_v1","ErfPow_v1")
-    pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW750",650,850,40,130, 400,1000,"ErfPowExp_v1","ErfPow2_v1")
-    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW1000",800,1100,40,130, 700,3000,"ExpN","Exp")
+    ##pre_limit_sb_correction_without_systermatic(channel,"MWp_1000_bb",900,1100,40,130, 800,3500,"ExpN","ExpTail")
+    ##pre_limit_sb_correction_without_systermatic(channel,"MWp_2000_bb",1900,2100,40,130, 800,3500,"ExpN","ExpTail")
+    ##pre_limit_sb_correction_without_systermatic(channel,"RSGravitonToWW_1000",900,1100,40,130, 700,5000,"ExpN","ExpTail")
+    ##pre_limit_sb_correction_without_systermatic(channel,"RSGravitonToWW_2000",1900,2100,40,130, 700,5000,"ExpN","Exp")
+    ##pre_limit_sb_correction_without_systermatic(channel,"RSGravitonToWW_3000",2900,3100,40,130, 700,5000,"ExpN","Exp")
+    ##pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW750",650,850,40,130, 400,1000,"ErfExp_v1","ErfPow_v1")
+
+    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW750",650,850,40,130, 400,1000,"ErfPowExp_v1","ErfPow2_v1")
+    pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW900",800,900,40,130, 400,1000,"ErfPowExp_v1","ErfPow2_v1")
+    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW1000",900,1100,40,130, 400,14000,"ErfPowExp_v1","ErfPow2_v1")
 
 def fit_signal(method, channel, higgs_sample="ggH600", in_mlvj_signal_region_min=500, in_mlvj_signal_region_max=700, in_mj_min=30, in_mj_max=140, in_mlvj_min=400, in_mlvj_max=1400, fit_model="ErfExp_v1", fit_model_alter="ErfPow_v1"): # the WJets M_lvj shape and normalization are from sb_correction
     boostedW_fitter=doFit_wj_and_wlvj(channel, higgs_sample, in_mlvj_signal_region_min, in_mlvj_signal_region_max, in_mj_min, in_mj_max, in_mlvj_min, in_mlvj_max,fit_model, fit_model_alter);
@@ -4883,7 +4869,7 @@ if __name__ == '__main__':
 
     if options.check:
         print '################# check workspace for %s sample'%(channel);
-        check_workspace(channel,"BulkG_c0p2_M2000");
+        check_workspace(channel,"BulkGravWW1000");
 
     if options.simple and (not options.fitwtagger) and (not options.fitwtaggersim) and ( not options.multi) and ( not options.control) and ( not options.check) and (not options.fitsignal):
     #if options.simple and ( not options.multi) and ( not options.check) and ( not options.fitsignal):
@@ -4894,5 +4880,4 @@ if __name__ == '__main__':
     if options.multi  and ( not options.fitsignal):
         print '################# multi mode for %s sample'%(channel)
         pre_limit_sb_correction("method1",sys.argv[1],sys.argv[2],int(sys.argv[3]),int(sys.argv[4]),int(sys.argv[5]),int(sys.argv[6]),int(sys.argv[7]),int(sys.argv[8]), sys.argv[9], sys.argv[10] )
-
 
