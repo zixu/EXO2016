@@ -21,7 +21,8 @@ from ROOT import gROOT, TPaveLabel, gStyle, gSystem, TGaxis, TStyle, TLatex, TSt
 parser = OptionParser()
 
 parser.add_option('-a', '--additioninformation',action="store",type="string",dest="additioninformation",default="EXO")
-parser.add_option('-b', action='store_true', dest='noX', default=False, help='no X11 windows')
+#parser.add_option('-b', action='store_true', dest='noX', default=False, help='no X11 windows')
+parser.add_option('-b', action='store_true', dest='noX', default=True, help='no X11 windows')
 parser.add_option('-c', '--channel',action="store",type="string",dest="channel",default="mu")
 #parser.add_option('-c', '--channel',action="store",type="string",dest="channel",default="el")
 
@@ -3035,6 +3036,9 @@ class doFit_wj_and_wlvj:
 
         if mlvj_model=="Exp":
             rrv_c_sb    = self.workspace4fit_.var("rrv_c_Exp%s_sb_lo_%s"%(label,self.channel));
+            c_sb_constrain=RooGaussian ("c_sb_constrain","c_sb_constrain",rrv_c_sb,RooFit.RooConst(rrv_c_sb.getVal()),RooFit.RooConst(rrv_c_sb.getError()) ) 
+            alpha_constrains.add(c_sb_constrain)
+
             rrv_delta_c = RooRealVar("rrv_delta_c_Exp%s_%s"%(label,self.channel),"rrv_delta_c_Exp%s_%s"%(label,self.channel),
                                       self.workspace4fit_.var("rrv_c_Exp%s_signal_region_%s"%(label,self.channel)).getVal()-rrv_c_sb.getVal(),
                                       self.workspace4fit_.var("rrv_c_Exp%s_signal_region_%s"%(label,self.channel)).getVal()-rrv_c_sb.getVal()-4*rrv_c_sb.getError(),
@@ -3069,6 +3073,9 @@ class doFit_wj_and_wlvj:
         if mlvj_model=="Pow":
 
             rrv_c_sb    = self.workspace4fit_.var("rrv_c_Pow%s_sb_lo_%s"%(label,self.channel));
+            c_sb_constrain=RooGaussian ("c_sb_constrain","c_sb_constrain",rrv_c_sb,RooFit.RooConst(rrv_c_sb.getVal()),RooFit.RooConst(rrv_c_sb.getError()) ) 
+            alpha_constrains.add(c_sb_constrain)
+
             rrv_delta_c = RooRealVar("rrv_delta_c_Pow%s_%s"%(label,self.channel),"rrv_delta_c_Pow%s_%s"%(label,self.channel),0., -100*rrv_c_sb.getError(),100*rrv_c_sb.getError());
             correct_factor_pdf = RooPowPdf("correct_factor_pdf","correct_factor_pdf",rrv_x,rrv_delta_c);
 
@@ -3133,7 +3140,7 @@ class doFit_wj_and_wlvj:
         model_pdf_signal_region_WJets.getParameters(rdataset_WJets_signal_region_mlvj).Print("v")
 
         print "zjx0"
-        raw_input("ENTER to continue!")
+        #raw_input("ENTER to continue!")
         #rfresult=simPdf.fitTo(combData4fit,RooFit.Save(kTRUE),RooFit.Extended(kFALSE), RooFit.SumW2Error(kTRUE), RooFit.Verbose(kTRUE));
         #rfresult=simPdf.fitTo(combData4fit,RooFit.Save(kTRUE),RooFit.Extended(kFALSE), RooFit.SumW2Error(kTRUE));
         rfresult=simPdf.fitTo(combData4fit,RooFit.Save(kTRUE),RooFit.Extended(kFALSE), RooFit.SumW2Error(kTRUE), RooFit.ExternalConstraints(alpha_constrains));
@@ -3181,7 +3188,7 @@ class doFit_wj_and_wlvj:
             parameters_list = model_pdf_signal_region_WJets.getParameters(rdataset_WJets_signal_region_mlvj);
             mplot_signal_region.GetYaxis().SetRangeUser(1e-2,mplot_signal_region.GetMaximum()*1.5);
             self.draw_canvas_with_pull( mplot_signal_region, mplot_pull_signal_region,parameters_list,"plots_%s_%s_%s_%s_g1/other/"%(options.additioninformation, self.channel,self.PS_model,self.wtagger_label), "m_lvj%s_signal_region_sim"%(label),"",1,1);
-            raw_input("ENTER")
+            #raw_input("ENTER")
 
         ### Total plot shape in sb_lo, sr and alpha
         model_pdf_sb_lo_WJets.plotOn(mplot,RooFit.Name("Sideband"),RooFit.LineStyle(10));
@@ -4830,7 +4837,7 @@ def pre_limit_simple(channel):
     #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW750",650,850,40,130, 400,1000,"ErfPowExp_v1","ErfPow2_v1")
     #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW750",650,850,40,130, 400,1000,"ErfPow2_v1","ErfPowExp_v1")
     #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW900",800,900,40,130, 400,1200,"ErfPowExp_v1","ErfPow2_v1")
-    pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW1000",900,1100,40,130, 400,13000,"ErfPowExp_v1","ErfPow2_v1")
+    pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW1000",900,1100,40,130, 600,1400,"Exp","Pow")
 
 def fit_signal(method, channel, higgs_sample="ggH600", in_mlvj_signal_region_min=500, in_mlvj_signal_region_max=700, in_mj_min=30, in_mj_max=140, in_mlvj_min=400, in_mlvj_max=1400, fit_model="ErfExp_v1", fit_model_alter="ErfPow_v1"): # the WJets M_lvj shape and normalization are from sb_correction
     boostedW_fitter=doFit_wj_and_wlvj(channel, higgs_sample, in_mlvj_signal_region_min, in_mlvj_signal_region_max, in_mj_min, in_mj_max, in_mlvj_min, in_mlvj_max,fit_model, fit_model_alter);
