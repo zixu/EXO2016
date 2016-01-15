@@ -87,7 +87,8 @@ class doFit_wj_and_wlvj:
         elif self.MODEL_4_mlvj=="ErfPowExp_v1" or self.MODEL_4_mlvj=="ErfPow2_v1" or self.MODEL_4_mlvj=="ErfExp_v1":
             self.BinWidth_mlvj=50.;
         else:
-            self.BinWidth_mlvj=100.;
+            self.BinWidth_mlvj=50.;
+            #self.BinWidth_mlvj=50.;
 
            
         #narrow the BinWidth_mj and BinWidth_mlvj by a factor of 5. Because Higgs-Combination-Tools will generate a binned sample, so need the bin width narrow. So, as a easy selution, we will increase the bin-width by a factor of 5 when ploting m_j m_WW
@@ -179,7 +180,6 @@ class doFit_wj_and_wlvj:
         #else:
         #    self.file_data = (self.channel+"_PKUTree_data_xww.root");#keep blind!!!!
 
-        #self.file_data = (self.channel+"_PKUTree_pdata_reweight.root");#keep blind!!!!
         self.file_data = (self.channel+"_PKUTree_pdata.root");#keep blind!!!!
         #self.file_data = (self.channel+"_PKUTree_15D.root");#keep blind!!!!
         #self.file_pseudodata = (self.channel+"_PKUTree_allBkg_xww.root");#fake data
@@ -232,15 +232,20 @@ class doFit_wj_and_wlvj:
             self.rrv_htagger_eff_reweight_forV.setError(0.);
 
         if self.channel=="mu" and self.wtagger_label=="HP":
-            self.rrv_htagger_eff_reweight_forT=RooRealVar("rrv_htagger_eff_reweight_forT","rrv_htagger_eff_reweight_forT", 0.975);
+            #self.rrv_htagger_eff_reweight_forT=RooRealVar("rrv_htagger_eff_reweight_forT","rrv_htagger_eff_reweight_forT", 0.975);
+            self.rrv_htagger_eff_reweight_forT=RooRealVar("rrv_htagger_eff_reweight_forT","rrv_htagger_eff_reweight_forT", 1.00);
+            #self.rrv_htagger_eff_reweight_forT=RooRealVar("rrv_htagger_eff_reweight_forT","rrv_htagger_eff_reweight_forT", 0.85);
             self.rrv_htagger_eff_reweight_forT.setError(0.02*self.rrv_htagger_eff_reweight_forT.getVal());
-            self.rrv_htagger_eff_reweight_forV=RooRealVar("rrv_htagger_eff_reweight_forV","rrv_htagger_eff_reweight_forV",0.891);
+            #self.rrv_htagger_eff_reweight_forV=RooRealVar("rrv_htagger_eff_reweight_forV","rrv_htagger_eff_reweight_forV",0.891);
+            self.rrv_htagger_eff_reweight_forV=RooRealVar("rrv_htagger_eff_reweight_forV","rrv_htagger_eff_reweight_forV",1);
             self.rrv_htagger_eff_reweight_forV.setError(0.0717773);
 
         if self.channel=="el" and self.wtagger_label=="HP":
-            self.rrv_htagger_eff_reweight_forT=RooRealVar("rrv_htagger_eff_reweight_forT","rrv_htagger_eff_reweight_forT",1.011);#0.968);
+            #self.rrv_htagger_eff_reweight_forT=RooRealVar("rrv_htagger_eff_reweight_forT","rrv_htagger_eff_reweight_forT",1.011);#0.968);
+            self.rrv_htagger_eff_reweight_forT=RooRealVar("rrv_htagger_eff_reweight_forT","rrv_htagger_eff_reweight_forT",1.00);
             self.rrv_htagger_eff_reweight_forT.setError(0.03*self.rrv_htagger_eff_reweight_forT.getVal());
-            self.rrv_htagger_eff_reweight_forV=RooRealVar("rrv_htagger_eff_reweight_forV","rrv_htagger_eff_reweight_forV",1.005);#0.891);
+            #self.rrv_htagger_eff_reweight_forV=RooRealVar("rrv_htagger_eff_reweight_forV","rrv_htagger_eff_reweight_forV",1.005);#0.891);
+            self.rrv_htagger_eff_reweight_forV=RooRealVar("rrv_htagger_eff_reweight_forV","rrv_htagger_eff_reweight_forV",1.0);#0.891);
             self.rrv_htagger_eff_reweight_forV.setError(0.0717773);
 
         if self.channel=="mu" and self.wtagger_label=="LP":
@@ -327,7 +332,7 @@ class doFit_wj_and_wlvj:
         self.datadriven_alpha_WJets_counting=-1;
 
         ### uncertainty for datacard
-        self.lumi_uncertainty    = 0.026;
+        self.lumi_uncertainty    = 0.05;
         self.XS_STop_uncertainty = 0.30 ;
         self.XS_VV_uncertainty   = 0.25 ;
         self.XS_TTbar_uncertainty   = 0.12; #0.20 ;#qun
@@ -1118,47 +1123,47 @@ class doFit_wj_and_wlvj:
             print "########### Double CB for Bulk graviton mlvj ############"
 
             if label_tstring.Contains("600"):#because the M_ljv lower limit is 800GeV, so, just use right side 
-                rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,630,400,1000);
-                rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 50,20 ,120);
-                rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 4.,0.01,45);
+                rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,630,550,680);
+                rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 50.4,40,60);
+                rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 31)#,15,60);
                 rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,5)#,0.1,10.);
-                rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,2.,0.01,35);
-                rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,2.,0.5,6.);
+                rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,2.2,0.01,35);
+                rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,1.94,1.0,4.0);
             elif label_tstring.Contains("700"):#because the M_ljv lower limit is 800GeV, so, just use right side 
-                rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,720,400,1000);
-                rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 50,20 ,120);
-                rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 40.,0.01,45);
-                rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,5,0.1,10.);
-                rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,2.,0.01,35);
-                rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,3.,0.5,6.);
+                rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,728,650, 780);
+                rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 57.5,50 ,70);
+                rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 45.)#,0.01,45);
+                rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,1.71,1.,3.);
+                rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,2.9,1.,5.);
+                rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,2.12,1.,4.);
             elif label_tstring.Contains("750"):#because the M_ljv lower limit is 800GeV, so, just use right side 
-                rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,770,670,870);
-                rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 63,40,80);
-                rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 5.,0.01,45);
-                rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,5,0.1,10.);
-                rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,2.,0.01,35);
-                rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,3.,0.5,6.);
+                rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,777,700,820);
+                rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 59.4,50,70);
+                rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 45.)#,0.01,45);
+                rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,1.66,1.,3.);
+                rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,4.,1,10);
+                rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,1.8,0.5,5.);
             elif label_tstring.Contains("800"):#because the M_ljv lower limit is 800GeV, so, just use right side 
-                rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,826,400,1000);
-                rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 60,20 ,120);
-                rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 4.,0.01,45);
-                rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,5,0.1,10.);
-                rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,2.,0.01,35);
-                rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,3.,0.5,6.);
+                rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,826,770,900);
+                rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 61.2,50,80);
+                rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 45)#4.,0.01,45);
+                rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,1.52,1,3.);
+                rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,5.4,1,10);
+                rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,1.7,1.0,3.);
             elif label_tstring.Contains("900"):#because the M_ljv lower limit is 800GeV, so, just use right side 
-                rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,926,400,1000);
-                rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 66,20 ,120);
-                rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 4.,0.01,45);
-                rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,5,0.1,10.);
-                rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,2.,0.01,35);
-                rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,3.,0.5,6.);
+                rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,929,870,970);
+                rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 66.2,50,80);
+                rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 45)#.,0.01,45);
+                rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,1.4,1.,3.);
+                rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,5.,1,10);
+                rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,1.8,1.,3.);
             elif label_tstring.Contains("1000"):#because the M_ljv lower limit is 800GeV, so, just use right side 
-                rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,1030,500,3500);
-                rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 70,20 ,120);
-                rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 4.,0.01,45);
-                rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,5,0.1,10.);
-                rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,2.,0.01,35);
-                rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,3.,0.5,6.);
+                rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,1029,970,1070);
+                rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 71.6,60 ,80);
+                rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 45)#.,0.01,45);
+                rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,1.36,0.5,3.);
+                rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,3.1,0.1,8);
+                rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,2.15,0.5,5.);
 
             elif label_tstring.Contains("2000"):#because the M_ljv lower limit is 800GeV, so, just use right side 
                 rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,2000,1500,3500);
@@ -1472,9 +1477,12 @@ class doFit_wj_and_wlvj:
         ## Erf times for mj spectrum
         if in_model_name == "ErfExp" :
             print "########### Erf*Exp for mj fit  ############"
-            rrv_c_ErfExp      = RooRealVar("rrv_c_ErfExp"+label+"_"+self.channel,"rrv_c_ErfExp"+label+"_"+self.channel,-1.4e-2,-0.1,-1e-4);
-            rrv_offset_ErfExp = RooRealVar("rrv_offset_ErfExp"+label+"_"+self.channel,"rrv_offset_ErfExp"+label+"_"+self.channel,60.,40.,80);
-            rrv_width_ErfExp  = RooRealVar("rrv_width_ErfExp"+label+"_"+self.channel,"rrv_width_ErfExp"+label+"_"+self.channel,20.,10., 40.);
+            ##rrv_c_ErfExp      = RooRealVar("rrv_c_ErfExp"+label+"_"+self.channel,"rrv_c_ErfExp"+label+"_"+self.channel,-1.4e-2,-0.1,-1e-4);
+            ##rrv_offset_ErfExp = RooRealVar("rrv_offset_ErfExp"+label+"_"+self.channel,"rrv_offset_ErfExp"+label+"_"+self.channel,60.,40.,80);
+            ##rrv_width_ErfExp  = RooRealVar("rrv_width_ErfExp"+label+"_"+self.channel,"rrv_width_ErfExp"+label+"_"+self.channel,20.,10., 40.);
+            rrv_c_ErfExp      = RooRealVar("rrv_c_ErfExp"+label+"_"+self.channel,"rrv_c_ErfExp"+label+"_"+self.channel,-4.4e-2,-0.1,-1e-4);
+            rrv_offset_ErfExp = RooRealVar("rrv_offset_ErfExp"+label+"_"+self.channel,"rrv_offset_ErfExp"+label+"_"+self.channel,74.,50.,90);
+            rrv_width_ErfExp  = RooRealVar("rrv_width_ErfExp"+label+"_"+self.channel,"rrv_width_ErfExp"+label+"_"+self.channel,30.,15., 50.);
             model_pdf         = ROOT.RooErfExpPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_c_ErfExp,rrv_offset_ErfExp,rrv_width_ErfExp);
 
         ## different initial values -> for mlvj
@@ -2130,6 +2138,7 @@ class doFit_wj_and_wlvj:
         #self.Make_Controlplots(cut,"signal_region");
 
         cut="(CategoryID==1 || CategoryID==-1 || CategoryID==2 || CategoryID==-2|| CategoryID==4 || CategoryID==-4) && m_lvj> 100 && m_lvj<3000 &&((massVhadJEC>40 && massVhadJEC<105)||(massVhadJEC>135&&massVhadJEC<150)) "
+        #cut="(CategoryID==1 || CategoryID==-1 || CategoryID==2 || CategoryID==-2|| CategoryID==4 || CategoryID==-4) && m_lvj> 100 && m_lvj<3000 &&((massVhadJEC>40 && massVhadJEC<105)||(massVhadJEC>135&&massVhadJEC<150)) && l_pt>120 && MET_et>80 "
         self.Make_Controlplots(cut,"preselection");
 
         cut="(CategoryID==3 || CategoryID==-3) && m_lvj> 100 && m_lvj<4000 && massVhadJEC>40 && massVhadJEC<150"
@@ -2151,7 +2160,7 @@ class doFit_wj_and_wlvj:
     ######## ++++++++++++++
     def make_controlplot(self,variable,cut,tag,nbin,min,max,xtitle="",ytitle="",logy=0 , TTBarControl=0):
         tmp_lumi=self.GetLumi()
-        tmp_signal_scale=1000
+        tmp_signal_scale=500
         weight_mc_forSignal="weight*%s*%s"%(tmp_lumi, tmp_signal_scale);
         weight_mc_forV="weight*%s"%(tmp_lumi);
         weight_mc_forT="weight*%s"%(tmp_lumi);
@@ -3353,7 +3362,8 @@ class doFit_wj_and_wlvj:
             treeIn.GetEntry(i);
 
             if i==0:
-                tmp_scale_to_lumi=treeIn.lumiWeight*tmp_lumi;#qun
+                #tmp_scale_to_lumi=treeIn.lumiWeight*tmp_lumi;#qun
+                tmp_scale_to_lumi=treeIn.weight*tmp_lumi;#qun
                 #tmp_scale_to_lumi=1;
     
             tmp_jet_mass=getattr(treeIn, jet_mass);
@@ -4146,7 +4156,7 @@ class doFit_wj_and_wlvj:
         #    signal_scale=20*self.xs_rescale;
         #else:
         #    signal_scale=self.xs_rescale;
-        signal_scale=1000;
+        signal_scale=500;
 
 
         model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*signal_scale),RooFit.Name("%s #times %s"%(self.signal_sample, signal_scale)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
@@ -4834,10 +4844,16 @@ def control_single_sb_correction(method, channel, signal_sample="ggH600", in_mlv
 def pre_limit_simple(channel):
     print "######################### pre_limit_simple for %s sampel"%(channel)
 
+    pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW600",500,700,40,130, 400,1000,"ErfPowExp_v1","ErfPow2_v1")
+    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW700",600,800,40,130, 400,1000,"ErfPowExp_v1","ErfPow2_v1")
     #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW750",650,850,40,130, 400,1000,"ErfPowExp_v1","ErfPow2_v1")
-    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW750",650,850,40,130, 400,1000,"ErfPow2_v1","ErfPowExp_v1")
-    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW900",800,900,40,130, 400,1200,"ErfPowExp_v1","ErfPow2_v1")
-    pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW1000",900,1100,40,130, 600,1400,"Exp","Pow")
+    #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW800",700, 900,40,130, 600,1400,"Exp","Pow")
+    #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW900",800,1000,40,130, 600,1400,"Exp","Pow")
+    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW1000",900,1100,40,130, 600,1400,"Exp","Pow")
+
+
+
+    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW1000",900,1100,40,130, 700,4000,"Exp","Pow")
 
 def fit_signal(method, channel, higgs_sample="ggH600", in_mlvj_signal_region_min=500, in_mlvj_signal_region_max=700, in_mj_min=30, in_mj_max=140, in_mlvj_min=400, in_mlvj_max=1400, fit_model="ErfExp_v1", fit_model_alter="ErfPow_v1"): # the WJets M_lvj shape and normalization are from sb_correction
     boostedW_fitter=doFit_wj_and_wlvj(channel, higgs_sample, in_mlvj_signal_region_min, in_mlvj_signal_region_max, in_mj_min, in_mj_max, in_mlvj_min, in_mlvj_max,fit_model, fit_model_alter);
