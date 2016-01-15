@@ -760,16 +760,16 @@ if __name__ == '__main__':
             ### Asymptotic Limit + profileLikelihood to have an hint of the r value
             ## mu HP
             if options.limitMode==0:
-              if options.isReReco == 0 and not options.noSys:
-               runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2"%(mass[i],mass[i],"mu",mass[i],"mu");
-              elif options.isReReco == 0 and options.noSys:
-               runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -S 0 -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2"%(mass[i],mass[i],"mu",mass[i],"mu");
-              elif options.isReReco == 1 and not options.noSys:
-               runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2"%(mass[i],mass[i],"mu",mass[i],"mu");
-               print "LILILILILI"
-#               runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_counting.txt -v 2"%(mass[i],mass[i],"mu",mass[i],"mu");
-              elif options.isReReco == 1 and options.noSys:
-               runCmmd2 = "combine -M Asymptotic -S 0 --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2"%(mass[i],mass[i],"mu",mass[i],"mu");
+              ##if options.isReReco == 0 and not options.noSys:
+              ## runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2"%(mass[i],mass[i],"mu",mass[i],"mu");
+              ##elif options.isReReco == 0 and options.noSys:
+              ## runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -S 0 -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2"%(mass[i],mass[i],"mu",mass[i],"mu");
+              ##elif options.isReReco == 1 and not options.noSys:
+              ## runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2"%(mass[i],mass[i],"mu",mass[i],"mu");
+              ##elif options.isReReco == 1 and options.noSys:
+              ## runCmmd2 = "combine -M Asymptotic -S 0 --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2"%(mass[i],mass[i],"mu",mass[i],"mu");
+
+              runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2 -S %d"%(mass[i],mass[i],"mu",mass[i],"mu", options.noSys);
 
               if options.batchMode:
                fn = "combineScript_Asymptotic_%s_%03d%s_%s"%("mu",mass[i],"","HP");
