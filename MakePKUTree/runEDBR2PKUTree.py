@@ -54,14 +54,14 @@ if __name__ == '__main__':
             filein =TFile(input_dir+samplename);
             dir1 = filein.Get("treeDumper");
             treein = dir1.Get("EDBRCandidates")
-            print "Open Tree Done"
+            #print "Open Tree Done"
 
             channel="el"
             analyzer_el=EDBR2PKUTree(treein,channel+"_out_"+samplename);
             analyzer_el.Loop(channel, sampleXS, sampleNum, IsData);
             analyzer_el.endJob();
 
-            channel="mu"
-            analyzer_mu=EDBR2PKUTree(treein,channel+"_out_"+samplename);
-            analyzer_mu.Loop(channel, sampleXS, sampleNum, IsData);
-            analyzer_mu.endJob();
+            ##channel="mu"
+            ##analyzer_mu=EDBR2PKUTree(treein,channel+"_out_"+samplename);
+            ##analyzer_mu.Loop(channel, sampleXS, sampleNum, IsData);
+            ##analyzer_mu.endJob();
