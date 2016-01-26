@@ -236,6 +236,7 @@ void EDBR2PKUTree::Loop(TString channelname, Double_t XS, Double_t totaleventnum
 
 		Double_t isAnaHP=1.;
 		Double_t isAnaLP=1.;
+		Double_t isAnaNP=1.;
 		Double_t isTTBarControl=1.;
 		Int_t tmp_categoryID_channel=0;
 		if( channelname=="el" ){
@@ -263,6 +264,11 @@ void EDBR2PKUTree::Loop(TString channelname, Double_t XS, Double_t totaleventnum
 			if ( lep==11 && HLT_Ele105>0 && isHEEP>0 && nLooseLep==1 && ptlep1>120 && fabs(etalep1)<2.5 && MET_et>80 && ptVlepJEC > 200.  && ptVhad>200 && fabs(yVhad)<2.4 && IDLoose>0 && num_bJet<1 && deltaRlepjet>pi_2 && fabs(delPhijetmet) >2.0 && fabs(delPhijetlep)>2.0 && tau21>0.5 && tau21<=0.75 && (( massVhadJEC >30 &&  massVhadJEC< 150 )) )
 			{ isAnaLP=1.; } 
 			else{ isAnaLP=-1.; }
+			//NP: 0.75<tau21
+			if ( lep==11 && HLT_Ele105>0 && isHEEP>0 && nLooseLep==1 && ptlep1>120 && fabs(etalep1)<2.5 && MET_et>80 && ptVlepJEC > 200.  && ptVhad>200 && fabs(yVhad)<2.4 && IDLoose>0 && num_bJet<1 && deltaRlepjet>pi_2 && fabs(delPhijetmet) >2.0 && fabs(delPhijetlep)>2.0 && tau21>0.75 && (( massVhadJEC >30 &&  massVhadJEC< 150 )) )
+			{ isAnaNP=1.; } 
+			else{ isAnaNP=-1.; }
+
 
 			//TTbar control
 			if ( lep==11 && HLT_Ele105>0 && isHEEP>0 && nLooseLep==1 && ptlep1>120 && fabs(etalep1)<2.5 && MET_et>80 && ptVlepJEC > 200. &&ptVhad>200 && fabs(yVhad)<2.4 && IDLoose>0  && num_bJet>0 &&  massVhadJEC>30 && massVhadJEC <150)
@@ -293,6 +299,11 @@ void EDBR2PKUTree::Loop(TString channelname, Double_t XS, Double_t totaleventnum
 			{ isAnaLP=1.; } 
 			else{ isAnaLP=-1.; }
 
+			//NP: 0.75<tau21;
+			if (lep==13 && HLT_Mu45_v1>0 && isHighPt>0 && trackIso/ptlep1<0.1 && fabs(etalep1)<2.1 && nLooseLep==1 && ptlep1>53 && MET_et>40 && ptVlepJEC>200 && ptVhad>200 && fabs(yVhad)<2.4 && IDLoose>0 && num_bJet<1 && deltaRlepjet>pi_2 && fabs(delPhijetmet) >2.0 && fabs(delPhijetlep)>2.0 && tau21>0.75  && (( massVhadJEC >30&& massVhadJEC< 150 )))
+			{ isAnaNP=1.; } 
+			else{ isAnaNP=-1.; }
+
 			//TTbar control
 			if (lep==13 && HLT_Mu45_v1>0 && isHighPt>0 && trackIso/ptlep1<0.1 && fabs(etalep1)<2.1 && nLooseLep==1 && ptlep1>53 && MET_et>40 && ptVlepJEC>200 && ptVhad>200 && fabs(yVhad)<2.4 && IDLoose>0 && num_bJet>0 && massVhadJEC>30 && massVhadJEC <150)
 			{ isTTBarControl=1.; } 
@@ -305,6 +316,7 @@ void EDBR2PKUTree::Loop(TString channelname, Double_t XS, Double_t totaleventnum
 		Int_t tmp_categoryID_eventselection=0;
 		if(isAnaHP>0)tmp_categoryID_eventselection=1;
 		else if(isAnaLP>0)tmp_categoryID_eventselection=2;
+		else if(isAnaNP>0)tmp_categoryID_eventselection=4;
 		else if(isTTBarControl>0)tmp_categoryID_eventselection=3;
 		else tmp_categoryID_eventselection=100;
 
