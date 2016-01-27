@@ -20,8 +20,11 @@ python runLimitsEXO750_mu.py --channel el --makeCards -b > el.log
 
 mv cards_EXO_mu_HP750_g1/ cards_allCats
 
-python runLimitsEXO750_mu.py --computeLimits
+python runLimitsEXO750_mu.py --channel mu --computeLimits
 
-python runLimitsEXO750_mu.py --plotLimits  
+python runLimitsEXO750_mu.py --channel el --computeLimits
 
+python runLimitsEXO750_mu.py --channel mu --plotLimits  
+
+python runLimitsEXO750_mu.py --channel el --plotLimits  
 
