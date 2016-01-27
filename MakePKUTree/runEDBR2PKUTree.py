@@ -53,12 +53,18 @@ if __name__ == '__main__':
             treein = dir1.Get("EDBRCandidates")
             #print "Open Tree Done"
 
-            channel="el"
-            analyzer_el=EDBR2PKUTree(treein,channel+"_out_"+samplename);
-            analyzer_el.Loop(channel, sampleXS, sampleNum, IsData);
-            analyzer_el.endJob();
+            ##channel="el"
+            ##if "singleMuon" in samplename: 
+            ##    print "ignore mu data in el channel"
+            ##else: 
+            ##    analyzer_el=EDBR2PKUTree(treein,channel+"_out_"+samplename); 
+            ##    analyzer_el.Loop(channel, sampleXS, sampleNum, IsData); 
+            ##    analyzer_el.endJob();
 
             channel="mu"
-            analyzer_mu=EDBR2PKUTree(treein,channel+"_out_"+samplename);
-            analyzer_mu.Loop(channel, sampleXS, sampleNum, IsData);
-            analyzer_mu.endJob();
+            if "singleEl" in samplename: 
+                print "ignore el data in mu channel"
+            else:
+                analyzer_mu=EDBR2PKUTree(treein,channel+"_out_"+samplename);
+                analyzer_mu.Loop(channel, sampleXS, sampleNum, IsData);
+                analyzer_mu.endJob();
