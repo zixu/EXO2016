@@ -305,7 +305,7 @@ void EDBR2PKUTree::Loop(TString channelname, Double_t XS, Double_t totaleventnum
 			else{ isAnaNP=-1.; }
 
 			//TTbar control
-			if (lep==13 && HLT_Mu4>0 && && trackIso/ptlep1<0.1 && fabs(etalep1)<2.1 && nLooseLep==1 && ptlep1>30 && MET_et>40 && ptVlepJEC>200 && ptVhad>200 && fabs(yVhad)<2.4 && IDLoose>0 && num_bJet>0 && massVhadJEC>30 && massVhadJEC <150)
+			if (lep==13 && HLT_Mu4>0 && trackIso/ptlep1<0.1 && fabs(etalep1)<2.1 && nLooseLep==1 && ptlep1>30 && MET_et>40 && ptVlepJEC>200 && ptVhad>200 && fabs(yVhad)<2.4 && IDLoose>0 && num_bJet>0 && massVhadJEC>30 && massVhadJEC <150)
 			{ isTTBarControl=1.; } 
 			else{ isTTBarControl=-1.; }
 
