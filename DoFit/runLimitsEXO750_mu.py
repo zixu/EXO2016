@@ -1056,13 +1056,13 @@ if __name__ == '__main__':
 
          for i in range(mLo,mHi):
              print "############################"+str(mass[i])+"#############################";            
-             print "getting card: higgsCombine_pval_obs_%03d_bb_%s_HP.ProfileLikelihood.mH%03d.root"%(mass[i],"mu",mass[i]);
+             print "getting card: higgsCombine_pval_obs_%03d_bb_%s_HP.ProfileLikelihood.mH%03d.root"%(mass[i],options.channel,mass[i]);
 
-             orootname_mu_allp = "higgsCombine_pval_obs_%03d_bb_%s_HP.ProfileLikelihood.mH%03d.root"%(mass[i],"mu",mass[i]);
+             orootname_mu_allp = "higgsCombine_pval_obs_%03d_bb_%s_HP.ProfileLikelihood.mH%03d.root"%(mass[i],options.channel,mass[i]);
 
-             #print "getting card: higgsCombine_pval_exp_%03d_bb_%s_HP.ProfileLikelihood.mH%03d.root"%(mass[i],"mu",mass[i]);
+             #print "getting card: higgsCombine_pval_exp_%03d_bb_%s_HP.ProfileLikelihood.mH%03d.root"%(mass[i],options.channel,mass[i]);
 
-             #orootname_mu_allp_exp = "higgsCombine_pval_exp_%03d_bb_%s_HP.ProfileLikelihood.mH%03d.root"%(mass[i],"mu",mass[i]);
+             #orootname_mu_allp_exp = "higgsCombine_pval_exp_%03d_bb_%s_HP.ProfileLikelihood.mH%03d.root"%(mass[i],options.channel,mass[i]);
 
              xbins.append( mass[i] );
              #xbins_exp.append( mass[i] );
@@ -1112,7 +1112,7 @@ if __name__ == '__main__':
           leg3 = ROOT.TLegend(0.2,0.2,0.5,0.35);
           leg3.SetFillStyle(0);
           leg3.SetBorderSize(1);
-          leg3.AddEntry( gr_mu_allp, "obs signif, #mu (HP)", "pl" );
+          leg3.AddEntry( gr_mu_allp, "obs signif, #%s (HP)"%(options.channel), "pl" );
           #leg3.AddEntry( gr_mu_allp_exp, "exp signif, HVT", "pl" );
 
           can2 = ROOT.TCanvas("can2","can2",800,800);
@@ -1135,10 +1135,10 @@ if __name__ == '__main__':
           ban2s.Draw();
           ban3s.Draw();
           ban4s.Draw();
-          can2.SaveAs("./LimitResult/Limit_ExpTail/pvals_mu_HP.pdf","pdf");
-          can2.SaveAs("./LimitResult/Limit_ExpTail/pvals_mu_HP.png","png");
-          can2.SaveAs("./LimitResult/Limit_ExpTail/pvals_mu_HP.root","root");
-          can2.SaveAs("./LimitResult/Limit_ExpTail/pvals_mu_HP.C","C");
+          can2.SaveAs("./LimitResult/Limit_ExpTail/pvals_%s_HP.pdf"%(options.channel),"pdf");
+          can2.SaveAs("./LimitResult/Limit_ExpTail/pvals_%s_HP.png"%(options.channel),"png");
+          can2.SaveAs("./LimitResult/Limit_ExpTail/pvals_%s_HP.root"%(options.channel),"root");
+          can2.SaveAs("./LimitResult/Limit_ExpTail/pvals_%s_HP.C"%(options.channel),"C");
 
          doULPlot("_mu_HP");
 
