@@ -81,29 +81,33 @@ mjhi_width = [ 130, 130, 130, 130, 130, 130]
 
 ### mlvj range min and max used when run with option --makeCards
 #fit range
-mlo = [  400, 400, 400, 600, 600, 600]
-mhi = [ 1000,1000,1000,1400,1400,1400]
+##mlo = [  400, 400, 400, 600, 600, 600]
+##mhi = [ 1000,1000,1000,1400,1400,1400]
+mlo = [  400, 600, 600, 600, 600, 600]
+mhi = [ 1000,1400,1400,1400,1400,1400]
 
-mlo_width = [  400, 400, 400, 600, 600, 600]
-mhi_width = [ 1000,1000,1000,1400,1400,1400]
+mlo_width = [  400, 600, 600, 600, 600, 600]
+mhi_width = [ 1000,1400,1400,1400,1400,1400]
 
 ### mlvj range min and max used when run with option --fitSignal
-mlo_sig = [  400, 400, 400, 600, 600, 600]
-mhi_sig = [ 1000,1000,1000,1400,1400,1400]
-mlo_sig_width = [  400, 400, 400, 600, 600, 600]
-mhi_sig_width = [ 1000,1000,1000,1400,1400,1400]
+mlo_sig = [  400, 600, 600, 600, 600, 600]
+mhi_sig = [ 1000,1400,1400,1400,1400,1400]
+mlo_sig_width = [  400, 600, 600, 600, 600, 600]
+mhi_sig_width = [ 1000,1400,1400,1400,1400,1400]
 
 ### shape to be used for bkg when --makeCards
-shape    = ["ErfPowExp_v1","ErfPowExp_v1","ErfPowExp_v1","Exp","Exp","Exp"]
-shapeAlt = ["ErfPow2_v1"  ,"ErfPow2_v1"  ,"ErfPow2_v1"  ,"Pow","Pow","Pow"]
+#shape    = ["ErfPowExp_v1","ErfPowExp_v1","ErfPowExp_v1","Exp","Exp","Exp"]
+#shapeAlt = ["ErfPow2_v1"  ,"ErfPow2_v1"  ,"ErfPow2_v1"  ,"Pow","Pow","Pow"]
+shape    = ["ErfPowExp_v1","Exp","Exp","Exp","Exp","Exp"]
+shapeAlt = ["ErfPow2_v1"  ,"Pow","Pow","Pow","Pow","Pow"]
 
 ### shape to be used for bkg when --fitSignal
 
-shape_sig_width  = ["BWDoubleCB","BWDoubleCB", "BWDoubleCB", "BWDoubleCB"]
+shape_sig_width  = ["BWDoubleCB","BWDoubleCB", "BWDoubleCB", "BWDoubleCB", "BWDoubleCB", "BWDoubleCB"]
 
 #shape_sig_narrow = ["CB_v1","CB_v1","CB_v1","CB_v1","CB_v1"]
 
-shape_sig_narrow = ["DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
+shape_sig_narrow = ["DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
 
 
 ### signal mass fraction for non narrow samples
@@ -799,14 +803,14 @@ if __name__ == '__main__':
               ##elif options.isReReco == 1 and options.noSys:
               ## runCmmd2 = "combine -M Asymptotic -S 0 --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2"%(mass[i],mass[i],"mu",mass[i],"mu");
 
-              runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2 -S %d"%(mass[i],mass[i],"mu",mass[i],"mu", options.noSys);
+              runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2 -S %d"%(mass[i],mass[i],options.channel ,mass[i],options.channel, options.noSys);
 
               if options.batchMode:
-               fn = "combineScript_Asymptotic_%s_%03d%s_%s"%("mu",mass[i],"","HP");
-               submitBatchJobCombine(runCmmd2,fn,"mu",mass[i],"HP",options.isReReco);
+               fn = "combineScript_Asymptotic_%s_%03d%s_%s"%(options.channel,mass[i],"","HP");
+               submitBatchJobCombine(runCmmd2,fn,options.channel,mass[i],"HP",options.isReReco);
               else:  
                print runCmmd2;
-               #os.system(runCmmd2);
+               os.system(runCmmd2);
 
               time.sleep(0.1);
 
