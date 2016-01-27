@@ -533,8 +533,8 @@ def doULPlot( suffix ):
       hrl_SM = can_SM.DrawFrame(750,1e-3, 2550, 1); #0.0005,2550,1);
       hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{RS} #rightarrow munubb) (pb)");
     else:
-      hrl_SM = can_SM.DrawFrame(750,1e-4, 4100, 100);
-      #hrl_SM = can_SM.DrawFrame(550,1e-4, 1050, 1e2);
+      #hrl_SM = can_SM.DrawFrame(750,1e-4, 4100, 100);
+      hrl_SM = can_SM.DrawFrame(550,1e-4, 1050, 1e2);
       hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{Bulk} #rightarrow WW) (pb)");
     hrl_SM.GetYaxis().SetTitleOffset(1.35);
     hrl_SM.GetYaxis().SetTitleSize(0.045);
