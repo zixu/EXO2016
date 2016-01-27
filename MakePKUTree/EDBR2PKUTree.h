@@ -145,8 +145,8 @@ public :
    Double_t        delPhijetlep;
    Bool_t          IDLoose;
    Bool_t          IDTight;
-   Bool_t          isHighPt;
-   Bool_t          isHEEP;
+   //Bool_t          isHighPt;
+   //Bool_t          isHEEP;
    Double_t        trackIso;
    //Double_t        METraw_et;
    //Double_t        METraw_phi;
@@ -176,8 +176,8 @@ public :
    Double_t        delPhilepmetJEC;
    Double_t        delPhijetmetJEC;
    Double_t        delPhijetlepJEC;
-   Int_t           HLT_Ele105;
-   Int_t           HLT_Mu45_v1;
+   Int_t           HLT_Ele2;
+   Int_t           HLT_Mu4;
    Bool_t          passFilter_HBHE;
    Bool_t          passFilter_HBHEIso;
    Bool_t          passFilter_HBHEIsoRerun;
@@ -291,8 +291,8 @@ public :
    TBranch        *b_delPhijetlep;   //!
    TBranch        *b_IDLoose;   //!
    TBranch        *b_IDTight;   //!
-   TBranch        *b_isHighPt;   //!
-   TBranch        *b_isHEEP;   //!
+   //TBranch        *b_isHighPt;   //!
+   //TBranch        *b_isHEEP;   //!
    TBranch        *b_trackIso;   //!
    TBranch        *b_METraw_et;   //!
    TBranch        *b_METraw_phi;   //!
@@ -322,8 +322,8 @@ public :
    TBranch        *b_delPhilepmetJEC;   //!
    TBranch        *b_delPhijetmetJEC;   //!
    TBranch        *b_delPhijetlepJEC;   //!
-   TBranch        *b_HLT_Ele105;   //!
-   TBranch        *b_HLT_Mu45_v1;   //!
+   TBranch        *b_HLT_Ele2;   //!
+   TBranch        *b_HLT_Mu4;   //!
    TBranch        *b_passFilter_HBHE_;   //!
    TBranch        *b_passFilter_HBHEIso_;   //!
    TBranch        *b_passFilter_HBHEIsoRerun_;   //!
@@ -488,8 +488,8 @@ void EDBR2PKUTree::Init(TTree *tree)
    ExTree->Branch("pfMETPhi",&pfMETPhi,"pfMETPhi/F");
    ExTree->Branch("weight", &weight, "weight/D");
    ExTree->Branch("isMatch", &isMatch, "isMatch/D");
-   ExTree->Branch("isHEEP", &isHEEP, "isHEEP/O");
-   ExTree->Branch("isHighPt", &isHighPt, "isHighPt/O");
+   //ExTree->Branch("isHEEP", &isHEEP, "isHEEP/O");
+   //ExTree->Branch("isHighPt", &isHighPt, "isHighPt/O");
    ExTree->Branch("passFilter_HBHE", &passFilter_HBHE, "passFilter_HBHE/O");
    ExTree->Branch("passFilter_CSCHalo", &passFilter_CSCHalo, "passFilter_CSCHalo/O");
    ExTree->Branch("passFilter_GoodVtx", &passFilter_GoodVtx, "passFilter_GoodVtx/O");
@@ -598,8 +598,8 @@ void EDBR2PKUTree::Init(TTree *tree)
    fChain->SetBranchAddress("delPhijetlep", &delPhijetlep, &b_delPhijetlep);
    fChain->SetBranchAddress("IDLoose", &IDLoose, &b_IDLoose);
    fChain->SetBranchAddress("IDTight", &IDTight, &b_IDTight);
-   fChain->SetBranchAddress("isHighPt", &isHighPt, &b_isHighPt);
-   fChain->SetBranchAddress("isHEEP", &isHEEP, &b_isHEEP);
+   //fChain->SetBranchAddress("isHighPt", &isHighPt, &b_isHighPt);
+   //fChain->SetBranchAddress("isHEEP", &isHEEP, &b_isHEEP);
    fChain->SetBranchAddress("trackIso", &trackIso, &b_trackIso);
    fChain->SetBranchAddress("METraw_et", &METraw_et, &b_METraw_et);
    fChain->SetBranchAddress("METraw_phi", &METraw_phi, &b_METraw_phi);
@@ -629,8 +629,8 @@ void EDBR2PKUTree::Init(TTree *tree)
    fChain->SetBranchAddress("delPhilepmetJEC", &delPhilepmetJEC, &b_delPhilepmetJEC);
    fChain->SetBranchAddress("delPhijetmetJEC", &delPhijetmetJEC, &b_delPhijetmetJEC);
    fChain->SetBranchAddress("delPhijetlepJEC", &delPhijetlepJEC, &b_delPhijetlepJEC);
-   fChain->SetBranchAddress("HLT_Ele105", &HLT_Ele105, &b_HLT_Ele105);
-   fChain->SetBranchAddress("HLT_Mu45_v1", &HLT_Mu45_v1, &b_HLT_Mu45_v1);
+   fChain->SetBranchAddress("HLT_Ele2", &HLT_Ele2, &b_HLT_Ele2);
+   fChain->SetBranchAddress("HLT_Mu4", &HLT_Mu4, &b_HLT_Mu4);
    fChain->SetBranchAddress("passFilter_HBHE", &passFilter_HBHE, &b_passFilter_HBHE_);
    fChain->SetBranchAddress("passFilter_HBHEIso", &passFilter_HBHEIso, &b_passFilter_HBHEIso_);
    fChain->SetBranchAddress("passFilter_HBHEIsoRerun", &passFilter_HBHEIsoRerun, &b_passFilter_HBHEIsoRerun_);
