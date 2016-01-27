@@ -19,11 +19,8 @@ from ROOT import EDBR2PKUTree, TFile, TTree
 
 
 if __name__ == '__main__': 
-    #input_dir="./inputEDBRTree/"
-    #input_dir="./ntuple/"
-    #input_dir="/afs/cern.ch/user/q/quwang/work/RunII/EXOMET/CMSSW_7_3_0/src/ExoDiBosonResonances/EDBRTreeMaker/test/ntuple/"
-    #input_dir="/afs/cern.ch/user/h/huangh/work/samples_750/huang_root/"#"/afs/cern.ch/user/q/quwang/work/RunII/CMSSW_7_4_3/src/ExoDiBosonResonances/EDBRTreeMaker/test/15Spring_50ns/"
-    input_dir="./BG_signal_samples/"
+    #input_dir="./BG_signal_samples/"
+    input_dir="./2016_lowtrigger_samples/"
 
     infile=open("filelist.txt")
 
@@ -61,7 +58,7 @@ if __name__ == '__main__':
             analyzer_el.Loop(channel, sampleXS, sampleNum, IsData);
             analyzer_el.endJob();
 
-            ##channel="mu"
-            ##analyzer_mu=EDBR2PKUTree(treein,channel+"_out_"+samplename);
-            ##analyzer_mu.Loop(channel, sampleXS, sampleNum, IsData);
-            ##analyzer_mu.endJob();
+            channel="mu"
+            analyzer_mu=EDBR2PKUTree(treein,channel+"_out_"+samplename);
+            analyzer_mu.Loop(channel, sampleXS, sampleNum, IsData);
+            analyzer_mu.endJob();
