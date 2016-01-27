@@ -130,37 +130,37 @@ mass_fraction = [0.15,0.05,0.3,0.3]
 ##xsDict = {1000:2.37,1500:0.235,2000:0.04797,2500:0.0094,3000:0.00292,4000:0.0002397}
 ##xsDict_munubb = {1000:2.37*0.4444,1500:0.235*0.4444,2000:0.04797*0.4444,2500:0.0094*0.4444,3000:0.00292*0.4444,4000:0.0002397*0.4444}
 xsDict =  {
-        600:    7.147913, 
-        700:    2.900665, 
-        750:    1.950000,    
-        800:    1.336325, 
-        900:    0.671447, 
-        1000:   0.360174         
+        600:    7.147913*1e-3, 
+        700:    2.900665*1e-3, 
+        750:    1.950000*1e-3,    
+        800:    1.336325*1e-3, 
+        900:    0.671447*1e-3, 
+        1000:   0.360174*1e-3         
         }
 xsDict_munubb =  {
-        600:    7.147913*0.3, 
-        700:    2.900665*0.3, 
-        750:    1.950000*0.3,    
-        800:    1.336325*0.3, 
-        900:    0.671447*0.3, 
-        1000:   0.360174*0.3         
+        600:    7.147913*1e-3*0.3, 
+        700:    2.900665*1e-3*0.3, 
+        750:    1.950000*1e-3*0.3,    
+        800:    1.336325*1e-3*0.3, 
+        900:    0.671447*1e-3*0.3, 
+        1000:   0.360174*1e-3*0.3         
         }
 
 xsDict2 =  {
-        600:    7.147913, 
-        700:    2.900665, 
-        750:    1.950000,    
-        800:    1.336325, 
-        900:    0.671447, 
-        1000:   0.360174         
+        600:    7.147913*1e-3, 
+        700:    2.900665*1e-3, 
+        750:    1.950000*1e-3,    
+        800:    1.336325*1e-3, 
+        900:    0.671447*1e-3, 
+        1000:   0.360174*1e-3         
         }
 xsDict2_munubb =  {
-        600:    7.147913*0.3, 
-        700:    2.900665*0.3, 
-        750:    1.950000*0.3,    
-        800:    1.336325*0.3, 
-        900:    0.671447*0.3, 
-        1000:   0.360174*0.3         
+        600:    7.147913*1e-3*0.3, 
+        700:    2.900665*1e-3*0.3, 
+        750:    1.950000*1e-3*0.3,    
+        800:    1.336325*1e-3*0.3, 
+        900:    0.671447*1e-3*0.3, 
+        1000:   0.360174*1e-3*0.3         
         }
 
 
@@ -441,7 +441,7 @@ def doULPlot( suffix ):
     ybins_xs_05 = array('d', [])
     
     for i in range(len(mass)):
-        curFile = "higgsCombine_lim_%03d_bb%s.Asymptotic.mH%03d.root"%(mass[i],suffix,mass[i]);
+        curFile = "higgsCombine_lim_%03d%s.Asymptotic.mH%03d.root"%(mass[i],suffix,mass[i]);
 	print "curFile: %s"%curFile;
 	if options.lnubbBR:
 	  sf = xsDict_munubb[mass[i]]; #*0.1057*0.577; # BR(W->munu)*BR(H->bb)
@@ -462,7 +462,7 @@ def doULPlot( suffix ):
         ybins_xs_05.append(sf2);#/20.); #*0.25);
     
     for i in range( len(mass)-1, -1, -1 ):
-        curFile = "higgsCombine_lim_%03d_bb%s.Asymptotic.mH%03d.root"%(mass[i],suffix,mass[i]);
+        curFile = "higgsCombine_lim_%03d%s.Asymptotic.mH%03d.root"%(mass[i],suffix,mass[i]);
         print "curFile: %s"%curFile;
         if options.lnubbBR:
           sf = xsDict_munubb[mass[i]]; #*0.1057*0.577; # BR(W->munu)*BR(H->bb)
@@ -533,8 +533,9 @@ def doULPlot( suffix ):
       hrl_SM = can_SM.DrawFrame(750,1e-3, 2550, 1); #0.0005,2550,1);
       hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{RS} #rightarrow munubb) (pb)");
     else:
-      hrl_SM = can_SM.DrawFrame(750,5e-3, 4100, 10);#2550, 10); #0.0005,2550,1);
-      hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{RS} #rightarrow WW) (pb)");
+      hrl_SM = can_SM.DrawFrame(750,1e-4, 4100, 100);
+      #hrl_SM = can_SM.DrawFrame(550,1e-4, 1050, 1e2);
+      hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{Bulk} #rightarrow WW) (pb)");
     hrl_SM.GetYaxis().SetTitleOffset(1.35);
     hrl_SM.GetYaxis().SetTitleSize(0.045);
     hrl_SM.GetYaxis().SetTitleFont(42);
@@ -573,16 +574,16 @@ def doULPlot( suffix ):
       #leg2.AddEntry(curGraph_xs_02,"RS model","L");
       leg2.AddEntry(curGraph_xs_02,"Bulk model","L");
 
-    xaxis2 = TGaxis(790.0,0.005,810,0.005,699.0,701.0,100,"UI");
-    xaxis2.Draw();
-    t800 =  TPaveText(0.135,0.108,0.18,0.108,"brNDC");
-    t800.SetFillColor(ROOT.kWhite);
-    t800.SetTextSize(0.045);
-    t800.SetTextAlign(11);
-    t800.SetTextFont(42);
-    t800.SetBorderSize(0);
-    t800.AddText("800");
-    t800.Draw();
+    #xaxis2 = TGaxis(790.0,0.005,810,0.005,699.0,701.0,100,"UI");
+    #xaxis2.Draw();
+    #t800 =  TPaveText(0.135,0.108,0.18,0.108,"brNDC");
+    #t800.SetFillColor(ROOT.kWhite);
+    #t800.SetTextSize(0.045);
+    #t800.SetTextAlign(11);
+    #t800.SetTextFont(42);
+    #t800.SetBorderSize(0);
+    #t800.AddText("800");
+    #t800.Draw();
                     
 
 
@@ -595,7 +596,7 @@ def doULPlot( suffix ):
 
     leg2.Draw();
 
-    banner = TLatex(0.95, 0.96, "1. fb^{-1} (13 TeV)");
+    banner = TLatex(0.95, 0.96, "2.2 fb^{-1} (13 TeV)");
     banner.SetNDC(); banner.SetTextSize(0.038); banner.SetTextFont(42); banner.SetTextAlign(31); banner.SetLineWidth(2); banner.Draw();
     CMStext = TLatex(0.15,0.96,"CMS");
     CMStext.SetNDC(); CMStext.SetTextSize(0.041); CMStext.SetTextFont(61); CMStext.SetTextAlign(11); CMStext.SetLineWidth(2); CMStext.Draw();
