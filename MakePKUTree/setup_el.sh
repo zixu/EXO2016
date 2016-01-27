@@ -22,5 +22,5 @@ cp el_out_BulkGravWW800.root el_PKUTree_BulkGravWW800.root
 cp el_out_BulkGravWW900.root el_PKUTree_BulkGravWW900.root
 cp el_out_BulkGravWW1000.root el_PKUTree_BulkGravWW1000.root
 
-#root MakePseudoData.C\(\"mu\"\) -q
+root MakePseudoData.C\(\"el\"\) -q
 hadd -f el_PKUTree_15D.root el_out_singleEl15DOct.root  el_out_singleEl15Dv4.root 
