@@ -1140,7 +1140,7 @@ if __name__ == '__main__':
           can2.SaveAs("./LimitResult/Limit_ExpTail/pvals_%s_HP.root"%(options.channel),"root");
           can2.SaveAs("./LimitResult/Limit_ExpTail/pvals_%s_HP.C"%(options.channel),"C");
 
-         doULPlot("_mu_HP");
+         doULPlot("_%s_HP"%(options.channel));
 
          ####################################################
 
