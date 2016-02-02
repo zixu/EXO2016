@@ -96,7 +96,7 @@ public :
    Double_t MET_phi;
    Double_t MET_sumEt;
    Int_t CategoryID;
-   Int_t vTagID;//1: tau21<0.5; 0: tau21>0.5 <0.75; -1: tau21 >0.75
+   Int_t vTagID;//1: tau21<0.45; 0: tau21>0.45 <0.75; -1: tau21 >0.75
    Double_t isMatch;
    Double_t        weight;
 
@@ -177,7 +177,7 @@ public :
    Double_t        delPhijetmetJEC;
    Double_t        delPhijetlepJEC;
    Int_t           HLT_Ele2;
-   Int_t           HLT_Mu4;
+   Int_t           HLT_Mu3;
    Bool_t          passFilter_HBHE;
    Bool_t          passFilter_HBHEIso;
    Bool_t          passFilter_HBHEIsoRerun;
@@ -323,7 +323,7 @@ public :
    TBranch        *b_delPhijetmetJEC;   //!
    TBranch        *b_delPhijetlepJEC;   //!
    TBranch        *b_HLT_Ele2;   //!
-   TBranch        *b_HLT_Mu4;   //!
+   TBranch        *b_HLT_Mu3;   //!
    TBranch        *b_passFilter_HBHE_;   //!
    TBranch        *b_passFilter_HBHEIso_;   //!
    TBranch        *b_passFilter_HBHEIsoRerun_;   //!
@@ -630,7 +630,7 @@ void EDBR2PKUTree::Init(TTree *tree)
    fChain->SetBranchAddress("delPhijetmetJEC", &delPhijetmetJEC, &b_delPhijetmetJEC);
    fChain->SetBranchAddress("delPhijetlepJEC", &delPhijetlepJEC, &b_delPhijetlepJEC);
    fChain->SetBranchAddress("HLT_Ele2", &HLT_Ele2, &b_HLT_Ele2);
-   fChain->SetBranchAddress("HLT_Mu4", &HLT_Mu4, &b_HLT_Mu4);
+   fChain->SetBranchAddress("HLT_Mu3", &HLT_Mu3, &b_HLT_Mu3);
    fChain->SetBranchAddress("passFilter_HBHE", &passFilter_HBHE, &b_passFilter_HBHE_);
    fChain->SetBranchAddress("passFilter_HBHEIso", &passFilter_HBHEIso, &b_passFilter_HBHEIso_);
    fChain->SetBranchAddress("passFilter_HBHEIsoRerun", &passFilter_HBHEIsoRerun, &b_passFilter_HBHEIsoRerun_);
