@@ -166,7 +166,7 @@ class doFit_wj_and_wlvj:
 #         self.file_Directory="AnaSigTree_new/";
 #        else:
         #self.file_Directory="data_Jan12_1/";
-        self.file_Directory="data_Jan27/";
+        self.file_Directory="data_Feb1/";
             
 
         self.PS_model= options.psmodel
@@ -2140,7 +2140,7 @@ class doFit_wj_and_wlvj:
         #cut="CategoryID==%s && m_lvj> %s && m_lvj<%s && massVhadJEC>%s && massVhadJEC<%s"%(self.categoryID, rrv_mass_lvj.getMin(), rrv_mass_lvj.getMax(), rrv_mass_j.getMin(), rrv_mass_j.getMax() )
         #self.Make_Controlplots(cut,"signal_region");
 
-        cut="(CategoryID==1 || CategoryID==-1 || CategoryID==2 || CategoryID==-2|| CategoryID==4 || CategoryID==-4) && m_lvj> 100 && m_lvj<3000 &&((massVhadJEC>40 && massVhadJEC<105)||(massVhadJEC>135&&massVhadJEC<150)) && l_pt> %s && MET_et>%s"%(self.lpt_cut, self.MET_cut)
+        cut="(CategoryID==1 || CategoryID==-1 || CategoryID==2 || CategoryID==-2|| CategoryID==4 || CategoryID==-4) && m_lvj> 100 && m_lvj<3000 &&((massVhadJEC>40 && massVhadJEC<65)||(massVhadJEC>135&&massVhadJEC<150)) && l_pt> %s && MET_et>%s"%(self.lpt_cut, self.MET_cut)
         self.Make_Controlplots(cut,"preselection");
 
         cut="(CategoryID==3 || CategoryID==-3) && m_lvj> 100 && m_lvj<4000 && massVhadJEC>40 && massVhadJEC<150 && l_pt>%s && MET_et>%s"%(self.lpt_cut, self.MET_cut) 
@@ -2153,7 +2153,7 @@ class doFit_wj_and_wlvj:
         self.make_controlplot("W_pt",cut,tag,30,200, 800,"W_pt","Events/(20 GeV)",0 , TTBarControl);
         self.make_controlplot("l_pt",cut,tag,26,0, 520,"l_pt","Events/(20 GeV)",0 , TTBarControl);
         self.make_controlplot("l_eta",cut,tag,20,-2.5,2.5,"l_eta","Events(0.25)",0 , TTBarControl);
-        self.make_controlplot("MET_et",cut,tag,60,0,600,"MET_et","Events/(10 GeV)",0 , TTBarControl);
+        self.make_controlplot("MET_et",cut,tag,30,0,600,"MET_et","Events/(20 GeV)",0 , TTBarControl);
         self.make_controlplot("nPV",cut,tag,20,0,40,"nPV","Events/(2)",0 , TTBarControl);
         self.make_controlplot("tau21",cut,tag,25,0,1,"tau21","Events/(0.04)",0 , TTBarControl);
         self.make_controlplot("nbtag",cut,tag,5,-0.5,4.5,"number of b-jets","Events",0 , TTBarControl);
@@ -2179,10 +2179,10 @@ class doFit_wj_and_wlvj:
         ##    if self.channel=="mu": tmp_TTBar_scale=0.85
         ##    if self.channel=="el": tmp_TTBar_scale=0.70
 
-        if self.channel=="mu": tmp_WJets_scale=1.01
-        if self.channel=="el": tmp_WJets_scale=0.90 
-        if self.channel=="mu": tmp_TTBar_scale=0.79
-        if self.channel=="el": tmp_TTBar_scale=0.71
+        if self.channel=="mu": tmp_WJets_scale=1.12
+        if self.channel=="el": tmp_WJets_scale=1.05 
+        if self.channel=="mu": tmp_TTBar_scale=0.81
+        if self.channel=="el": tmp_TTBar_scale=0.75
 
         weight_mc_forWJets="weight*%s*%s"%(tmp_lumi, tmp_WJets_scale); #General
         weight_mc_forTTBar="weight*%s*%s"%(tmp_lumi, tmp_TTBar_scale); #General
