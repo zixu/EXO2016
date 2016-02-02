@@ -88,9 +88,8 @@ class doFit_wj_and_wlvj:
             self.BinWidth_mlvj=50.;
         else:
             self.BinWidth_mlvj=50.;
-            #self.BinWidth_mlvj=50.;
-
            
+
         #narrow the BinWidth_mj and BinWidth_mlvj by a factor of 5. Because Higgs-Combination-Tools will generate a binned sample, so need the bin width narrow. So, as a easy selution, we will increase the bin-width by a factor of 5 when ploting m_j m_WW
         self.narrow_factor=1.;
 
@@ -166,9 +165,8 @@ class doFit_wj_and_wlvj:
 #        if TString(in_signal_sample).Contains("inclusive"):
 #         self.file_Directory="AnaSigTree_new/";
 #        else:
-        #self.file_Directory="zijun_newcodes_Apr25/";
-        #self.file_Directory="PrepareDataSet/";
-        self.file_Directory="data_Jan12_1/";
+        #self.file_Directory="data_Jan12_1/";
+        self.file_Directory="data_Jan27/";
             
 
         self.PS_model= options.psmodel
@@ -179,11 +177,13 @@ class doFit_wj_and_wlvj:
         #    self.file_data = (self.channel+"_PKUTree_data_xww.root");#keep blind!!!!
         #else:
         #    self.file_data = (self.channel+"_PKUTree_data_xww.root");#keep blind!!!!
+        
+        if options.control==1:
+            self.file_data = (self.channel+"_PKUTree_15D.root");
+        else: 
+            self.file_data = (self.channel+"_PKUTree_pdata.root");#keep blind!!!!
 
-        self.file_data = (self.channel+"_PKUTree_pdata.root");#keep blind!!!!
-        #self.file_data = (self.channel+"_PKUTree_15D.root");#keep blind!!!!
         #self.file_pseudodata = (self.channel+"_PKUTree_allBkg_xww.root");#fake data
-        #self.file_signal     = (self.channel+"_PKUTree_%s_xww.root"%(self.signal_sample));
         self.file_signal     = (self.channel+"_PKUTree_%s.root"%(self.signal_sample));
         self.file_WJets0_mc  = (self.channel+"_PKUTree_WJetsPt180_xww.root");
         self.file_VV_mc      = (self.channel+"_PKUTree_VV_xww.root");# WW+WZ
@@ -194,16 +194,12 @@ class doFit_wj_and_wlvj:
         self.wtagger_label = options.category;
         
         if self.wtagger_label=="HP" :
-            if self.channel=="el":
-                self.wtagger_cut_max=0.5 ; self.wtagger_cut_min=0. ;
-            if self.channel=="mu":
-                self.wtagger_cut_max=0.6 ; self.wtagger_cut_min=0. ;
-            if self.channel=="em":
-                self.wtagger_cut_max=0.5 ; self.wtagger_cut_min=0. ;
+            self.wtagger_cut_max=0.45;
+            self.wtagger_cut_min=0.0;
 
         if self.wtagger_label=="LP":
-            self.wtagger_cut_max=0.75 ;
-            self.wtagger_cut_min=0.5 ;
+            self.wtagger_cut_max=0.75;
+            self.wtagger_cut_min=0.45;
 
         #if self.wtagger_label=="nocut":
         if self.wtagger_label=="ALLP":
@@ -320,10 +316,11 @@ class doFit_wj_and_wlvj:
 
         ## for basic selection         
         self.vpt_cut   = 200;
-        self.MET_cut = 40;#50;
-        self.lpt_cut   = 50;
+        self.MET_cut = 40;
+        self.lpt_cut   = 40;
         if self.channel=="el":
-            self.MET_cut= 80; self.lpt_cut = 90;#very tight
+            self.MET_cut= 80; 
+            self.lpt_cut = 45;
         self.deltaPhi_METj_cut =2.0;
 
         # parameters of data-driven method to get the WJets background event number.
@@ -1811,10 +1808,16 @@ class doFit_wj_and_wlvj:
         ## For mlvj fit ->Erf*Pow*Exp can replace Erf*Exp 
         if in_model_name == "ErfPowExp_v1":
             print "########### Erf*Pow*Exp Pdf  for mlvj fit   ############"
-            rrv_c0 = RooRealVar("rrv_c0_ErfPowExp"+label+"_"+self.channel,"rrv_c0_ErfPowExp"+label+"_"+self.channel,11,5,20);
-            rrv_c1 = RooRealVar("rrv_c1_ErfPowExp"+label+"_"+self.channel,"rrv_c1_ErfPowExp"+label+"_"+self.channel, 0,-2,2);
-            rrv_offset = RooRealVar("rrv_offset_ErfPowExp"+label+"_"+self.channel,"rrv_offset_ErfPowExp"+label+"_"+self.channel, 470,420,520);
-            rrv_width  = RooRealVar("rrv_width_ErfPowExp"+label+"_"+self.channel,"rrv_width_ErfPowExp"+label+"_"+self.channel,40,10,80);
+            if self.channel=="mu":
+                rrv_c0 = RooRealVar("rrv_c0_ErfPowExp"+label+"_"+self.channel,"rrv_c0_ErfPowExp"+label+"_"+self.channel,11,5,20);
+                rrv_c1 = RooRealVar("rrv_c1_ErfPowExp"+label+"_"+self.channel,"rrv_c1_ErfPowExp"+label+"_"+self.channel, 0,-2,2);
+                rrv_offset = RooRealVar("rrv_offset_ErfPowExp"+label+"_"+self.channel,"rrv_offset_ErfPowExp"+label+"_"+self.channel, 470,420,520);
+                rrv_width  = RooRealVar("rrv_width_ErfPowExp"+label+"_"+self.channel,"rrv_width_ErfPowExp"+label+"_"+self.channel,40,10,80);
+            else:
+                rrv_c0 = RooRealVar("rrv_c0_ErfPowExp"+label+"_"+self.channel,"rrv_c0_ErfPowExp"+label+"_"+self.channel,17,0,40);
+                rrv_c1 = RooRealVar("rrv_c1_ErfPowExp"+label+"_"+self.channel,"rrv_c1_ErfPowExp"+label+"_"+self.channel, 1.7,-10,10);
+                rrv_offset = RooRealVar("rrv_offset_ErfPowExp"+label+"_"+self.channel,"rrv_offset_ErfPowExp"+label+"_"+self.channel, 520,400,650);
+                rrv_width  = RooRealVar("rrv_width_ErfPowExp"+label+"_"+self.channel,"rrv_width_ErfPowExp"+label+"_"+self.channel,40,10,80);
             model_pdf  = RooErfPowExpPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_c0,rrv_c1,rrv_offset,rrv_width);
 
         ## For mlvj fit ->Erf*Pow*Exp can replace Erf*Exp 
@@ -2134,25 +2137,23 @@ class doFit_wj_and_wlvj:
     def ControlPlots(self):
         rrv_mass_j   = self.workspace4fit_.var("rrv_mass_j")
         rrv_mass_lvj = self.workspace4fit_.var("rrv_mass_lvj")
-        cut="CategoryID==%s && m_lvj> %s && m_lvj<%s && massVhadJEC>%s && massVhadJEC<%s"%(self.categoryID, rrv_mass_lvj.getMin(), rrv_mass_lvj.getMax(), rrv_mass_j.getMin(), rrv_mass_j.getMax() )
+        #cut="CategoryID==%s && m_lvj> %s && m_lvj<%s && massVhadJEC>%s && massVhadJEC<%s"%(self.categoryID, rrv_mass_lvj.getMin(), rrv_mass_lvj.getMax(), rrv_mass_j.getMin(), rrv_mass_j.getMax() )
         #self.Make_Controlplots(cut,"signal_region");
 
-        cut="(CategoryID==1 || CategoryID==-1 || CategoryID==2 || CategoryID==-2|| CategoryID==4 || CategoryID==-4) && m_lvj> 100 && m_lvj<3000 &&((massVhadJEC>40 && massVhadJEC<105)||(massVhadJEC>135&&massVhadJEC<150)) "
-        #cut="(CategoryID==1 || CategoryID==-1 || CategoryID==2 || CategoryID==-2|| CategoryID==4 || CategoryID==-4) && m_lvj> 100 && m_lvj<3000 &&((massVhadJEC>40 && massVhadJEC<105)||(massVhadJEC>135&&massVhadJEC<150)) && l_pt>120 && MET_et>80 "
+        cut="(CategoryID==1 || CategoryID==-1 || CategoryID==2 || CategoryID==-2|| CategoryID==4 || CategoryID==-4) && m_lvj> 100 && m_lvj<3000 &&((massVhadJEC>40 && massVhadJEC<105)||(massVhadJEC>135&&massVhadJEC<150)) && l_pt> %s && MET_et>%s"%(self.lpt_cut, self.MET_cut)
         self.Make_Controlplots(cut,"preselection");
 
-        cut="(CategoryID==3 || CategoryID==-3) && m_lvj> 100 && m_lvj<4000 && massVhadJEC>40 && massVhadJEC<150"
+        cut="(CategoryID==3 || CategoryID==-3) && m_lvj> 100 && m_lvj<4000 && massVhadJEC>40 && massVhadJEC<150 && l_pt>%s && MET_et>%s"%(self.lpt_cut, self.MET_cut) 
         self.Make_Controlplots(cut,"TopControl",1);
 
     ######## ++++++++++++++
     def Make_Controlplots(self,cut,tag, TTBarControl=0):
-        self.make_controlplot("m_lvj",cut,tag,20,400,1400,"mass(lvj)","Events/(50 GeV)",0, TTBarControl );
+        self.make_controlplot("m_lvj",cut,tag,12,400,1000,"mass(lvj)","Events/(50 GeV)",0, TTBarControl );
         self.make_controlplot("massVhadJEC",cut,tag,23,40,155,"mass(j)","Events/(5 GeV)",0 , TTBarControl);
         self.make_controlplot("W_pt",cut,tag,30,200, 800,"W_pt","Events/(20 GeV)",0 , TTBarControl);
         self.make_controlplot("l_pt",cut,tag,26,0, 520,"l_pt","Events/(20 GeV)",0 , TTBarControl);
         self.make_controlplot("l_eta",cut,tag,20,-2.5,2.5,"l_eta","Events(0.25)",0 , TTBarControl);
-        self.make_controlplot("pfMET",cut,tag,30,0,600,"pfMET","Events/(20 GeV)",0 , TTBarControl);
-        self.make_controlplot("MET_et",cut,tag,30,0,600,"MET_et","Events/(20 GeV)",0 , TTBarControl);
+        self.make_controlplot("MET_et",cut,tag,60,0,600,"MET_et","Events/(10 GeV)",0 , TTBarControl);
         self.make_controlplot("nPV",cut,tag,20,0,40,"nPV","Events/(2)",0 , TTBarControl);
         self.make_controlplot("tau21",cut,tag,25,0,1,"tau21","Events/(0.04)",0 , TTBarControl);
         self.make_controlplot("nbtag",cut,tag,5,-0.5,4.5,"number of b-jets","Events",0 , TTBarControl);
@@ -2171,12 +2172,17 @@ class doFit_wj_and_wlvj:
         tmp_WJets_scale=1.0
         tmp_TTBar_scale=1.0
 
-        if TTBarControl==0: 
-            if self.channel=="mu": tmp_WJets_scale=1.18
-            if self.channel=="el": tmp_WJets_scale=1.01 
-        else: 
-            if self.channel=="mu": tmp_TTBar_scale=0.85
-            if self.channel=="el": tmp_TTBar_scale=0.70
+        ##if TTBarControl==0: 
+        ##    if self.channel=="mu": tmp_WJets_scale=1.18
+        ##    if self.channel=="el": tmp_WJets_scale=1.01 
+        ##else: 
+        ##    if self.channel=="mu": tmp_TTBar_scale=0.85
+        ##    if self.channel=="el": tmp_TTBar_scale=0.70
+
+        if self.channel=="mu": tmp_WJets_scale=1.01
+        if self.channel=="el": tmp_WJets_scale=0.90 
+        if self.channel=="mu": tmp_TTBar_scale=0.79
+        if self.channel=="el": tmp_TTBar_scale=0.71
 
         weight_mc_forWJets="weight*%s*%s"%(tmp_lumi, tmp_WJets_scale); #General
         weight_mc_forTTBar="weight*%s*%s"%(tmp_lumi, tmp_TTBar_scale); #General
@@ -2298,8 +2304,7 @@ class doFit_wj_and_wlvj:
         theLeg.AddEntry(hist_TTbar, "TTbar","F");
         theLeg.AddEntry(hist_STop, "Single Top","F");
         theLeg.AddEntry(gr_MCStat, "MC Stat","F");
-        ##theLeg.AddEntry(hist_Signal, self.signal_sample+" #times 50","L");
-        theLeg.AddEntry(hist_Signal, "BulkG_WW #times %s"%(tmp_signal_scale),"L");
+        theLeg.AddEntry(hist_Signal, self.signal_sample+" #times %s"%(tmp_signal_scale),"L");
         theLeg.SetY1NDC(0.9 - 0.05*6 - 0.005);
         theLeg.SetY1(theLeg.GetY1NDC());
         theLeg.Draw();
@@ -3154,6 +3159,7 @@ class doFit_wj_and_wlvj:
         #rfresult=simPdf.fitTo(combData4fit,RooFit.Save(kTRUE),RooFit.Extended(kFALSE), RooFit.SumW2Error(kTRUE));
         rfresult=simPdf.fitTo(combData4fit,RooFit.Save(kTRUE),RooFit.Extended(kFALSE), RooFit.SumW2Error(kTRUE), RooFit.ExternalConstraints(alpha_constrains));
         rfresult.Print();
+        #raw_input("ENTER to continue!")
         #rfresult=simPdf.fitTo(combData4fit,RooFit.Save(kTRUE),RooFit.Extended(kFALSE), RooFit.SumW2Error(kTRUE), RooFit.Minimizer("Minuit2"), RooFit.Verbose(kTRUE));
         rfresult=simPdf.fitTo(combData4fit,RooFit.Save(kTRUE),RooFit.Extended(kFALSE), RooFit.SumW2Error(kTRUE), RooFit.Minimizer("Minuit2"), RooFit.ExternalConstraints(alpha_constrains));
         print "zjx2"
@@ -3362,8 +3368,8 @@ class doFit_wj_and_wlvj:
             treeIn.GetEntry(i);
 
             if i==0:
-                #tmp_scale_to_lumi=treeIn.lumiWeight*tmp_lumi;#qun
-                tmp_scale_to_lumi=treeIn.weight*tmp_lumi;#qun
+                tmp_scale_to_lumi=treeIn.lumiWeight*tmp_lumi;#qun
+                #tmp_scale_to_lumi=treeIn.weight*tmp_lumi;#qun
                 #tmp_scale_to_lumi=1;
     
             tmp_jet_mass=getattr(treeIn, jet_mass);
@@ -4625,15 +4631,9 @@ objName ==objName_before ):
 
     ##### Get Lumi for banner title
     def GetLumi(self):
-
-        if self.channel=="el":   return 2.198;
-        elif self.channel=="mu": return 2.198;
-        #elif self.channel=="mu": return 0.553;
+        if self.channel=="el":   return 2.18;
+        elif self.channel=="mu": return 2.17;
         elif self.channel=="em": return 1.0;
-        #if self.channel=="el":   return 3.0;
-        #elif self.channel=="mu": return 3.0;
-        #elif self.channel=="em": return 3.0;
-
 
     #### function to run the selection on data to build the datasets 
     def get_data(self):
@@ -4675,9 +4675,13 @@ objName ==objName_before ):
             
         #### Fit the mlvj in sb_lo, signal region using two different model as done in the mj
         self.fit_mlvj_model_single_MC(self.file_WJets0_mc,"_WJets0_xww","_sb_lo",self.MODEL_4_mlvj, 0, 0, 1, 1);
+        #$raw_input("ENTER")
         self.fit_mlvj_model_single_MC(self.file_WJets0_mc,"_WJets0_xww","_signal_region",self.MODEL_4_mlvj, 0, 0, 1, 1);
+        #raw_input("ENTER")
         self.fit_mlvj_model_single_MC(self.file_WJets0_mc,"_WJets01_xww","_sb_lo",self.MODEL_4_mlvj_alter, 0, 0, 1, 1);
+        #raw_input("ENTER")
         self.fit_mlvj_model_single_MC(self.file_WJets0_mc,"_WJets01_xww","_signal_region",self.MODEL_4_mlvj_alter, 0, 0, 1, 1);
+        #raw_input("ENTER")
         
         print "________________________________________________________________________"
 
@@ -4844,9 +4848,12 @@ def control_single_sb_correction(method, channel, signal_sample="ggH600", in_mlv
 def pre_limit_simple(channel):
     print "######################### pre_limit_simple for %s sampel"%(channel)
 
-    pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW600",500,700,40,130, 400,1000,"ErfPowExp_v1","ErfPow2_v1")
+    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW600",500,700,40,130, 400,1000,"ErfExp_v1","ErfPow_v1")
+    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW600",500,700,40,130, 400,1000,"ErfPowExp_v1","ErfPow2_v1")
     #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW700",600,800,40,130, 400,1000,"ErfPowExp_v1","ErfPow2_v1")
     #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW750",650,850,40,130, 400,1000,"ErfPowExp_v1","ErfPow2_v1")
+    pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW700",600, 800,40,130, 600,1400,"Exp","Pow")
+    #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW750",650, 850,40,130, 600,1400,"Exp","Pow")
     #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW800",700, 900,40,130, 600,1400,"Exp","Pow")
     #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW900",800,1000,40,130, 600,1400,"Exp","Pow")
     #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW1000",900,1100,40,130, 600,1400,"Exp","Pow")
@@ -4871,7 +4878,7 @@ def Fit_Signal(channel):
 def control_single(channel):
     print "control_single for %s sampel"%(channel)
     #control_single_sb_correction("method1",channel, "ggH600",500,700,30,140,400,1000,"ErfExp_v1")
-    control_single_sb_correction("method1",channel, "BulkGravWW750",500,1300,20,130,400,1400,"ErfExp_v1")
+    control_single_sb_correction("method1",channel, "BulkGravWW750",500,1300,40,150,400,1000,"ErfExp_v1")
 
 
 ### function to check the workspace once it has already created
@@ -4898,16 +4905,12 @@ if __name__ == '__main__':
     if options.fitsignal:
         print "fitsignal"
         Fit_Signal(channel);
-    ##### only fit signal lineshape
-    ##if options.fitsignal :
-    ##    pre_fitsignal_only(sys.argv[1],sys.argv[2],int(sys.argv[3]),int(sys.argv[4]),int(sys.argv[5]),int(sys.argv[6]),int(sys.argv[7]),int(sys.argv[8]),sys.argv[9],sys.argv[10])
 
     if options.check:
         print '################# check workspace for %s sample'%(channel);
         check_workspace(channel,"BulkGravWW1000");
 
     if options.simple and (not options.fitwtagger) and (not options.fitwtaggersim) and ( not options.multi) and ( not options.control) and ( not options.check) and (not options.fitsignal):
-    #if options.simple and ( not options.multi) and ( not options.check) and ( not options.fitsignal):
         print '################# simple mode for %s sample'%(channel)
         pre_limit_simple(channel);
 
