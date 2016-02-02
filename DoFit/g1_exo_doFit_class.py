@@ -2161,7 +2161,7 @@ class doFit_wj_and_wlvj:
     ######## ++++++++++++++
     def make_controlplot(self,variable,cut,tag,nbin,min,max,xtitle="",ytitle="",logy=0 , TTBarControl=0):
         tmp_lumi=self.GetLumi()
-        tmp_signal_scale=500
+        tmp_signal_scale=10
         weight_mc_forSignal="weight*%s*%s"%(tmp_lumi, tmp_signal_scale);
         weight_mc_forV="weight*%s"%(tmp_lumi);
         weight_mc_forT="weight*%s"%(tmp_lumi);
