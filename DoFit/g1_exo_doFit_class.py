@@ -131,8 +131,8 @@ class doFit_wj_and_wlvj:
             self.mj_sideband_lo_min = in_mj_min;
             self.mj_sideband_lo_max = 65;#65;
             self.mj_signal_min = 65;#65;
-            self.mj_signal_max = 105;#105;
-            self.mj_sideband_hi_min = 105;#105;
+            self.mj_signal_max = 135;#105;
+            self.mj_sideband_hi_min = 135;#105;
             self.mj_sideband_hi_max = in_mj_max;
         if options.closuretest ==1: ##closure test A1->A2
             self.mj_sideband_lo_min = in_mj_min;
@@ -4162,7 +4162,7 @@ class doFit_wj_and_wlvj:
         #    signal_scale=20*self.xs_rescale;
         #else:
         #    signal_scale=self.xs_rescale;
-        signal_scale=500;
+        signal_scale=10;
 
 
         model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*signal_scale),RooFit.Name("%s #times %s"%(self.signal_sample, signal_scale)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
@@ -4848,15 +4848,15 @@ def control_single_sb_correction(method, channel, signal_sample="ggH600", in_mlv
 def pre_limit_simple(channel):
     print "######################### pre_limit_simple for %s sampel"%(channel)
 
-    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW600",500,700,40,130, 400,1000,"ErfExp_v1","ErfPow_v1")
-    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW600",500,700,40,130, 400,1000,"ErfPowExp_v1","ErfPow2_v1")
-    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW700",600,800,40,130, 400,1000,"ErfPowExp_v1","ErfPow2_v1")
-    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW750",650,850,40,130, 400,1000,"ErfPowExp_v1","ErfPow2_v1")
-    pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW700",600, 800,40,130, 600,1400,"Exp","Pow")
-    #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW750",650, 850,40,130, 600,1400,"Exp","Pow")
-    #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW800",700, 900,40,130, 600,1400,"Exp","Pow")
-    #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW900",800,1000,40,130, 600,1400,"Exp","Pow")
-    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW1000",900,1100,40,130, 600,1400,"Exp","Pow")
+    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW600",500,700,40,150, 400,1000,"ErfExp_v1","ErfPow_v1")
+    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW600",500,700,40,150, 400,1000,"ErfPowExp_v1","ErfPow2_v1")
+    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW700",600,800,40,150, 400,1000,"ErfPowExp_v1","ErfPow2_v1")
+    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW750",650,850,40,150, 400,1000,"ErfPowExp_v1","ErfPow2_v1")
+    pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW700",600, 800,40,150, 600,1400,"Exp","Pow")
+    #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW750",650, 850,40,150, 600,1400,"Exp","Pow")
+    #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW800",700, 900,40,150, 600,1400,"Exp","Pow")
+    #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW900",800,1000,40,150, 600,1400,"Exp","Pow")
+    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW1000",900,1100,40,150, 600,1400,"Exp","Pow")
 
 
 
