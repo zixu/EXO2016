@@ -131,7 +131,7 @@ class doFit_wj_and_wlvj:
             self.mj_sideband_lo_min = in_mj_min;
             self.mj_sideband_lo_max = 65;#65;
             self.mj_signal_min = 65;#65;
-            self.mj_signal_max = 135;#105;
+            self.mj_signal_max = 105;#105;
             self.mj_sideband_hi_min = 135;#105;
             self.mj_sideband_hi_max = in_mj_max;
         if options.closuretest ==1: ##closure test A1->A2
