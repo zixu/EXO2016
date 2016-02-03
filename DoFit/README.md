@@ -19,7 +19,7 @@ python runLimitsEXO750_mu.py --channel mu --makeCards -b > mu.log
 python runLimitsEXO750_mu.py --channel el --makeCards -b > el.log
 
 mkdir cards_allCats
-cp cards_EXO_*_HP750_g1/* cards_allCats
+cp cards_EXO_*/* cards_allCats
 
 python runLimitsEXO750_mu.py --channel mu --computeLimits
 
