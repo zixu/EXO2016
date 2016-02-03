@@ -1,10 +1,10 @@
 # root file_name                                               ; Theory_XS fb;  Event_Number
-BulkGravWW600.root  ;  7.147913   ;  50000
-BulkGravWW700.root  ;  2.900665   ;  49800
-BulkGravWW750.root  ;  1.950000   ;  50000   
-BulkGravWW800.root  ;  1.336325   ;  50000
-BulkGravWW900.root  ;  0.671447   ;  50000
-BulkGravWW1000.root ;  0.360174   ;  50000
+BulkGravWW600.root  ;  406.830851   ;  50000
+BulkGravWW700.root  ;  165.094354   ;  49800
+BulkGravWW750.root  ;  110.500282   ;  50000
+BulkGravWW800.root  ;  76.058293   ;  50000
+BulkGravWW900.root  ;  38.216100   ;  50000
+BulkGravWW1000.root ;  20.499693   ;  50000
 ST_s-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1.root   ;  47130.     ; 984400
 ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1.root   ;  26066.  ; 1680200
 ST_t-channel_top_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1.root   ;  43798.  ; 3299800
