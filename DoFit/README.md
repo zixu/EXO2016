@@ -1,10 +1,8 @@
-Try
-
 Control Plots:
 
-python g1_exo_doFit_class.py --control -c el
+python g1_exo_doFit_class.py --control -c el -b
 
-python g1_exo_doFit_class.py --control -c mu
+python g1_exo_doFit_class.py --control -c mu -b
 
 Simple Try Analysis:
 
@@ -14,7 +12,7 @@ python g1_exo_doFit_class.py  -b -c mu
 
 
 
-Do Analysis:
+Do Full Analysis:
 
 python runLimitsEXO750_mu.py --channel mu --makeCards -b > mu.log
 
