@@ -436,6 +436,9 @@ class doFit_wj_and_wlvj:
         if label_tstring.Contains("4000"):
             self.signal_jet_energy_scale_uncertainty = 0.0464 ;
             self.signal_btag_uncertainty = 0.07146;
+        if label_tstring.Contains("4500"):
+            self.signal_jet_energy_scale_uncertainty = 0.0464 ;
+            self.signal_btag_uncertainty = 0.07146;
 
         #what is xs_rescale?
         self.xs_rescale = 1.;            
