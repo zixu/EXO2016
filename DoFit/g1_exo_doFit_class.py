@@ -1397,9 +1397,20 @@ class doFit_wj_and_wlvj:
                     rrv_mean_BW  = RooRealVar("rrv_mean_BW"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_mean_BW"+label+"_"+self.channel+"_"+self.wtagger_label,2100);
                     rrv_width_BW = RooRealVar("rrv_width_BW"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_width_BW"+label+"_"+self.channel+"_"+self.wtagger_label,630);
 
+            elif label_tstring.Contains("WW4500"):
+                    rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_label,0.,-100,100);
+                    rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_label,90,20,250);
+                    rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_label, 20.,0.01,105);
+                    rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,3.5,0.5,50.5);
+                    rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_label,20.,0.01,105);
+                    rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_label,3.5,0.5,50.5);
+                    rrv_mean_BW  = RooRealVar("rrv_mean_BW"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_mean_BW"+label+"_"+self.channel+"_"+self.wtagger_label,4500);
+                    rrv_width_BW = RooRealVar("rrv_width_BW"+label+"_"+self.channel+"_"+self.wtagger_label,"rrv_width_BW"+label+"_"+self.channel+"_"+self.wtagger_label,100,0,1000);
+
+
             ### fix the Breit-Wigner core to the generated one  
-            rrv_mean_BW.setConstant(kTRUE);
-            rrv_width_BW.setConstant(kTRUE);                    
+            #rrv_mean_BW.setConstant(kTRUE);
+            #rrv_width_BW.setConstant(kTRUE);                    
             bw           = RooBreitWigner("bw"+label+"_"+self.channel,"bw"+label+"_"+self.channel, rrv_x,rrv_mean_BW,rrv_width_BW);
 
             ### Double Crystall ball term --> add parameters in order to do systematic on the signal shape inside combiner
@@ -4722,7 +4733,8 @@ objName ==objName_before ):
         ##   self.fit_mlvj_model_single_MC(self.file_signal,"_%s_xww"%(self.signal_sample),"_signal_region",model_width, 0, 0, 0, 0);            
         ##else: 
         ##    self.fit_mlvj_model_single_MC(self.file_signal,"_%s_xww"%(self.signal_sample),"_signal_region",model_narrow, 0, 0, 0, 0);
-        self.fit_mlvj_model_single_MC(self.file_signal,"_%s_xww"%(self.signal_sample),"_signal_region",model_narrow, 0, 0, 0, 1);
+        #self.fit_mlvj_model_single_MC(self.file_signal,"_%s_xww"%(self.signal_sample),"_signal_region",model_narrow, 0, 0, 0, 1);
+        self.fit_mlvj_model_single_MC(self.file_signal,"_%s_xww"%(self.signal_sample),"_signal_region",model_width, 0, 0, 0, 1);
         print "________________________________________________________________________"
 
     ##### Define the steps to fit WJets MC in the mj and mlvj spectra
@@ -4942,15 +4954,15 @@ def Fit_Signal(channel):
     #fit_signal("method1",channel, "BulkGravWW800",500,700,30,150,200,1500,"ErfExp_v1")
     #fit_signal("method1",channel, "BulkGravWW900",500,700,30,150,200,1500,"ErfExp_v1")
     #fit_signal("method1",channel,"BulkGravWW1000",500,700,30,150,200,1500,"ErfExp_v1")
-    fit_signal("method1",channel,"BulkGravWW1000",500,700,30,150,  0,2000,"ErfExp_v1")
-    fit_signal("method1",channel,"BulkGravWW1200",500,700,30,150,200,2200,"ErfExp_v1")
-    fit_signal("method1",channel,"BulkGravWW1400",500,700,30,150,400,2400,"ErfExp_v1")
-    fit_signal("method1",channel,"BulkGravWW1800",500,700,30,150,800,2800,"ErfExp_v1")
-    fit_signal("method1",channel,"BulkGravWW2000",500,700,30,150,1000,3000,"ErfExp_v1")
-    fit_signal("method1",channel,"BulkGravWW2500",500,700,30,150,1500,3500,"ErfExp_v1")
-    fit_signal("method1",channel,"BulkGravWW3000",500,700,30,150,2000,4000,"ErfExp_v1")
-    fit_signal("method1",channel,"BulkGravWW3500",500,700,30,150,2500,4500,"ErfExp_v1")
-    fit_signal("method1",channel,"BulkGravWW4000",500,700,30,150,3000,5000,"ErfExp_v1")
+    #fit_signal("method1",channel,"BulkGravWW1000",500,700,30,150,  0,2000,"ErfExp_v1")
+    #fit_signal("method1",channel,"BulkGravWW1200",500,700,30,150,200,2200,"ErfExp_v1")
+    #fit_signal("method1",channel,"BulkGravWW1400",500,700,30,150,400,2400,"ErfExp_v1")
+    #fit_signal("method1",channel,"BulkGravWW1800",500,700,30,150,800,2800,"ErfExp_v1")
+    #fit_signal("method1",channel,"BulkGravWW2000",500,700,30,150,1000,3000,"ErfExp_v1")
+    #fit_signal("method1",channel,"BulkGravWW2500",500,700,30,150,1500,3500,"ErfExp_v1")
+    #fit_signal("method1",channel,"BulkGravWW3000",500,700,30,150,2000,4000,"ErfExp_v1")
+    #fit_signal("method1",channel,"BulkGravWW3500",500,700,30,150,2500,4500,"ErfExp_v1")
+    #fit_signal("method1",channel,"BulkGravWW4000",500,700,30,150,3000,5000,"ErfExp_v1")
     fit_signal("method1",channel,"BulkGravWW4500",500,700,30,150,3500,5500,"ErfExp_v1")
   
 def control_single(channel):
