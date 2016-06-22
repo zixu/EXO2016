@@ -20,7 +20,7 @@ from optparse import OptionParser
 
 parser = OptionParser()
 
-parser.add_option('-b', action='store_true', dest='noX', default=False, help='no X11 windows')
+parser.add_option('-b', action='store_true', dest='noX', default=True, help='no X11 windows')
 
 ### to make the full analysis fit + datacards
 parser.add_option('--makeCards', action='store_true', dest='makeCards', default=False, help='make datacards plus whole analysis')
@@ -76,45 +76,47 @@ parser.add_option('--noSys', action='store',type="int", dest='noSys', default=0,
 ##shape_sig_narrow = ["DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
 
 
-### mass point for signal to be fitted
-mass  = [1000,2000,2500,3000,4000]
-### mass nalysis
-ccmlo = [ 900,1900,2400,2900,3900] 
-ccmhi = [1100,2100,2600,3100,4100]
-### jet mass range
-mjlo = [   40,  40,  40,  40,  40]
-mjhi = [  150, 150, 150, 150, 150]
-### mlvj range min and max used when run with option --makeCards
-#fit range
-mlo = [  800, 800, 800, 800, 800]
-mhi = [ 5000,5000,5000,5000,5000]
-### shape to be used for bkg when --makeCards
-#shape    = [   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN"]
-#shapeAlt = ["ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail"]
-shape    = ["Exp", "Exp", "Exp", "Exp", "Exp"]
-shapeAlt = ["Pow", "Pow", "Pow", "Pow", "Pow"]
-### shape to be used for bkg when --fitSignal
-shape_sig_width  = [ "BWDoubleCB", "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB"]
-shape_sig_narrow = ["DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
-
 ##### mass point for signal to be fitted
-##mass  = [600,700,750,800,900,1000,2000,2500,3000,3500,4000,4500]
-##### mass window for couting analysis
-##ccmlo = [500,600,650,700, 800, 900,1900,2400,2900,3400,3900,4400 ] 
-##ccmhi = [700,800,850,900,1000,1100,2100,2600,3100,3600,4100,4600 ]
+##mass  = [1000,2000,2500,3000,4000]
+##### mass nalysis
+##ccmlo = [ 900,1900,2400,2900,3900] 
+##ccmhi = [1100,2100,2600,3100,4100]
 ##### jet mass range
-##mjlo = [  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40]
-##mjhi = [ 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150]
+##mjlo = [   40,  40,  40,  40,  40]
+##mjhi = [  150, 150, 150, 150, 150]
 ##### mlvj range min and max used when run with option --makeCards
 ###fit range
-##mlo = [  600, 600, 600, 600, 600, 800, 800, 800, 800, 800, 800, 800]
-##mhi = [ 1400,1400,1400,1400,1400,5000,5000,5000,5000,5000,5000,5000]
+##mlo = [  800, 800, 800, 800, 800]
+##mhi = [ 5000,5000,5000,5000,5000]
 ##### shape to be used for bkg when --makeCards
-##shape    = ["Exp","Exp","Exp","Exp","Exp",   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN"]
-##shapeAlt = ["Pow","Pow","Pow","Pow","Pow","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail"]
+###shape    = [   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN"]
+###shapeAlt = ["ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail"]
+##shape    = ["Exp", "Exp", "Exp", "Exp", "Exp"]
+##shapeAlt = ["Pow", "Pow", "Pow", "Pow", "Pow"]
 ##### shape to be used for bkg when --fitSignal
-##shape_sig_width  = ["BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB"]
-##shape_sig_narrow = ["DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
+##shape_sig_width  = [ "BWDoubleCB", "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB"]
+##shape_sig_narrow = ["DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
+
+### mass point for signal to be fitted
+mass  = [600,700,750,800,900,1000,2000,2500,3000,3500,4000,4500]
+### mass window for couting analysis
+ccmlo = [500,600,650,700, 800, 900,1900,2400,2900,3400,3900,4400 ] 
+ccmhi = [700,800,850,900,1000,1100,2100,2600,3100,3600,4100,4600 ]
+### jet mass range
+mjlo = [  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40]
+mjhi = [ 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150]
+### mlvj range min and max used when run with option --makeCards
+#fit range
+mlo = [  600, 600, 600, 600, 600, 800, 800, 800, 800, 800, 800, 800]
+mhi = [ 1400,1400,1400,1400,1400,5000,5000,5000,5000,5000,5000,5000]
+### shape to be used for bkg when --makeCards
+#shape    = ["Exp","Exp","Exp","Exp","Exp",   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN"]
+#shapeAlt = ["Pow","Pow","Pow","Pow","Pow","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail"]
+shape    = ["Exp","Exp","Exp","Exp","Exp","Exp","Exp","Exp","Exp","Exp","Exp","Exp"]
+shapeAlt = ["Pow","Pow","Pow","Pow","Pow","Pow","Pow","Pow","Pow","Pow","Pow","Pow"]
+### shape to be used for bkg when --fitSignal
+shape_sig_width  = ["BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB"]
+shape_sig_narrow = ["DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
 
 
 
@@ -476,10 +478,10 @@ if __name__ == '__main__':
             if options.limitMode==0:
               runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2 -S %d"%(mass[i],mass[i],options.channel ,mass[i],options.channel, options.noSys);
             elif options.limitMode==1:
-              runCmmd = "combine -M ProfileLikelihood --significance --pvalue -m %03d -n _pval_obs_%03d_bb_%s_HP wwlvj_MWp_%03d_bb_%s_HP_unbin.txt\n"%(mass[i],mass[i],"mu",mass[i],"mu");
-              runCmmd += "combine -M ProfileLikelihood --significance --pvalue -m %03d -n _pval_exp_%03d_bb_%s_HP wwlvj_MWp_%03d_bb_%s_HP_unbin.txt --expectSignal=1 --toysFreq -t -1"%(mass[i],mass[i],"mu",mass[i],"mu");
+              runCmmd2 = "combine -M ProfileLikelihood --significance --pvalue -m %03d -n _pval_obs_%03d_bb_%s_HP wwlvj_MWp_%03d_bb_%s_HP_unbin.txt\n"%(mass[i],mass[i],"mu",mass[i],"mu");
+              runCmmd2 += "combine -M ProfileLikelihood --significance --pvalue -m %03d -n _pval_exp_%03d_bb_%s_HP wwlvj_MWp_%03d_bb_%s_HP_unbin.txt --expectSignal=1 --toysFreq -t -1"%(mass[i],mass[i],"mu",mass[i],"mu");
             print runCmmd2;
-            #os.system(runCmmd);
+            #os.system(runCmmd2);
             time.sleep(0.1);
 
     ### make the plots    
