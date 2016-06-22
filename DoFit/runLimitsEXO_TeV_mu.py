@@ -38,7 +38,7 @@ parser.add_option('--fitSignal', action='store_true', dest='fitSignal', default=
 ### other options 
 parser.add_option('--channel',action="store",type="string",dest="channel",default="mu")
 parser.add_option('--massPoint',action="store",type="int",dest="massPoint",default=-1)
-parser.add_option('--cPrime',action="store",type="int",dest="cPrime",default=-1)
+#parser.add_option('--cPrime',action="store",type="int",dest="cPrime",default=-1)
 parser.add_option('--odir',action="store",type="string",dest="odir",default=".")
 parser.add_option('--category',action="store",type="string",dest="category",default="HP") #"HP")
 parser.add_option('--closuretest', action='store',type="int", dest='closuretest', default=0, help='closure test; 0: no test; 1: A1->A2; 2: A->B')
@@ -56,25 +56,44 @@ parser.add_option('--noSys', action='store',type="int", dest='noSys', default=0,
 ### Global Variables for running jobs ###
 #########################################
 
+##### mass point for signal to be fitted
+##mass  = [600,700,750,800,900,1000]
+##### mass window for couting analysis
+##ccmlo = [500,600,650,700, 800, 900] 
+##ccmhi = [700,800,850,900,1000,1100]
+##### jet mass range
+##mjlo = [  40,  40,  40,  40,  40,  40]
+##mjhi = [ 150, 150, 150, 150, 150, 150]
+##### mlvj range min and max used when run with option --makeCards
+###fit range
+##mlo = [  600, 600, 600, 600, 600, 600]
+##mhi = [ 1400,1400,1400,1400,1400,1400]
+##### shape to be used for bkg when --makeCards
+##shape    = ["Exp","Exp","Exp","Exp","Exp","Exp"]
+##shapeAlt = ["Pow","Pow","Pow","Pow","Pow","Pow"]
+##### shape to be used for bkg when --fitSignal
+##shape_sig_width  = ["BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB"]
+##shape_sig_narrow = ["DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
+
+
 ### mass point for signal to be fitted
-mass  = [600,700,750,800,900,1000]
-### mass window for couting analysis
-ccmlo = [500,600,650,700, 800, 900] 
-ccmhi = [700,800,850,900,1000,1100]
+mass  = [1000,2000,2500,3000,3500,4000,4500]
+### mass nalysis
+ccmlo = [ 900,1900,2400,2900,3400,3900,4400 ] 
+ccmhi = [1100,2100,2600,3100,3600,4100,4600 ]
 ### jet mass range
-mjlo = [  40,  40,  40,  40,  40,  40]
-mjhi = [ 150, 150, 150, 150, 150, 150]
+mjlo = [   40,  40,  40,  40,  40,  40,  40]
+mjhi = [  150, 150, 150, 150, 150, 150, 150]
 ### mlvj range min and max used when run with option --makeCards
 #fit range
-mlo = [  600, 600, 600, 600, 600, 600]
-mhi = [ 1400,1400,1400,1400,1400,1400]
+mlo = [  800, 800, 800, 800, 800, 800, 800]
+mhi = [ 5000,5000,5000,5000,5000,5000,5000]
 ### shape to be used for bkg when --makeCards
-shape    = ["Exp","Exp","Exp","Exp","Exp","Exp"]
-shapeAlt = ["Pow","Pow","Pow","Pow","Pow","Pow"]
+shape    = [   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN"]
+shapeAlt = ["ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail"]
 ### shape to be used for bkg when --fitSignal
-shape_sig_width  = ["BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB"]
-shape_sig_narrow = ["DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
-
+shape_sig_width  = [ "BWDoubleCB", "BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB"]
+shape_sig_narrow = ["DoubleCB_v1", "DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
 
 ##### mass point for signal to be fitted
 ##mass  = [600,700,750,800,900,1000,2000,2500,3000,3500,4000,4500]
@@ -94,6 +113,7 @@ shape_sig_narrow = ["DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "
 ##### shape to be used for bkg when --fitSignal
 ##shape_sig_width  = ["BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB"]
 ##shape_sig_narrow = ["DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
+
 
 
 ### signal mass fraction for non narrow samples
