@@ -282,8 +282,8 @@ def doULPlot( suffix ):
         else:
             sf = xsDict[mass[i]];
         curAsymLimits = getAsymLimits(curFile);
-        xbins.append( mass[i] );
-        xbins_env.append( mass[i] );
+        xbins.append( mass[i]/1000. );#GeV->TeV
+        xbins_env.append( mass[i]/1000. );
         ybins_exp.append( curAsymLimits[3]*sf );
         ybins_obs.append( curAsymLimits[0]*sf );
         ybins_2s.append( curAsymLimits[1]*sf );
@@ -298,7 +298,7 @@ def doULPlot( suffix ):
         else:
           sf = xsDict[mass[i]];
         curAsymLimits = getAsymLimits(curFile);
-        xbins_env.append( mass[i] );
+        xbins_env.append( mass[i]/1000. );
         ybins_2s.append( curAsymLimits[5]*sf );
         ybins_1s.append( curAsymLimits[4]*sf );
 
@@ -348,23 +348,21 @@ def doULPlot( suffix ):
 
     can_SM = ROOT.TCanvas("can_SM","can_SM",630,600);
     
+    hrl_SM = can_SM.DrawFrame(mass[0]/1000.,1e-4, mass[nPoints-1]/1000., 1e2);
     if options.lnubbBR:
-      hrl_SM = can_SM.DrawFrame(750,1e-3, 2550, 1); #0.0005,2550,1);
-      hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{RS} #rightarrow munubb) (pb)");
+        hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{Bulk} #rightarrow munubb) (pb)");
     else:
-      #hrl_SM = can_SM.DrawFrame(750,1e-4, 4100, 100);
-      #hrl_SM = can_SM.DrawFrame(550,1e-4, 1050, 1e2);
-      #hrl_SM = can_SM.DrawFrame(600,1e-3, 1000, 1e2);
-      hrl_SM = can_SM.DrawFrame(mass[0],1e-4, mass[nPoints-1], 1e2);
-      hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{Bulk} #rightarrow WW) (pb)");
+        hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{Bulk} #rightarrow WW) (pb)");
+
     hrl_SM.GetYaxis().SetTitleOffset(1.35);
     hrl_SM.GetYaxis().SetTitleSize(0.045);
     hrl_SM.GetYaxis().SetTitleFont(42);
 
-    hrl_SM.GetXaxis().SetTitle("M_{G} (GeV)");
+    hrl_SM.GetXaxis().SetTitle("M_{G} (TeV)");
     hrl_SM.GetXaxis().SetTitleSize(0.045);
     hrl_SM.GetXaxis().SetTitleFont(42);
 
+    hrl_SM.GetXaxis().SetNdivisions(510);
     hrl_SM.GetYaxis().SetNdivisions(505);
     can_SM.SetGridx(1);
     can_SM.SetGridy(1);
@@ -385,13 +383,9 @@ def doULPlot( suffix ):
     leg2.AddEntry(curGraph_obs,"Asympt. CL_{S} Observed","LP")
     leg2.AddEntry(curGraph_1s,"Asympt. CL_{S}  Expected #pm 1#sigma","LF")
     leg2.AddEntry(curGraph_2s,"Asympt. CL_{S}  Expected #pm 2#sigma","LF")
-    if options.lnubbBR:
-      #leg2.AddEntry(curGraph_th,"RS model","L");
-      leg2.AddEntry(curGraph_th,"Bulk model","L");
-    else:
-      #leg2.AddEntry(curGraph_th,"RS model","L");
-      leg2.AddEntry(curGraph_th,"Bulk model","L");
+    leg2.AddEntry(curGraph_th,"Bulk model","L");
 
+    #ROOT.gPad.SetLogx();
     ROOT.gPad.SetLogy();
 
     can_SM.Update();
