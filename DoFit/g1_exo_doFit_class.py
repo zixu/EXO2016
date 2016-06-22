@@ -4924,8 +4924,8 @@ def pre_limit_simple(channel):
     #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW800",700, 900,40,150, 600,1400,"Exp","Pow")
     #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW900",800,1000,40,150, 600,1400,"Exp","Pow")
     #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW1000",900,1100,40,150, 600,1400,"Exp","Pow")
-    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW4000",3900,4100,40,150, 600,4500,"ExpN","ExpTail")
-    pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW4500",4400,4600,40,150, 600,4500,"ExpN","ExpTail")
+    pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW4000",3900,4100,40,150, 600,4500,"ExpTail","ExpN")
+    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW4500",4400,4600,40,150, 600,4500,"ExpTail","ExpN")
 
 
 
