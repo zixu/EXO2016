@@ -166,7 +166,7 @@ class doFit_wj_and_wlvj:
 #         self.file_Directory="AnaSigTree_new/";
 #        else:
         #self.file_Directory="data_June16_HM_80X_bonding_tmp/";
-        self.file_Directory="data_Jun17_highmass/";
+        self.file_Directory="PKUTree_final_2p6fb/";
             
 
         self.PS_model= options.psmodel
@@ -4698,9 +4698,9 @@ objName ==objName_before ):
 
     ##### Get Lumi for banner title
     def GetLumi(self):
-        if self.channel=="el":   return 2.07;
-        elif self.channel=="mu": return 2.07;
-        elif self.channel=="em": return 1.0;
+        if self.channel=="el":   return 2.6;
+        elif self.channel=="mu": return 2.6;
+        elif self.channel=="em": return 2.6;
 
     #### function to run the selection on data to build the datasets 
     def get_data(self):
@@ -4924,7 +4924,8 @@ def pre_limit_simple(channel):
     #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW800",700, 900,40,150, 600,1400,"Exp","Pow")
     #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW900",800,1000,40,150, 600,1400,"Exp","Pow")
     #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW1000",900,1100,40,150, 600,1400,"Exp","Pow")
-    pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW4000",3900,4100,40,150, 600,4500,"ExpN","ExpTail")
+    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW4000",3900,4100,40,150, 600,4500,"ExpN","ExpTail")
+    pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW4500",4400,4600,40,150, 600,4500,"ExpN","ExpTail")
 
 
 
