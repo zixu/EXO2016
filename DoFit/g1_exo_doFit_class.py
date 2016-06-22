@@ -383,7 +383,6 @@ class doFit_wj_and_wlvj:
         if label_tstring.Contains("1000"):
             self.signal_jet_energy_scale_uncertainty = 0.0214 ;#0.011 ;#qun
             self.xs_rescale = 0.011035/0.0017742;            
-            self.signal_btag_uncertainty = 0.0;#qun
         if label_tstring.Contains("1100"):
             self.signal_jet_energy_scale_uncertainty = 0.014 ;
             self.xs_rescale = 0.0056883/0.00091785;            
@@ -413,7 +412,6 @@ class doFit_wj_and_wlvj:
             self.xs_rescale = 7.9677e-05/1.2723e-05;            
         if label_tstring.Contains("2000"):
             self.signal_jet_energy_scale_uncertainty = 0.0284 ;#0.018 ;#qun
-            self.signal_btag_uncertainty = 0.0;
             self.xs_rescale = 5.0345e-05/8.0046e-06;            
         if label_tstring.Contains("2100"):
             self.signal_jet_energy_scale_uncertainty = 0.02 ;
@@ -432,13 +430,12 @@ class doFit_wj_and_wlvj:
             self.xs_rescale = 5.6338e-06/8.8518e-07;            
         if label_tstring.Contains("3000"):
             self.signal_jet_energy_scale_uncertainty = 0.0464 ;
-            self.signal_btag_uncertainty = 0.07146;
+        if label_tstring.Contains("3500"):
+            self.signal_jet_energy_scale_uncertainty = 0.0464 ;
         if label_tstring.Contains("4000"):
             self.signal_jet_energy_scale_uncertainty = 0.0464 ;
-            self.signal_btag_uncertainty = 0.07146;
         if label_tstring.Contains("4500"):
             self.signal_jet_energy_scale_uncertainty = 0.0464 ;
-            self.signal_btag_uncertainty = 0.07146;
 
         #what is xs_rescale?
         self.xs_rescale = 1.;            
