@@ -186,51 +186,18 @@ class doFit_wj_and_wlvj:
             raw_input("Fail to find correct categoryID. Please check your wtaggerI:%s and channel:%s"%(self.wtagger_category, self.channel));
             
         #medium wtagger_eff reweight between data and mc #Wtagger_forV SF have be add to ntuple weight;
-        if   self.wtagger_category=="ALLP" and self.channel=="el": 
-            self.rrv_VTagger_eff_reweight_forT=RooRealVar("rrv_VTagger_eff_reweight_forT","rrv_VTagger_eff_reweight_forT",1); #1.11); #0.968);
-            self.rrv_VTagger_eff_reweight_forT.setError(0.); #0.05); #0.214);
-            self.rrv_VTagger_eff_reweight_forV=RooRealVar("rrv_VTagger_eff_reweight_forV","rrv_VTagger_eff_reweight_forV",1.0); #0.891);
-            self.rrv_VTagger_eff_reweight_forV.setError(0.);
-        elif self.wtagger_category=="ALLP" and self.channel=="mu":
-            self.rrv_VTagger_eff_reweight_forT=RooRealVar("rrv_VTagger_eff_reweight_forT","rrv_VTagger_eff_reweight_forT",1); #1.11); #1.31);
-            self.rrv_VTagger_eff_reweight_forT.setError(0.); #0.05); #0.212);
-            self.rrv_VTagger_eff_reweight_forV=RooRealVar("rrv_VTagger_eff_reweight_forV","rrv_VTagger_eff_reweight_forV",1.0); #1.277);
-            self.rrv_VTagger_eff_reweight_forV.setError(0.);
-        elif self.wtagger_category=="LP"   and self.channel=="el":
+        if   self.wtagger_category=="LP":
             self.rrv_VTagger_eff_reweight_forT=RooRealVar("rrv_VTagger_eff_reweight_forT","rrv_VTagger_eff_reweight_forT",1.39);
             self.rrv_VTagger_eff_reweight_forT.setError(0.08*self.rrv_VTagger_eff_reweight_forT.getVal());
             self.rrv_VTagger_eff_reweight_forV=RooRealVar("rrv_VTagger_eff_reweight_forV","rrv_VTagger_eff_reweight_forV",1.277);
             self.rrv_VTagger_eff_reweight_forV.setError(0.303);
-        elif self.wtagger_category=="LP"   and self.channel=="mu":
-            self.rrv_VTagger_eff_reweight_forT=RooRealVar("rrv_VTagger_eff_reweight_forT","rrv_VTagger_eff_reweight_forT",1.31);
-            self.rrv_VTagger_eff_reweight_forT.setError(0.048103*self.rrv_VTagger_eff_reweight_forT.getVal());
-            self.rrv_VTagger_eff_reweight_forV=RooRealVar("rrv_VTagger_eff_reweight_forV","rrv_VTagger_eff_reweight_forV",1.277);
-            self.rrv_VTagger_eff_reweight_forV.setError(0.303);
-        elif self.wtagger_category=="HP"   and self.channel=="el":
-            self.rrv_VTagger_eff_reweight_forT=RooRealVar("rrv_VTagger_eff_reweight_forT","rrv_VTagger_eff_reweight_forT",1.00);
-            self.rrv_VTagger_eff_reweight_forT.setError(0.03*self.rrv_VTagger_eff_reweight_forT.getVal());
-            self.rrv_VTagger_eff_reweight_forV=RooRealVar("rrv_VTagger_eff_reweight_forV","rrv_VTagger_eff_reweight_forV",1.0);#0.891);
-            self.rrv_VTagger_eff_reweight_forV.setError(0.0717773);
-        elif self.wtagger_category=="HP"   and self.channel=="mu": 
+        elif self.wtagger_category=="HP": 
             self.rrv_VTagger_eff_reweight_forT=RooRealVar("rrv_VTagger_eff_reweight_forT","rrv_VTagger_eff_reweight_forT", 1.00);
-            self.rrv_VTagger_eff_reweight_forT.setError(0.02*self.rrv_VTagger_eff_reweight_forT.getVal());
+            self.rrv_VTagger_eff_reweight_forT.setError(0.049*self.rrv_VTagger_eff_reweight_forT.getVal());
             self.rrv_VTagger_eff_reweight_forV=RooRealVar("rrv_VTagger_eff_reweight_forV","rrv_VTagger_eff_reweight_forV",1);
-            self.rrv_VTagger_eff_reweight_forV.setError(0.0717773);
+            self.rrv_VTagger_eff_reweight_forV.setError(0.144);
         else:
             raw_input("Fail to find correct categoryID. Please check your wtaggerI:%s and channel:%s"%(self.wtagger_category, self.channel));
-
-        ##if self.channel=="em" and self.wtagger_category=="HP":
-        ##    self.rrv_VTagger_eff_reweight_forT=RooRealVar("rrv_VTagger_eff_reweight_forT","rrv_VTagger_eff_reweight_forT", 0.971);
-        ##    self.rrv_VTagger_eff_reweight_forT.setError(0.02*self.rrv_VTagger_eff_reweight_forT.getVal());
-        ##    self.rrv_VTagger_eff_reweight_forV=RooRealVar("rrv_VTagger_eff_reweight_forV","rrv_VTagger_eff_reweight_forV",0.891);
-        ##    self.rrv_VTagger_eff_reweight_forV.setError(0.0717773);
-
-        ##if self.channel=="em" and self.wtagger_category=="LP":
-        ##    self.rrv_VTagger_eff_reweight_forT=RooRealVar("rrv_VTagger_eff_reweight_forT","rrv_VTagger_eff_reweight_forT", 1.34);
-        ##    self.rrv_VTagger_eff_reweight_forT.setError(0.02*self.rrv_VTagger_eff_reweight_forT.getVal());
-        ##    self.rrv_VTagger_eff_reweight_forV=RooRealVar("rrv_VTagger_eff_reweight_forV","rrv_VTagger_eff_reweight_forV",1.277);
-        ##    self.rrv_VTagger_eff_reweight_forV.setError(0.303);
-
 
         print "VTagger efficiency correction for Top sample: %s +/- %s"%(self.rrv_VTagger_eff_reweight_forT.getVal(), self.rrv_VTagger_eff_reweight_forT.getError());
         print "VTagger efficiency correction for V sample: %s +/- %s"%(self.rrv_VTagger_eff_reweight_forV.getVal(), self.rrv_VTagger_eff_reweight_forV.getError());
@@ -280,93 +247,40 @@ class doFit_wj_and_wlvj:
         self.datadriven_alpha_WJets_counting=-1;
 
         ### uncertainty for datacard
-        self.lumi_uncertainty    = 0.05;
-        self.XS_STop_uncertainty = 0.30 ;
-        self.XS_VV_uncertainty   = 0.25 ;
+        self.lumi_uncertainty    = 0.027;
+        self.XS_Signal_uncertainty = 0.17 ;#pdf uncertainty 13% + scale uncertainty 11%
+        self.XS_STop_uncertainty = 0.050 ;
+        self.XS_VV_uncertainty   = 0.030 ;
         self.XS_TTbar_uncertainty   = 0.12; #0.20 ;#qun
         self.XS_TTbar_NLO_uncertainty = 0.063 ;# from AN-12-368 table8
         self.XS_STop_NLO_uncertainty  = 0.05 ;# from AN-12-368 table8
         self.XS_VV_NLO_uncertainty    = 0.10 ;# from AN-12-368 table8
 
-        #el and mu trigger and eff uncertainty, AN2012_368_v5 12.3
-        self.lep_trigger_uncertainty = 0.01;
-        self.btag_scale_uncertainty  = 0.025;
-        self.signal_btag_uncertainty = 0.019;#0.002;#qun
+        #el and mu trigger and eff uncertainty, B2G-16-4
+        self.lep_trigger_uncertainty = 0.03
+        self.btag_scale_uncertainty  = 0.025
+        self.signal_btag_uncertainty = 0.002
       
         if self.channel == "mu":
-            self.signal_lepton_energy_scale_uncertainty = 0.02;#0.007 ;#qun
-            self.signal_lepton_energy_res_uncertainty   = 0.0025;#0.001 ;#qun
-            self.signal_jet_energy_res_uncertainty      = 0.015;#0.003 ; #qun
-            self.lep_eff_uncertainty     = 0.01;
+            self.signal_lepton_energy_scale_uncertainty = 0.007
+            self.signal_lepton_energy_res_uncertainty   = 0.001
+            self.lep_eff_uncertainty     = 0.02
         elif self.channel == "el":
-            self.signal_lepton_energy_scale_uncertainty = 0.01;#0.002 ; #qun
-            self.signal_lepton_energy_res_uncertainty   = 0.004;#0.001 ;#qun
-            self.signal_jet_energy_res_uncertainty      = 0.015;#0.003 ;#qun
-            self.lep_eff_uncertainty     = 0.03;
-        #elif self.channel == "em":
-        # self.signal_lepton_energy_scale_uncertainty = 0.045 ;
-        # self.signal_lepton_energy_res_uncertainty   = 0.001 ;
-        # self.signal_jet_energy_res_uncertainty      = 0.003 ;
-        # self.lep_eff_uncertainty     = 0.02;
+            self.signal_lepton_energy_scale_uncertainty = 0.002
+            self.signal_lepton_energy_res_uncertainty   = 0.001
+            self.lep_eff_uncertainty     = 0.03
         else:
             raw_input("Fail to find correct channel. Please check your channel:%s"%(self.channel));
 
         self.eff_vtag_model = 0. ;
 
-        label_tstring=TString(self.signal_sample);
-        if label_tstring.Contains("WW600") :
-            self.signal_jet_energy_scale_uncertainty = 0.01 ;
-        elif label_tstring.Contains("WW700") :
-            self.signal_jet_energy_scale_uncertainty = 0.011 ;
-        elif label_tstring.Contains("WW750") :#tmp use 700 results
-            self.signal_jet_energy_scale_uncertainty = 0.011 ;
-        elif label_tstring.Contains("WW800") :
-            self.signal_jet_energy_scale_uncertainty =  0.0068 ;#0.011 ;#qun
-        elif label_tstring.Contains("WW900") :
-            self.signal_jet_energy_scale_uncertainty = 0.011 ;
-        elif label_tstring.Contains("WW1000"):
-            self.signal_jet_energy_scale_uncertainty = 0.0214 ;#0.011 ;#qun
-        elif label_tstring.Contains("WW1100"):
-            self.signal_jet_energy_scale_uncertainty = 0.014 ;
-        elif label_tstring.Contains("WW1200"):
-            self.signal_jet_energy_scale_uncertainty = 0.014 ;
-        elif label_tstring.Contains("WW1300"):
-            self.signal_jet_energy_scale_uncertainty = 0.014 ;
-        elif label_tstring.Contains("WW1400"):
-            self.signal_jet_energy_scale_uncertainty = 0.014 ;
-        elif label_tstring.Contains("WW1500"):
-            self.signal_jet_energy_scale_uncertainty = 0.015 ;
-        elif label_tstring.Contains("WW1600"):
-            self.signal_jet_energy_scale_uncertainty = 0.015 ;
-        elif label_tstring.Contains("WW1700"):
-            self.signal_jet_energy_scale_uncertainty = 0.016 ;
-        elif label_tstring.Contains("WW1800"):
-            self.signal_jet_energy_scale_uncertainty = 0.016 ;
-        elif label_tstring.Contains("WW1900"):
-            self.signal_jet_energy_scale_uncertainty = 0.018 ;
-        elif label_tstring.Contains("WW2000"):
-            self.signal_jet_energy_scale_uncertainty = 0.0284 ;#0.018 ;#qun
-        elif label_tstring.Contains("WW2100"):
-            self.signal_jet_energy_scale_uncertainty = 0.02 ;
-        elif label_tstring.Contains("WW2200"):
-            self.signal_jet_energy_scale_uncertainty = 0.02 ;
-        elif label_tstring.Contains("WW2300"):
-            self.signal_jet_energy_scale_uncertainty = 0.023 ;
-        elif label_tstring.Contains("WW2400"):
-            self.signal_jet_energy_scale_uncertainty = 0.026 ;
-        elif label_tstring.Contains("WW2500"):
-            self.signal_jet_energy_scale_uncertainty = 0.03 ;
-        elif label_tstring.Contains("WW3000"):
-            self.signal_jet_energy_scale_uncertainty = 0.0464 ;
-        elif label_tstring.Contains("WW3500"):
-            self.signal_jet_energy_scale_uncertainty = 0.0464 ;
-        elif label_tstring.Contains("WW4000"):
-            self.signal_jet_energy_scale_uncertainty = 0.0464 ;
-        elif label_tstring.Contains("WW4500"):
-            self.signal_jet_energy_scale_uncertainty = 0.0464 ;
-        else:
-            raw_input("Signal:%s not found"%(self.signal_sample))
-
+        self.signal_jet_energy_res_uncertainty      = 0.003 
+        self.signal_jet_energy_scale_uncertainty_low = 0.982 
+        self.signal_jet_energy_scale_uncertainty_high = 1.012 
+        self.signal_jet_mass_scale_uncertainty_low = 0.965 
+        self.signal_jet_mass_scale_uncertainty_high = 1.020 
+        self.signal_jet_mass_res_uncertainty_low = 1.006
+        self.signal_jet_mass_res_uncertainty_high = 0.985
 
         #### sigma and mean signal systematic inflation
         self.mean_signal_uncertainty_jet_scale  = 0.005; 
@@ -1663,7 +1577,8 @@ class doFit_wj_and_wlvj:
         model = self.make_Model(label+in_range,mlvj_model,"_mlvj",constrainslist,ismc);
 
         ## make the fit
-        model.fitTo( rdataset, RooFit.Save(1), RooFit.SumW2Error(kTRUE) ,RooFit.Extended(kTRUE) );
+        rfresult = model.fitTo( rdataset, RooFit.Save(1), RooFit.SumW2Error(kTRUE) ,RooFit.Extended(kTRUE) );
+        rfresult.Print();
         rfresult = model.fitTo( rdataset, RooFit.Save(1), RooFit.SumW2Error(kTRUE) ,RooFit.Extended(kTRUE), RooFit.Minimizer("Minuit2") );
         rfresult.Print();
 
@@ -3196,6 +3111,8 @@ class doFit_wj_and_wlvj:
         datacard_out.write( "\n-------------------------------- " )
         ### luminosity nouisance
         datacard_out.write( "\nlumi_13TeV lnN %0.3f - %0.3f %0.3f %0.3f"%(1.+self.lumi_uncertainty, 1.+self.lumi_uncertainty,1.+self.lumi_uncertainty,1.+self.lumi_uncertainty) )
+        ### Signal XS  nouisance in boosted regime
+        datacard_out.write( "\nCMS_xww_XS_Signal lnN %0.3f - - - -"%(1+self.XS_Signal_uncertainty) )
         ### STop XS  nouisance in boosted regime
         datacard_out.write( "\nCMS_xww_XS_STop lnN - - - %0.3f -"%(1+self.XS_STop_uncertainty) )
         ### VV XS  nouisance in boosted regime
@@ -3207,17 +3124,13 @@ class doFit_wj_and_wlvj:
             datacard_out.write( "\nCMS_xww_WJ_norm_%s_%s lnN - %0.3f - - -"%(self.channel, self.wtagger_category, 1+ self.workspace4limit_.var("rate_WJets_xww_for_unbin").getError()/self.workspace4limit_.var("rate_WJets_xww_for_unbin").getVal() ) );
 
         ### Top normalization due to SF in the ttbar CR
-        datacard_out.write( "\nCMS_xww_Top_norm_%s_%s lnN - - %0.3f %0.3f -"%(self.channel, self.wtagger_category, 1+self.rrv_VTagger_eff_reweight_forT.getError()/self.rrv_VTagger_eff_reweight_forT.getVal(), 1+self.rrv_VTagger_eff_reweight_forT.getError()/self.rrv_VTagger_eff_reweight_forT.getVal() ) );
+        datacard_out.write( "\nCMS_xww_Top_norm_%s_%s lnN - - %0.3f/%0.3f %0.3f/%0.3f -"%(self.channel, self.wtagger_category, 1+self.rrv_VTagger_eff_reweight_forT.getError()/self.rrv_VTagger_eff_reweight_forT.getVal(), 1-self.rrv_VTagger_eff_reweight_forT.getError()/self.rrv_VTagger_eff_reweight_forT.getVal(), 1+self.rrv_VTagger_eff_reweight_forT.getError()/self.rrv_VTagger_eff_reweight_forT.getVal(), 1-self.rrv_VTagger_eff_reweight_forT.getError()/self.rrv_VTagger_eff_reweight_forT.getVal() ) );
 
         ### V-Tagger SF nouisance
         if self.wtagger_category == "HP":
             datacard_out.write( "\nCMS_eff_vtag_tau21_sf lnN %0.3f/%0.3f - - - %0.3f/%0.3f"%(1+self.rrv_VTagger_eff_reweight_forV.getError(),1-self.rrv_VTagger_eff_reweight_forV.getError(), 1+self.rrv_VTagger_eff_reweight_forV.getError(),1-self.rrv_VTagger_eff_reweight_forV.getError()));
         elif self.wtagger_category == "LP":
             datacard_out.write( "\nCMS_eff_vtag_tau21_sf lnN %0.3f/%0.3f - - - %0.3f/%0.3f"%(1-self.rrv_VTagger_eff_reweight_forV.getError(),1+self.rrv_VTagger_eff_reweight_forV.getError(), 1-self.rrv_VTagger_eff_reweight_forV.getError(),1+self.rrv_VTagger_eff_reweight_forV.getError()));
-        elif self.wtagger_category == "ALLP":
-            datacard_out.write( "\nCMS_eff_vtag_tau21_sf lnN - - - - -");
-        else:
-            datacard_out.write( "\nCMS_eff_vtag_tau21_sf lnN %0.3f/%0.3f - - - %0.3f/%0.3f"%(1+self.rrv_VTagger_eff_reweight_forV.getError(),1-self.rrv_VTagger_eff_reweight_forV.getError(), 1+self.rrv_VTagger_eff_reweight_forV.getError(),1-self.rrv_VTagger_eff_reweight_forV.getError()));
             
         ### btag scale factor on the MC background
         #datacard_out.write( "\nCMS_xww_btagger lnN - - %0.3f %0.3f %0.3f"%(self.channel, 1+self.btag_scale_uncertainty, 1+self.btag_scale_uncertainty, 1+self.btag_scale_uncertainty ) );
@@ -3253,9 +3166,13 @@ class doFit_wj_and_wlvj:
         datacard_out.write( "\nCMS_scale_%s lnN %0.3f - - - -"%(self.channel_short,1+self.signal_lepton_energy_scale_uncertainty));
         ### Lepton Energy Resolution
         datacard_out.write( "\nCMS_res_%s lnN %0.3f - - - -"%(self.channel_short,1+self.signal_lepton_energy_res_uncertainty));
-        ### CA8 jet energy scale
-        datacard_out.write( "\nCMS_scale_j  lnN %0.3f - - - -"%(1+self.signal_jet_energy_scale_uncertainty));
-        ### CA8 jet energy resolution
+        ### fat jet energy scale
+        datacard_out.write( "\nCMS_scale_j  lnN %0.3f/%0.3f - - - -"%(self.signal_jet_energy_scale_uncertainty_low, self.signal_jet_energy_scale_uncertainty_high));
+        ### fat jet mass scale
+        datacard_out.write( "\nCMS_mass_scale_j  lnN %0.3f/%0.3f - - - -"%(self.signal_jet_mass_scale_uncertainty_low, self.signal_jet_mass_scale_uncertainty_high));
+        ### fat jet mass res
+        datacard_out.write( "\nCMS_mass_res_j  lnN %0.3f/%0.3f - - - -"%(self.signal_jet_mass_res_uncertainty_low, self.signal_jet_mass_res_uncertainty_high));
+        ### fat jet energy resolution
         datacard_out.write( "\nCMS_res_j  lnN %0.3f - - - -"%(1+self.signal_jet_energy_res_uncertainty));
         ### btag on the signal
         datacard_out.write( "\nCMS_xww_btag_eff lnN %0.3f - - - -"%(1+self.signal_btag_uncertainty));
@@ -3376,13 +3293,15 @@ class doFit_wj_and_wlvj:
         ## signal scale to be visible in the plots
         label_tstring = TString(self.signal_sample);
         if label_tstring.Contains("WW600")  :
-            signal_scale=50
+            signal_scale=15
         elif label_tstring.Contains("WW750"):
-            signal_scale=50
+            signal_scale=20
         elif label_tstring.Contains("WW2000"):
             signal_scale=100
+        elif label_tstring.Contains("WW4000"):
+            signal_scale=10000
         else:
-            signal_scale=10000;
+            signal_scale=100
 
 
         model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*signal_scale),RooFit.Name("%s #times %s"%(self.signal_sample, signal_scale)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
@@ -3849,7 +3768,7 @@ objName ==objName_before ):
             self.fit_mlvj_model_single_MC(self.file_VV_mc,"_VV_xww","_signal_region",self.MODEL_4_mlvj, 1, 0, 1);
          
         else:
-            self.fit_mlvj_model_single_MC(self.file_VV_mc,"_VV_xww","_sb_lo","Exp", 0, 0, 1);
+            self.fit_mlvj_model_single_MC(self.file_VV_mc,"_VV_xww","_sb_lo",self.MODEL_4_mlvj, 0, 0, 1);
             self.fit_mlvj_model_single_MC(self.file_VV_mc,"_VV_xww","_signal_region",self.MODEL_4_mlvj, 1, 0, 1);
  
         print "________________________________________________________________________"
@@ -3893,7 +3812,7 @@ objName ==objName_before ):
             self.fit_mlvj_model_single_MC(self.file_STop_mc,"_STop_xww","_signal_region","ErfExp_v1", 1, 0, 1);
         else:
             self.fit_mlvj_model_single_MC(self.file_STop_mc,"_STop_xww","_sb_lo","Exp", 0, 0, 1);
-            self.fit_mlvj_model_single_MC(self.file_STop_mc,"_STop_xww","_signal_region","Exp", 1, 0, 1);
+            self.fit_mlvj_model_single_MC(self.file_STop_mc,"_STop_xww","_signal_region",self.MODEL_4_mlvj, 1, 0, 1);
 
         print "________________________________________________________________________"
 
@@ -3983,15 +3902,16 @@ def pre_limit_simple(channel):
     #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW700",600,800,40,150, 400,1000,"ErfPowExp_v1","ErfPow2_v1")
     #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW750",650,850,40,150, 400,1000,"ErfPowExp_v1","ErfPow2_v1")
     #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW700",600, 800,40,150, 600,1400,"Exp","Pow")
-    #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW750",650, 850,40,150, 600,1400,"Exp","Pow")
+    #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW750",650, 850,40,150, 600,1500,"Exp","Pow")
     #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW800",700, 900,40,150, 600,1400,"Exp","Pow")
     #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW900",800,1000,40,150, 600,1400,"Exp","Pow")
-    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW1000",900,1100,40,150, 600,1400,"Exp","Pow")
-    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW4000",3900,4100,40,150, 800,4500,"ExpTail","ExpN")
-    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW4000",3900,4100,40,150, 800,4500,"ExpN","Exp")
-    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW4500",4400,4600,40,150, 800,4500,"ExpTail","ExpN")
+    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW1000",900,1100,40,150, 600,1500,"Exp","Pow")
+    pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW1000",900,1100,40,150, 800,5000,"ExpN","ExpTail")
+    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW4000",3900,4100,40,150, 800,5000,"ExpTail","ExpN")
+    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW4000",3900,4100,40,150, 800,5000,"ExpN","Exp")
+    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW4500",4400,4600,40,150, 800,5000,"ExpTail","ExpN")
     #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW3500",3400,3600,40,150, 800,5000,"Exp","Pow")
-    pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW4000",3900,4100,40,150, 800,5000,"ExpN","ExpTail")
+    #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW4000",3900,4100,40,150, 800,5000,"ExpN","ExpTail")
 
 def fit_signal(method, channel, signal_sample,  in_mlvj_min, in_mlvj_max): # the WJets M_lvj shape and normalization are from sb_correction
     boostedW_fitter=doFit_wj_and_wlvj(channel, signal_sample, in_mlvj_min, in_mlvj_max, 40, 150, in_mlvj_min, in_mlvj_max);
