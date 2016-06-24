@@ -463,7 +463,7 @@ if __name__ == '__main__':
             time.sleep(0.3);
             command_makeCards = "nohup python B2GWW_doFit_class.py %s BulkGravWW%03d %02d %02d %02d %02d %02d %02d %s %s -b -m %01d --inPath %s --category %s --closuretest %01d  -w %01d &"%(CHAN, mass[i], ccmlo[i], ccmhi[i], mjlo[i], mjhi[i], mlo[i], mhi[i], shape[i], shapeAlt[i], 1, os.getcwd(), options.category,options.closuretest, binwidth[i]);
             print command_makeCards ;
-            #os.system(command_makeCards);
+            os.system(command_makeCards);
                  
     ### Compute Limits
     if options.computeLimits:
