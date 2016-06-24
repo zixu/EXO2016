@@ -26,7 +26,7 @@ parser.add_option('-a', '--additioninformation',action="store",type="string",des
 parser.add_option('-b', action='store_true', dest='noX', default=True, help='no X11 windows')
 parser.add_option('-c', '--channel',action="store",type="string",dest="opt_channel",default="mu")
 #parser.add_option('-c', '--channel',action="store",type="string",dest="opt_channel",default="el")
-parser.add_option('-w', '--width',action="store",dest="opt_channel",default=True, help="bin width")#True: 100; False: 50
+parser.add_option('-w', '--width',action="store",dest='width',default=True, help="bin width")#True: 100; False: 50
 
 parser.add_option('-s','--simple', action='store', dest='simple', default=True, help='pre-limit in simple mode')
 parser.add_option('-m','--multi', action='store', dest='multi', default=False, help='pre-limit in multi mode')
