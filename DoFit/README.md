@@ -18,7 +18,11 @@ python runLimitsB2GWW.py --channel mu --computeLimits
 
 python runLimitsB2GWW.py --channel el --computeLimits
 
-python runLimitsB2GWW.py --channel mu --plotLimits  
+python runLimitsB2GWW.py --channel em --computeLimits
 
-python runLimitsB2GWW.py --channel el --plotLimits  
+python runLimitsB2GWW.py --channel mu --plotLimits -b
+
+python runLimitsB2GWW.py --channel el --plotLimits -b
+
+python runLimitsB2GWW.py --channel em --plotLimits -b
 
