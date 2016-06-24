@@ -26,7 +26,7 @@ parser.add_option('-a', '--additioninformation',action="store",type="string",des
 parser.add_option('-b', action='store_true', dest='noX', default=True, help='no X11 windows')
 parser.add_option('-c', '--channel',action="store",type="string",dest="opt_channel",default="mu")
 #parser.add_option('-c', '--channel',action="store",type="string",dest="opt_channel",default="el")
-parser.add_option('-w', '--width',action="store",dest='width',default=True, help="bin width")#True: 100; False: 50
+parser.add_option('-w', '--width',action="store",type="int",dest='width',default=1, help="bin width")#True: 100; False: 50
 
 parser.add_option('-s','--simple', action='store', dest='simple', default=True, help='pre-limit in simple mode')
 parser.add_option('-m','--multi', action='store', dest='multi', default=False, help='pre-limit in multi mode')
@@ -107,6 +107,7 @@ class doFit_wj_and_wlvj:
         ## define invariant mass WW variable
         rrv_mass_lvj= RooRealVar("rrv_mass_lvj","M_{WW}",(in_mlvj_min+in_mlvj_max)/2.,in_mlvj_min,in_mlvj_max,"GeV");
         rrv_mass_lvj.setBins(nbins_mlvj);
+        rrv_mass_lvj.Print("v")
 
         ## set the model used for the background parametrization
         self.MODEL_4_mlvj=fit_model;
@@ -582,8 +583,12 @@ class doFit_wj_and_wlvj:
         if in_model_name == "ExpN":
             
             print "########### ExpN funtion for W+jets mlvj ############"
-            rrv_c_ExpN = RooRealVar("rrv_c_ExpN"+label+"_"+self.channel,"rrv_c_ExpN"+label+"_"+self.channel,-2,-10,-1e-2);
-            rrv_n_ExpN = RooRealVar("rrv_n_ExpN"+label+"_"+self.channel,"rrv_n_ExpN"+label+"_"+self.channel, 2, 0, 10);
+            rrv_c_ExpN = RooRealVar("rrv_c_ExpN"+label+"_"+self.channel,"rrv_c_ExpN"+label+"_"+self.channel,-5.32e-3,-1e-1,-1e-6);
+            rrv_n_ExpN = RooRealVar("rrv_n_ExpN"+label+"_"+self.channel,"rrv_n_ExpN"+label+"_"+self.channel, -64.3, -1e4, 1e5);
+
+            #rrv_c_ExpN = RooRealVar("rrv_c_ExpN"+label+"_"+self.channel,"rrv_c_ExpN"+label+"_"+self.channel,-2e-3,-1e2,-1e-5);
+            #rrv_n_ExpN = RooRealVar("rrv_n_ExpN"+label+"_"+self.channel,"rrv_n_ExpN"+label+"_"+self.channel, 2000, 0, 10000);
+
             model_pdf = ROOT.RooExpNPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_c_ExpN, rrv_n_ExpN);
 
                                                                                                              
@@ -3206,7 +3211,7 @@ class doFit_wj_and_wlvj:
 
         ### rates for the different process
         if mode == "unbin":
-            datacard_out.write( "\nrate %0.5f %0.3f %0.3f %0.3f %0.3f "%(self.workspace4limit_.var("rate_%s_xww_for_unbin"%(self.signal_sample)).getVal(), self.workspace4limit_.var("rate_WJets_xww_for_unbin").getVal(), self.workspace4limit_.var("rate_TTbar_xww_for_unbin").getVal(), self.workspace4limit_.var("rate_STop_xww_for_unbin").getVal(), self.workspace4limit_.var("rate_VV_xww_for_unbin").getVal() ) )
+            datacard_out.write( "\nrate %0.7f %0.3f %0.3f %0.3f %0.3f "%(self.workspace4limit_.var("rate_%s_xww_for_unbin"%(self.signal_sample)).getVal(), self.workspace4limit_.var("rate_WJets_xww_for_unbin").getVal(), self.workspace4limit_.var("rate_TTbar_xww_for_unbin").getVal(), self.workspace4limit_.var("rate_STop_xww_for_unbin").getVal(), self.workspace4limit_.var("rate_VV_xww_for_unbin").getVal() ) )
         elif mode == "counting":
             datacard_out.write( "\nrate %0.7f %0.3f %0.3f %0.3f %0.3f"%(self.workspace4limit_.var("rate_%s_xww_for_counting"%(self.signal_sample)).getVal(), self.workspace4limit_.var("rate_WJets_xww_for_counting").getVal(), self.workspace4limit_.var("rate_TTbar_xww_for_counting").getVal(), self.workspace4limit_.var("rate_STop_xww_for_counting").getVal(), self.workspace4limit_.var("rate_VV_xww_for_counting").getVal() ) )
         else: raw_input("wrong mode:"+mode)
