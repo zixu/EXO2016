@@ -3608,18 +3608,17 @@ class doFit_wj_and_wlvj:
         self.leg = self.legend4Plot(mplot,0,1,-0.01,-0.05,0.11,0.);
         #self.leg.SetTextSize(0.036);
         mplot.addObject(self.leg);
-	pt1 = ROOT.TPaveText(0.6180905,0.4355644,0.8291457,0.507992,"NDC")
-	pt1.SetTextFont(42)
-	pt1.SetTextSize(0.05)
-	#pt.SetTextAlign(12)
-	pt1.SetFillColor(0)
-	pt1.SetFillStyle(0)
-	pt1.SetBorderSize(0)
-	##text = pt1.AddText("")
-	##if options.category.find('Z') != -1: text = pt1.AddText("WZ category")
-	##elif options.category.find('W') != -1: text = pt1.AddText("WW category")
-	##text.SetTextFont(62)
-#	mplot.addObject(pt1)
+        #pt1 = ROOT.TPaveText(0.6180905,0.4355644,0.8291457,0.507992,"NDC")
+        #pt1.SetTextFont(42)
+        #pt1.SetTextSize(0.05)
+        #pt1.SetFillColor(0)
+        #pt1.SetFillStyle(0)
+        #pt1.SetBorderSize(0)
+        #text = pt1.AddText("")
+        #if options.category.find('Z') != -1: text = pt1.AddText("WZ category")
+        #elif options.category.find('W') != -1: text = pt1.AddText("WW category")
+        #text.SetTextFont(62)
+        #mplot.addObject(pt1)
 	            
         mplot.GetYaxis().SetRangeUser(1e-2,mplot.GetMaximum()*1.2);
             
@@ -4200,33 +4199,87 @@ class doFit_wj_and_wlvj:
 
 
 
-    ### in order to get the pull
+#    ### in order to get the pull
+#    def get_pull(self, rrv_x, mplot_orig):
+#
+#        #print "############### draw the pull plot ########################"
+#        hpull = mplot_orig.pullHist();
+#        x = ROOT.Double(0.); y = ROOT.Double(0) ;
+#        for ipoint in range(0,hpull.GetN()):
+#          hpull.GetPoint(ipoint,x,y);
+#          if(y == 0):
+#           hpull.SetPoint(ipoint,x,10)
+#       
+#        mplot_pull = rrv_x.frame(RooFit.Title("Pull Distribution"), RooFit.Bins(int(rrv_x.getBins()/self.binwidth_narrow_factor)));
+#        medianLine = TLine(rrv_x.getMin(),0.,rrv_x.getMax(),0); medianLine.SetLineWidth(2); medianLine.SetLineColor(kRed);
+#        mplot_pull.addObject(medianLine);
+#        mplot_pull.addPlotable(hpull,"P");
+#        mplot_pull.SetTitle("");
+#        mplot_pull.GetXaxis().SetTitle("");
+#        mplot_pull.GetYaxis().SetRangeUser(-5,5);
+#        mplot_pull.GetYaxis().SetTitleSize(0.10);
+#        mplot_pull.GetYaxis().SetLabelSize(0.10);
+#        mplot_pull.GetXaxis().SetTitleSize(0.10);
+#        mplot_pull.GetXaxis().SetLabelSize(0.10);
+#        mplot_pull.GetYaxis().SetTitleOffset(0.40);
+#        mplot_pull.GetYaxis().SetTitle("#frac{Data-Fit}{#sigma_{data}}");
+#        mplot_pull.GetYaxis().CenterTitle();
+#
+#        return mplot_pull;
     def get_pull(self, rrv_x, mplot_orig):
 
-        #print "############### draw the pull plot ########################"
+        print "############### draw the pull plot ########################"
         hpull = mplot_orig.pullHist();
         x = ROOT.Double(0.); y = ROOT.Double(0) ;
         for ipoint in range(0,hpull.GetN()):
           hpull.GetPoint(ipoint,x,y);
+	  #print x,y
           if(y == 0):
            hpull.SetPoint(ipoint,x,10)
        
-        mplot_pull = rrv_x.frame(RooFit.Title("Pull Distribution"), RooFit.Bins(int(rrv_x.getBins()/self.binwidth_narrow_factor)));
-        medianLine = TLine(rrv_x.getMin(),0.,rrv_x.getMax(),0); medianLine.SetLineWidth(2); medianLine.SetLineColor(kRed);
-        mplot_pull.addObject(medianLine);
-        mplot_pull.addPlotable(hpull,"P");
-        mplot_pull.SetTitle("");
-        mplot_pull.GetXaxis().SetTitle("");
-        mplot_pull.GetYaxis().SetRangeUser(-5,5);
-        mplot_pull.GetYaxis().SetTitleSize(0.10);
-        mplot_pull.GetYaxis().SetLabelSize(0.10);
-        mplot_pull.GetXaxis().SetTitleSize(0.10);
-        mplot_pull.GetXaxis().SetLabelSize(0.10);
-        mplot_pull.GetYaxis().SetTitleOffset(0.40);
-        mplot_pull.GetYaxis().SetTitle("#frac{Data-Fit}{#sigma_{data}}");
-        mplot_pull.GetYaxis().CenterTitle();
+   	gt = ROOT.TH1F("gt","gt",int(rrv_x.getBins()/self.binwidth_narrow_factor),rrv_x.getMin(),rrv_x.getMax());
+   	gt.SetMinimum(-3.999);
+   	gt.SetMaximum(3.999);
+   	gt.SetDirectory(0);
+   	gt.SetStats(0);
+   	gt.SetLineStyle(0);
+   	gt.SetMarkerStyle(20);
+   	gt.GetXaxis().SetTitle(rrv_x.GetTitle());
+   	gt.GetXaxis().SetLabelFont(42);
+   	gt.GetXaxis().SetLabelOffset(0.02);
+   	gt.GetXaxis().SetLabelSize(0.15);
+   	gt.GetXaxis().SetTitleSize(0.15);
+   	gt.GetXaxis().SetTitleOffset(1.2);
+   	gt.GetXaxis().SetTitleFont(42);
+   	gt.GetYaxis().SetTitle("#frac{Data-Fit}{#sigma_{data}}");
+   	gt.GetYaxis().CenterTitle(True);
+   	gt.GetYaxis().SetNdivisions(205);
+   	gt.GetYaxis().SetLabelFont(42);
+   	gt.GetYaxis().SetLabelOffset(0.007);
+   	gt.GetYaxis().SetLabelSize(0.15);
+   	gt.GetYaxis().SetTitleSize(0.15);
+   	gt.GetYaxis().SetTitleOffset(0.35);
+   	gt.GetYaxis().SetTitleFont(42);
+   	#gt.GetXaxis().SetNdivisions(505)
+	hpull.SetHistogram(gt)
+	return hpull
+        #mplot_pull = rrv_x.frame(RooFit.Title("Pull Distribution"), RooFit.Bins(int(rrv_x.getBins()/self.binwidth_narrow_factor)));
+        #medianLine = TLine(rrv_x.getMin(),0.,rrv_x.getMax(),0); medianLine.SetLineWidth(2); medianLine.SetLineColor(kRed);
+        #mplot_pull.addObject(medianLine);
+        #mplot_pull.addPlotable(hpull,"P");
+        #mplot_pull.SetTitle("");
+        #mplot_pull.GetXaxis().SetTitle("");
+        #mplot_pull.GetYaxis().SetRangeUser(-5,5);
+        #mplot_pull.GetYaxis().SetTitleSize(0.10);
+        #mplot_pull.GetYaxis().SetLabelSize(0.10);
+        #mplot_pull.GetXaxis().SetTitleSize(0.10);
+        #mplot_pull.GetXaxis().SetLabelSize(0.10);
+        #mplot_pull.GetYaxis().SetTitleOffset(0.40);
+        #mplot_pull.GetYaxis().SetTitle("#frac{Data-Fit}{#sigma_{data}}");
+        #mplot_pull.GetYaxis().CenterTitle();
 
         return mplot_pull;
+
 
     def getData_PoissonInterval(self,data_obs,mplot):
         rrv_x = self.workspace4fit_.var("rrv_mass_lvj");
@@ -4686,7 +4739,7 @@ class doFit_wj_and_wlvj:
     def draw_canvas_with_pull1(self, rrv_x, datahist, mplot, mplot_pull,ndof,parameters_list,in_directory, in_file_name, in_model_name="", show_constant_parameter=0, logy=0,ismj=0,isPull=0):# mplot + pull
 
         print "############### draw the canvas with pull ########################" 
-	#hist_ = datahist.createHistogram(rrv_x.GetName(),int(rrv_x.getBins()/self.narrow_factor))
+	#hist_ = datahist.createHistogram(rrv_x.GetName(),int(rrv_x.getBins()/self.binwidth_narrow_factor))
         #chi2_ = self.calculate_chi2(datahist,rrv_x,mplot,ndof,ismj)
 	mplot.GetXaxis().SetTitle("")
 	#mplot.GetXaxis().SetTitleOffset(1.1);
@@ -4849,16 +4902,162 @@ class doFit_wj_and_wlvj:
 
 
   
+#    def draw_canvas_with_pull2(self, rrv_x, datahist, mplot, mplotP, mplot_pull,ndof,parameters_list,in_directory, in_file_name, in_model_name="", show_constant_parameter=0, logy=0,ismj=0,isPull=0):# mplot + pull
+#
+#        print "############### draw the canvas with pull ########################" 
+#        chi2_ = self.calculate_chi2(datahist,rrv_x,mplot,ndof,ismj)
+#        mplot.GetXaxis().SetTitle("")
+#        mplot.GetYaxis().SetTitleSize(0.07)
+#        mplot.GetYaxis().SetTitleOffset(0.9)
+#        mplot.GetYaxis().SetLabelSize(0.06)
+#        mplot.GetXaxis().SetLabelSize(0);
+#        mplotP.GetXaxis().SetTitle("M_{WW} (GeV)")
+#	
+#        cMassFit = self.get_canvas("cMassFit")#TCanvas("cMassFit","cMassFit", 600,600);
+#        # if parameters_list is empty, don't draw pad3
+#        par_first=parameters_list.createIterator();
+#        par_first.Reset();
+#        param_first=par_first.Next()
+#        doParameterPlot = 0 ;
+#        if param_first and doParameterPlot != 0:
+#            pad1=TPad("pad1","pad1",0.,0. ,0.8,0.24);
+#            pad2=TPad("pad2","pad2",0.,0.24,0.8,1. );
+#            pad3=TPad("pad3","pad3",0.8,0.,1,1);
+#            pad1.Draw();
+#            pad2.Draw();
+#            pad3.Draw();
+#        else:
+#            pad1=TPad("pad1","pad1",0.,0. ,1,0.30); #pad1 - pull
+#            pad2=TPad("pad2","pad2",0.,0.3,1.,1. ); #pad0
+#
+#   	    pad2.SetRightMargin(0.1);
+#   	    pad2.SetTopMargin(0.1);
+#   	    pad2.SetBottomMargin(0.0001);
+#   	    pad1.SetRightMargin(0.1)
+#   	    pad1.SetTopMargin(0)
+#   	    pad1.SetBottomMargin(0.4)   
+#        pad1.Draw();
+#        pad2.Draw();
+#
+#        pad2.cd();
+#	
+#		
+#        if ismj:
+#            pt = ROOT.TPaveText(0.6243719,0.4080919,0.8756281,0.547952,"NDC")
+#            pt.SetTextSize(0.03746254)
+#        else:
+#            pt = ROOT.TPaveText(0.5175879,0.7152847,0.8027638,0.8551449,"NDC")
+#            pt.SetTextSize(0.054)
+#         
+#        pt.SetTextFont(62)	
+#        pt.SetTextAlign(12)
+#        pt.SetFillColor(0)
+#        pt.SetBorderSize(0)
+#        pt.SetFillStyle(0)
+#        text = pt.AddText("#chi^2/d.o.f = %.2f/%i = %.2f" %(chi2_[0],chi2_[1],chi2_[0]/chi2_[1]))
+#        text.SetTextFont(62)
+#        mplot.Draw();
+#        pad1.cd();
+#        mplot_pull.Draw("AP");
+#        mplotP.Draw("same");
+#        medianLine = TLine(mplot.GetXaxis().GetXmin(),0.,mplot.GetXaxis().GetXmax(),0); medianLine.SetLineWidth(2); medianLine.SetLineColor(kRed);
+#        medianLine.Draw()
+#        mplot_pull.Draw("Psame");
+#	
+#        if param_first and doParameterPlot != 0:
+#
+#            pad3.cd();
+#            latex=TLatex();
+#            latex.SetTextSize(0.1);
+#            par=parameters_list.createIterator();
+#            par.Reset();
+#            param=par.Next()
+#            i=0;
+#            while param:
+#                if (not param.isConstant() ) or show_constant_parameter:
+#                    param.Print();
+#                    icolor=1;#if a paramenter is constant, color is 2
+#                    if param.isConstant(): icolor=2
+#                    latex.DrawLatex(0,0.9-i*0.04,"#color[%s]{%s}"%(icolor,param.GetName()) );
+#                    latex.DrawLatex(0,0.9-i*0.04-0.02," #color[%s]{%4.3e +/- %2.1e}"%(icolor,param.getVal(),param.getError()) );
+#                    i=i+1;
+#                param=par.Next();
+#
+#        cMassFit.Update()
+#        pad2.cd()
+#        CMS_lumi.CMS_lumi(pad2, 4, 11)	
+#        pad2.cd()
+#        pad2.Update()
+#        pad2.RedrawAxis()
+#        frame = pad2.GetFrame()
+#        frame.Draw()   
+#        cMassFit.cd()
+#        cMassFit.Update()
+#			
+#        ## create the directory where store the plots
+#        Directory = TString(in_directory+self.signal_sample);
+#        if not Directory.EndsWith("/"):Directory = Directory.Append("/");
+#        if not os.path.isdir(Directory.Data()):
+#              os.system("mkdir -p "+Directory.Data());
+#
+#        rlt_file = TString(Directory.Data()+in_file_name);
+#        if rlt_file.EndsWith(".root"):
+#            TString(in_model_name).ReplaceAll(".root","");
+#            rlt_file.ReplaceAll(".root","_"+in_model_name+"_with_pull.png");
+#        else:
+#            TString(in_model_name).ReplaceAll(".root","");
+#            rlt_file.ReplaceAll(".root","");
+#            rlt_file=rlt_file.Append("_"+in_model_name+"_with_pull.png");
+#
+#        cMassFit.SaveAs(rlt_file.Data());
+#
+#        rlt_file.ReplaceAll(".png",".pdf");
+#        cMassFit.SaveAs(rlt_file.Data());
+#        
+#        rlt_file.ReplaceAll(".pdf",".root");
+#        cMassFit.SaveAs(rlt_file.Data());
+#
+#        string_file_name = TString(in_file_name);
+#        if string_file_name.EndsWith(".root"):
+#            string_file_name.ReplaceAll(".root","_"+in_model_name);
+#        else:
+#            string_file_name.ReplaceAll(".root","");
+#            string_file_name.Append("_"+in_model_name);
+#
+#        if logy:
+#            mplot.GetYaxis().SetRangeUser(0.002,mplot.GetMaximum()*200);
+#            pad2.SetLogy() ;
+#            pad2.Update();
+#            cMassFit.Update();
+#            rlt_file.ReplaceAll(".root","_log.root");
+#            cMassFit.SaveAs(rlt_file.Data());
+#            rlt_file.ReplaceAll(".root",".pdf");
+#            cMassFit.SaveAs(rlt_file.Data());
+#            rlt_file.ReplaceAll(".pdf",".png");
+#            cMassFit.SaveAs(rlt_file.Data());
+#
+#        #self.draw_canvas(mplot,in_directory,string_file_name.Data(),0,logy,1);
+#    #### draw canvas with plots with pull
     def draw_canvas_with_pull2(self, rrv_x, datahist, mplot, mplotP, mplot_pull,ndof,parameters_list,in_directory, in_file_name, in_model_name="", show_constant_parameter=0, logy=0,ismj=0,isPull=0):# mplot + pull
 
         print "############### draw the canvas with pull ########################" 
+	#hist_ = datahist.createHistogram(rrv_x.GetName(),int(rrv_x.getBins()/self.binwidth_narrow_factor))
         chi2_ = self.calculate_chi2(datahist,rrv_x,mplot,ndof,ismj)
-        mplot.GetXaxis().SetTitle("")
+	mplot.GetXaxis().SetTitle("")
+	#mplot.GetXaxis().SetTitleOffset(1.1);
+        #mplot.GetYaxis().SetTitleOffset(1.3);
+        #mplot.GetXaxis().SetTitleSize(0.055);
+        #mplot.GetYaxis().SetTitleSize(0.055);
+        #mplot.GetXaxis().SetLabelSize(0.045);
+        #mplot.GetYaxis().SetLabelSize(0.045);
         mplot.GetYaxis().SetTitleSize(0.07)
         mplot.GetYaxis().SetTitleOffset(0.9)
         mplot.GetYaxis().SetLabelSize(0.06)
-        mplot.GetXaxis().SetLabelSize(0);
-        mplotP.GetXaxis().SetTitle("M_{WW} (GeV)")
+	mplot.GetXaxis().SetLabelSize(0);
+        #mplot_pull.GetXaxis().SetLabelSize(0.14);
+        #mplot_pull.GetYaxis().SetLabelSize(0.14);
+        #mplot_pull.GetYaxis().SetTitleSize(0.15);
+        #mplot_pull.GetYaxis().SetNdivisions(205);
 	
         cMassFit = self.get_canvas("cMassFit")#TCanvas("cMassFit","cMassFit", 600,600);
         # if parameters_list is empty, don't draw pad3
@@ -4867,49 +5066,58 @@ class doFit_wj_and_wlvj:
         param_first=par_first.Next()
         doParameterPlot = 0 ;
         if param_first and doParameterPlot != 0:
-            pad1=TPad("pad1","pad1",0.,0. ,0.8,0.24);
-            pad2=TPad("pad2","pad2",0.,0.24,0.8,1. );
-            pad3=TPad("pad3","pad3",0.8,0.,1,1);
-            pad1.Draw();
-            pad2.Draw();
-            pad3.Draw();
+         pad1=TPad("pad1","pad1",0.,0. ,0.8,0.24);
+         pad2=TPad("pad2","pad2",0.,0.24,0.8,1. );
+         pad3=TPad("pad3","pad3",0.8,0.,1,1);
+         pad1.Draw();
+         pad2.Draw();
+         pad3.Draw();
         else:
-            pad1=TPad("pad1","pad1",0.,0. ,1,0.30); #pad1 - pull
-            pad2=TPad("pad2","pad2",0.,0.3,1.,1. ); #pad0
+         pad1=TPad("pad1","pad1",0.,0. ,1,0.30); #pad1 - pull
+         pad2=TPad("pad2","pad2",0.,0.3,1.,1. ); #pad0
 
-   	    pad2.SetRightMargin(0.1);
-   	    pad2.SetTopMargin(0.1);
-   	    pad2.SetBottomMargin(0.0001);
-   	    pad1.SetRightMargin(0.1)
-   	    pad1.SetTopMargin(0)
-   	    pad1.SetBottomMargin(0.4)   
-        pad1.Draw();
-        pad2.Draw();
-
+   	 pad2.SetRightMargin(0.1);
+   	 pad2.SetTopMargin(0.1);
+   	 pad2.SetBottomMargin(0.0001);
+   	 pad1.SetRightMargin(0.1)
+   	 pad1.SetTopMargin(0)
+   	 pad1.SetBottomMargin(0.4)   
+	 #pad1.SetRightMargin(0.05)
+	 #pad2.SetRightMargin(0.05)
+         pad1.Draw();
+         pad2.Draw();
+                                                                                                                                                                              
         pad2.cd();
 	
 		
-        if ismj:
-            pt = ROOT.TPaveText(0.6243719,0.4080919,0.8756281,0.547952,"NDC")
-            pt.SetTextSize(0.03746254)
-        else:
-            pt = ROOT.TPaveText(0.5175879,0.7152847,0.8027638,0.8551449,"NDC")
-            pt.SetTextSize(0.054)
-         
-        pt.SetTextFont(62)	
-        pt.SetTextAlign(12)
-        pt.SetFillColor(0)
-        pt.SetBorderSize(0)
-        pt.SetFillStyle(0)
-        text = pt.AddText("#chi^2/d.o.f = %.2f/%i = %.2f" %(chi2_[0],chi2_[1],chi2_[0]/chi2_[1]))
-        text.SetTextFont(62)
+	if ismj:
+	 pt = ROOT.TPaveText(0.6243719,0.4080919,0.8756281,0.547952,"NDC")
+	 pt.SetTextSize(0.03746254)
+	else:
+	 pt = ROOT.TPaveText(0.5175879,0.7152847,0.8027638,0.8551449,"NDC")
+	 pt.SetTextSize(0.054)
+	 
+	pt.SetTextFont(62)	
+	pt.SetTextAlign(12)
+	pt.SetFillColor(0)
+	pt.SetBorderSize(0)
+	pt.SetFillStyle(0)
+	text = pt.AddText("#chi^2/d.o.f = %.2f/%i = %.2f" %(chi2_[0],chi2_[1],chi2_[0]/chi2_[1]))
+	text.SetTextFont(62)
+	
+	
         mplot.Draw();
+	#pt.Draw()
+
+        #banner = self.banner4Plot(1);
+        #banner.Draw();
+
         pad1.cd();
         mplot_pull.Draw("AP");
         mplotP.Draw("same");
         medianLine = TLine(mplot.GetXaxis().GetXmin(),0.,mplot.GetXaxis().GetXmax(),0); medianLine.SetLineWidth(2); medianLine.SetLineColor(kRed);
-        medianLine.Draw()
-        mplot_pull.Draw("Psame");
+	medianLine.Draw()
+	mplot_pull.Draw("Psame");
 	
         if param_first and doParameterPlot != 0:
 
@@ -4930,16 +5138,16 @@ class doFit_wj_and_wlvj:
                     i=i+1;
                 param=par.Next();
 
-        cMassFit.Update()
-        pad2.cd()
-        CMS_lumi.CMS_lumi(pad2, 4, 11)	
-        pad2.cd()
-        pad2.Update()
-        pad2.RedrawAxis()
-        frame = pad2.GetFrame()
-        frame.Draw()   
-        cMassFit.cd()
-        cMassFit.Update()
+	cMassFit.Update()
+	pad2.cd()
+	CMS_lumi.CMS_lumi(pad2, 4, 11)	
+	pad2.cd()
+	pad2.Update()
+	pad2.RedrawAxis()
+	frame = pad2.GetFrame()
+	frame.Draw()   
+	cMassFit.cd()
+	cMassFit.Update()
 			
         ## create the directory where store the plots
         Directory = TString(in_directory+self.signal_sample);
@@ -4983,7 +5191,8 @@ class doFit_wj_and_wlvj:
             rlt_file.ReplaceAll(".pdf",".png");
             cMassFit.SaveAs(rlt_file.Data());
 
-        self.draw_canvas(mplot,in_directory,string_file_name.Data(),0,logy,1);
+        #self.draw_canvas(mplot,in_directory,string_file_name.Data(),0,logy,1);
+
 
     def calculate_chi2(self,hist,rrv_x,mplot_orig,ndof,ismj):
         pulls = array('d',[])
