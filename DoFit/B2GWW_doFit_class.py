@@ -192,20 +192,20 @@ class doFit_wj_and_wlvj:
             
         #medium wtagger_eff reweight between data and mc #Wtagger_forV SF have be add to ntuple weight;
         if   self.wtagger_category=="LP":
-            self.rrv_VTagger_eff_reweight_forT=RooRealVar("rrv_VTagger_eff_reweight_forT","rrv_VTagger_eff_reweight_forT",1.39);
-            self.rrv_VTagger_eff_reweight_forT.setError(0.08*self.rrv_VTagger_eff_reweight_forT.getVal());
-            self.rrv_VTagger_eff_reweight_forV=RooRealVar("rrv_VTagger_eff_reweight_forV","rrv_VTagger_eff_reweight_forV",1.277);
-            self.rrv_VTagger_eff_reweight_forV.setError(0.303);
+            self.rrv_wtagger_eff_reweight_forT=RooRealVar("rrv_wtagger_eff_reweight_forT","rrv_wtagger_eff_reweight_forT",1.39);
+            self.rrv_wtagger_eff_reweight_forT.setError(0.08*self.rrv_wtagger_eff_reweight_forT.getVal());
+            self.rrv_wtagger_eff_reweight_forV=RooRealVar("rrv_wtagger_eff_reweight_forV","rrv_wtagger_eff_reweight_forV",1.277);
+            self.rrv_wtagger_eff_reweight_forV.setError(0.303);
         elif self.wtagger_category=="HP": 
-            self.rrv_VTagger_eff_reweight_forT=RooRealVar("rrv_VTagger_eff_reweight_forT","rrv_VTagger_eff_reweight_forT", 1.00);
-            self.rrv_VTagger_eff_reweight_forT.setError(0.049*self.rrv_VTagger_eff_reweight_forT.getVal());
-            self.rrv_VTagger_eff_reweight_forV=RooRealVar("rrv_VTagger_eff_reweight_forV","rrv_VTagger_eff_reweight_forV",1);
-            self.rrv_VTagger_eff_reweight_forV.setError(0.144);
+            self.rrv_wtagger_eff_reweight_forT=RooRealVar("rrv_wtagger_eff_reweight_forT","rrv_wtagger_eff_reweight_forT", 0.85);
+            self.rrv_wtagger_eff_reweight_forT.setError(0.042);
+            self.rrv_wtagger_eff_reweight_forV=RooRealVar("rrv_wtagger_eff_reweight_forV","rrv_wtagger_eff_reweight_forV",0.692);
+            self.rrv_wtagger_eff_reweight_forV.setError(0.144);
         else:
             raw_input("Fail to find correct categoryID. Please check your wtaggerI:%s and channel:%s"%(self.wtagger_category, self.channel));
 
-        print "VTagger efficiency correction for Top sample: %s +/- %s"%(self.rrv_VTagger_eff_reweight_forT.getVal(), self.rrv_VTagger_eff_reweight_forT.getError());
-        print "VTagger efficiency correction for V sample: %s +/- %s"%(self.rrv_VTagger_eff_reweight_forV.getVal(), self.rrv_VTagger_eff_reweight_forV.getError());
+        print "VTagger efficiency correction for Top sample: %s +/- %s"%(self.rrv_wtagger_eff_reweight_forT.getVal(), self.rrv_wtagger_eff_reweight_forT.getError());
+        print "VTagger efficiency correction for V sample: %s +/- %s"%(self.rrv_wtagger_eff_reweight_forV.getVal(), self.rrv_wtagger_eff_reweight_forV.getError());
 
 
         #correct the W-jet mass peak difference between data and MC
@@ -1305,8 +1305,8 @@ class doFit_wj_and_wlvj:
         weight_mc_forSignal="weight*%s*%s"%(tmp_lumi, tmp_signal_scale);
         weight_mc_forV="weight*%s"%(tmp_lumi);
         weight_mc_forT="weight*%s"%(tmp_lumi);
-        ##weight_mc_forV="weight*%s*%s"%(tmp_lumi,self.rrv_VTagger_eff_reweight_forV.getVal());#little error rrv_wtagger_eff_reweight_forV
-        ##weight_mc_forT="weight*%s*%s"%(tmp_lumi,self.rrv_VTagger_eff_reweight_forT.getVal());#little error rrv_wtagger_eff_reweight_forT
+        ##weight_mc_forV="weight*%s*%s"%(tmp_lumi,self.rrv_wtagger_eff_reweight_forV.getVal());#little error rrv_wtagger_eff_reweight_forV
+        ##weight_mc_forT="weight*%s*%s"%(tmp_lumi,self.rrv_wtagger_eff_reweight_forT.getVal());#little error rrv_wtagger_eff_reweight_forT
         weight_mc_forG="weight*%s"%(tmp_lumi); #General
 
         if options.keepblind: 
@@ -2690,17 +2690,12 @@ class doFit_wj_and_wlvj:
                 if label =="_data" or label =="_data_xww" :
                     tmp_event_weight=1.;
                     tmp_event_weight4fit=1.;
-
-#                if TString(label).Contains("MWp_") and TString(label).Contains("_bb"):#qun
-#                    tmp_event_weight     = treeIn.weight*tmp_lumi/20.;
-#                    tmp_event_weight4fit = tmp_event_weight;
-
-                ##    
-                ##else:
-                ##    if TString(label).Contains("_TTbar") or TString(label).Contains("_STop") :
-                ##        tmp_event_weight=tmp_event_weight*self.rrv_VTagger_eff_reweight_forT.getVal();
-                ##    else:
-                ##        tmp_event_weight=tmp_event_weight*self.rrv_VTagger_eff_reweight_forV.getVal();
+                    
+                else:
+                    if TString(label).Contains("_TTbar") or TString(label).Contains("_STop") :
+                        tmp_event_weight=tmp_event_weight*self.rrv_wtagger_eff_reweight_forT.getVal();
+                    else:
+                        tmp_event_weight=tmp_event_weight*self.rrv_wtagger_eff_reweight_forV.getVal();
                 
                 rrv_mass_lvj.setVal(treeIn.m_lvj);
 
@@ -2743,9 +2738,9 @@ class doFit_wj_and_wlvj:
 
         if not label=="_data" and not label =="_data_xww": ## correct also because events in 4fit dataset where not rescaled in the cycle
             if TString(label).Contains("_TTbar") or TString(label).Contains("_STop") :
-                tmp_scale_to_lumi=tmp_scale_to_lumi*self.rrv_VTagger_eff_reweight_forT.getVal();
+                tmp_scale_to_lumi=tmp_scale_to_lumi*self.rrv_wtagger_eff_reweight_forT.getVal();
             else:
-                tmp_scale_to_lumi=tmp_scale_to_lumi*self.rrv_VTagger_eff_reweight_forV.getVal();
+                tmp_scale_to_lumi=tmp_scale_to_lumi*self.rrv_wtagger_eff_reweight_forV.getVal();
 
         ### scaler to lumi for MC in 4fit datasets
         rrv_scale_to_lumi=RooRealVar("rrv_scale_to_lumi"+label+"_"+self.channel,"rrv_scale_to_lumi"+label+"_"+self.channel,tmp_scale_to_lumi)
@@ -2824,9 +2819,9 @@ class doFit_wj_and_wlvj:
         getattr(self.workspace4limit_,"import")(self.workspace4fit_.var("rrv_number_STop_xww_signal_region_%s_mlvj"%(self.channel)).clone("rate_STop_xww_for_unbin"));
 
         ### Set the error properly -> taking into account lumi, Vtagger and theoretical uncertainty on XS -> for VV, TTbar and STop
-        self.workspace4limit_.var("rate_VV_xww_for_unbin").setError(self.workspace4limit_.var("rate_VV_xww_for_unbin").getVal()*TMath.Sqrt( self.lumi_uncertainty*self.lumi_uncertainty + self.rrv_VTagger_eff_reweight_forV.getError()/self.rrv_VTagger_eff_reweight_forV.getVal()*self.rrv_VTagger_eff_reweight_forV.getError()/self.rrv_VTagger_eff_reweight_forV.getVal() +self.XS_VV_uncertainty*self.XS_VV_uncertainty ) );
-        self.workspace4limit_.var("rate_STop_xww_for_unbin").setError(self.workspace4limit_.var("rate_STop_xww_for_unbin").getVal()*TMath.Sqrt( self.lumi_uncertainty*self.lumi_uncertainty + self.rrv_VTagger_eff_reweight_forT.getError()/self.rrv_VTagger_eff_reweight_forT.getVal()*self.rrv_VTagger_eff_reweight_forT.getError()/self.rrv_VTagger_eff_reweight_forT.getVal() +self.XS_STop_uncertainty*self.XS_STop_uncertainty ) );
-        self.workspace4limit_.var("rate_TTbar_xww_for_unbin").setError(self.workspace4limit_.var("rate_TTbar_xww_for_unbin").getVal()*TMath.Sqrt( self.lumi_uncertainty*self.lumi_uncertainty + self.rrv_VTagger_eff_reweight_forT.getError()/self.rrv_VTagger_eff_reweight_forT.getVal()*self.rrv_VTagger_eff_reweight_forT.getError()/self.rrv_VTagger_eff_reweight_forT.getVal() ))
+        self.workspace4limit_.var("rate_VV_xww_for_unbin").setError(self.workspace4limit_.var("rate_VV_xww_for_unbin").getVal()*TMath.Sqrt( self.lumi_uncertainty*self.lumi_uncertainty + self.rrv_wtagger_eff_reweight_forV.getError()/self.rrv_wtagger_eff_reweight_forV.getVal()*self.rrv_wtagger_eff_reweight_forV.getError()/self.rrv_wtagger_eff_reweight_forV.getVal() +self.XS_VV_uncertainty*self.XS_VV_uncertainty ) );
+        self.workspace4limit_.var("rate_STop_xww_for_unbin").setError(self.workspace4limit_.var("rate_STop_xww_for_unbin").getVal()*TMath.Sqrt( self.lumi_uncertainty*self.lumi_uncertainty + self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal()*self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal() +self.XS_STop_uncertainty*self.XS_STop_uncertainty ) );
+        self.workspace4limit_.var("rate_TTbar_xww_for_unbin").setError(self.workspace4limit_.var("rate_TTbar_xww_for_unbin").getVal()*TMath.Sqrt( self.lumi_uncertainty*self.lumi_uncertainty + self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal()*self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal() ))
 
         ### Get the dataset for data into the signal region
         getattr(self.workspace4limit_,"import")(self.workspace4fit_.data("rdataset_data_xww_signal_region_%s_mlvj"%(self.channel)).Clone("data_obs_xww_%s_%s"%(self.channel,self.wtagger_category)))
@@ -3229,13 +3224,16 @@ class doFit_wj_and_wlvj:
             datacard_out.write( "\nCMS_xww_WJ_norm_%s_%s lnN - %0.3f - - -"%(self.channel, self.wtagger_category, 1+ self.workspace4limit_.var("rate_WJets_xww_for_unbin").getError()/self.workspace4limit_.var("rate_WJets_xww_for_unbin").getVal() ) );
 
         ### Top normalization due to SF in the ttbar CR
-        datacard_out.write( "\nCMS_xww_Top_norm_%s_%s lnN - - %0.3f/%0.3f %0.3f/%0.3f -"%(self.channel, self.wtagger_category, 1+self.rrv_VTagger_eff_reweight_forT.getError()/self.rrv_VTagger_eff_reweight_forT.getVal(), 1-self.rrv_VTagger_eff_reweight_forT.getError()/self.rrv_VTagger_eff_reweight_forT.getVal(), 1+self.rrv_VTagger_eff_reweight_forT.getError()/self.rrv_VTagger_eff_reweight_forT.getVal(), 1-self.rrv_VTagger_eff_reweight_forT.getError()/self.rrv_VTagger_eff_reweight_forT.getVal() ) );
+        ##datacard_out.write( "\nCMS_xww_Top_norm_%s_%s lnN - - %0.3f/%0.3f %0.3f/%0.3f -"%(self.channel, self.wtagger_category, 1+self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal(), 1-self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal(), 1+self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal(), 1-self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal() ) );
+        datacard_out.write( "\nCMS_xww_Top_norm_%s_%s lnN - %0.3f/%0.3f %0.3f/%0.3f %0.3f/%0.3f -"%(self.channel, self.wtagger_category, 1-0.6*self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal(), 1+0.6*self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal(), 1+self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal(), 1-self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal(), 1+self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal(), 1-self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal() ) );
+
+
 
         ### V-Tagger SF nouisance
         if self.wtagger_category == "HP":
-            datacard_out.write( "\nCMS_eff_vtag_tau21_sf lnN %0.3f/%0.3f - - - %0.3f/%0.3f"%(1+self.rrv_VTagger_eff_reweight_forV.getError(),1-self.rrv_VTagger_eff_reweight_forV.getError(), 1+self.rrv_VTagger_eff_reweight_forV.getError(),1-self.rrv_VTagger_eff_reweight_forV.getError()));
+            datacard_out.write( "\nCMS_eff_vtag_tau21_sf lnN %0.3f/%0.3f - - - %0.3f/%0.3f"%(1+self.rrv_wtagger_eff_reweight_forV.getError(),1-self.rrv_wtagger_eff_reweight_forV.getError(), 1+self.rrv_wtagger_eff_reweight_forV.getError(),1-self.rrv_wtagger_eff_reweight_forV.getError()));
         elif self.wtagger_category == "LP":
-            datacard_out.write( "\nCMS_eff_vtag_tau21_sf lnN %0.3f/%0.3f - - - %0.3f/%0.3f"%(1-self.rrv_VTagger_eff_reweight_forV.getError(),1+self.rrv_VTagger_eff_reweight_forV.getError(), 1-self.rrv_VTagger_eff_reweight_forV.getError(),1+self.rrv_VTagger_eff_reweight_forV.getError()));
+            datacard_out.write( "\nCMS_eff_vtag_tau21_sf lnN %0.3f/%0.3f - - - %0.3f/%0.3f"%(1-self.rrv_wtagger_eff_reweight_forV.getError(),1+self.rrv_wtagger_eff_reweight_forV.getError(), 1-self.rrv_wtagger_eff_reweight_forV.getError(),1+self.rrv_wtagger_eff_reweight_forV.getError()));
             
         ### btag scale factor on the MC background
         #datacard_out.write( "\nCMS_xww_btagger lnN - - %0.3f %0.3f %0.3f"%(self.channel, 1+self.btag_scale_uncertainty, 1+self.btag_scale_uncertainty, 1+self.btag_scale_uncertainty ) );
