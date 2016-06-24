@@ -480,12 +480,12 @@ if __name__ == '__main__':
                     cmd_comb += 'wwlvj_BulkGravWW%s_mu_HP_unbin.txt ' %(mass[i])
                     cmd_comb += '> wwlvj_BulkGravWW%s_em_HP_unbin.txt'%(mass[i])
                     print cmd_comb
-                    #os.system(cmd_comb)
+                    os.system(cmd_comb)
 
                 runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2 -S %d"%(mass[i],mass[i],options.channel ,mass[i],options.channel, options.noSys);
 
                 print runCmmd2;
-                #os.system(runCmmd2);
+                os.system(runCmmd2);
                 time.sleep(0.1);
 
 
