@@ -434,7 +434,7 @@ if __name__ == '__main__':
 
     ### Set the working directory
     if options.computeLimits or options.plotLimits:
-	os.chdir("cards_allCats");    
+	os.chdir("cards_B2GWW");    
 
     ### put in functionality to test just one mass point or just one cprime
 
@@ -474,13 +474,24 @@ if __name__ == '__main__':
             time.sleep(0.3);
             ### Asymptotic Limit + profileLikelihood to have an hint of the r value
             if options.limitMode==0:
-              runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2 -S %d"%(mass[i],mass[i],options.channel ,mass[i],options.channel, options.noSys);
-            elif options.limitMode==1:
-              runCmmd2 = "combine -M ProfileLikelihood --significance --pvalue -m %03d -n _pval_obs_%03d_bb_%s_HP wwlvj_MWp_%03d_bb_%s_HP_unbin.txt\n"%(mass[i],mass[i],"mu",mass[i],"mu");
-              runCmmd2 += "combine -M ProfileLikelihood --significance --pvalue -m %03d -n _pval_exp_%03d_bb_%s_HP wwlvj_MWp_%03d_bb_%s_HP_unbin.txt --expectSignal=1 --toysFreq -t -1"%(mass[i],mass[i],"mu",mass[i],"mu");
-            print runCmmd2;
-            #os.system(runCmmd2);
-            time.sleep(0.1);
+                if options.channel=="em":
+                    cmd_comb= 'combineCards.py '
+                    cmd_comb += 'wwlvj_BulkGravWW%s_el_HP_unbin.txt ' %(mass[i]) 
+                    cmd_comb += 'wwlvj_BulkGravWW%s_mu_HP_unbin.txt ' %(mass[i])
+                    cmd_comb += '> wwlvj_BulkGravWW%s_em_HP_unbin.txt'%(mass[i])
+                    print cmd_comb
+                    #os.system(cmd_comb)
+
+                runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2 -S %d"%(mass[i],mass[i],options.channel ,mass[i],options.channel, options.noSys);
+
+                print runCmmd2;
+                #os.system(runCmmd2);
+                time.sleep(0.1);
+
+
+            #elif options.limitMode==1:
+            #  runCmmd2 = "combine -M ProfileLikelihood --significance --pvalue -m %03d -n _pval_obs_%03d_bb_%s_HP wwlvj_MWp_%03d_bb_%s_HP_unbin.txt\n"%(mass[i],mass[i],"mu",mass[i],"mu");
+            #  runCmmd2 += "combine -M ProfileLikelihood --significance --pvalue -m %03d -n _pval_exp_%03d_bb_%s_HP wwlvj_MWp_%03d_bb_%s_HP_unbin.txt --expectSignal=1 --toysFreq -t -1"%(mass[i],mass[i],"mu",mass[i],"mu");
 
     ### make the plots    
     if options.plotLimits:
