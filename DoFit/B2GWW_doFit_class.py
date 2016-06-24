@@ -165,9 +165,9 @@ class doFit_wj_and_wlvj:
         self.signal_sample=in_signal_sample;
 
         if options.control==1:
-            self.file_data = (self.channel+"_PKUTree_pdata.root");#keep blind!!!!
+            self.file_data = (self.channel+"_PKUTree_pdata_SF.root");#keep blind!!!!
         else: 
-            self.file_data = (self.channel+"_PKUTree_pdata.root");#keep blind!!!!
+            self.file_data = (self.channel+"_PKUTree_pdata_SF.root");#keep blind!!!!
 
         self.file_signal     = (self.channel+"_PKUTree_%s.root"%(self.signal_sample));
         self.file_WJets0_mc  = (self.channel+"_PKUTree_WJetsPt180_xww.root");
@@ -254,6 +254,42 @@ class doFit_wj_and_wlvj:
             'Uncertainty' : kBlack,
             'Other_Backgrounds' : kBlue
         }
+        ### signal scale to be visible in the plots
+        if "WW600" in self.signal_sample:
+            self.signal_scale=15
+        if "WW700" in self.signal_sample:
+            self.signal_scale=15
+        elif "WW750" in self.signal_sample:
+            self.signal_scale=20
+        if "WW800" in self.signal_sample:
+            self.signal_scale=30
+        if "WW900" in self.signal_sample:
+            self.signal_scale=40
+        elif "WW1000" in self.signal_sample:
+            self.signal_scale=50
+        elif "WW1200" in self.signal_sample:
+            self.signal_scale=60
+        elif "WW1400" in self.signal_sample:
+            self.signal_scale=70
+        elif "WW1600" in self.signal_sample:
+            self.signal_scale=80
+        elif "WW1800" in self.signal_sample:
+            self.signal_scale=90
+        elif "WW2000" in self.signal_sample:
+            self.signal_scale=100
+        elif "WW2500" in self.signal_sample:
+            self.signal_scale=500
+        elif "WW3000" in self.signal_sample:
+            self.signal_scale=5000
+        elif "WW3500" in self.signal_sample:
+            self.signal_scale=50000
+        elif "WW4000" in self.signal_sample:
+            self.signal_scale=100000
+        elif "WW4500" in self.signal_sample:
+            self.signal_scale=500000
+        else:
+            #self.signal_scale=100
+            raw_input("can not find the signal:"+self.signal_sample)
 
         # parameters of data-driven method to get the WJets background event number.
         self.number_WJets_insideband=-1;
@@ -3401,21 +3437,7 @@ class doFit_wj_and_wlvj:
         model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("TTbar_line_invisible"), RooFit.Components("TTbar_xww_%s_%s,STop_xww_%s_%s"%(self.channel,self.wtagger_category,self.channel,self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines());
         model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("STop_line_invisible"), RooFit.Components("STop_xww_%s_%s"%(self.channel,self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines());
 
-        ## signal scale to be visible in the plots
-        label_tstring = TString(self.signal_sample);
-        if label_tstring.Contains("WW600")  :
-            signal_scale=15
-        elif label_tstring.Contains("WW750"):
-            signal_scale=20
-        elif label_tstring.Contains("WW2000"):
-            signal_scale=100
-        elif label_tstring.Contains("WW4000"):
-            signal_scale=10000
-        else:
-            signal_scale=100
-
-
-        model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*signal_scale),RooFit.Name("%s #times %s"%(self.signal_sample, signal_scale)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
+        model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*self.signal_scale),RooFit.Name("%s #times %s"%(self.signal_sample, self.signal_scale)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
 
         #### plot the observed data using poissonian error bar
         self.getData_PoissonInterval(data_obs,mplot);
@@ -3568,20 +3590,8 @@ class doFit_wj_and_wlvj:
 
         model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("STop_line_invisible"), RooFit.Components("STop_xww_%s_%s"%(self.channel,self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines());
 
-        ### signal scale to be visible in the plots
-        label_tstring = TString(self.signal_sample);
-        if label_tstring.Contains("WW600")  :
-            signal_scale=15
-        elif label_tstring.Contains("WW750"):
-            signal_scale=20
-        elif label_tstring.Contains("WW2000"):
-            signal_scale=100
-        elif label_tstring.Contains("WW4000"):
-            signal_scale=10000
-        else:
-            signal_scale=100
 
-        model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*signal_scale),RooFit.Name("%s #times %s"%(self.signal_sample, signal_scale)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
+        model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*self.signal_scale),RooFit.Name("%s #times %s"%(self.signal_sample, self.signal_scale)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
 
         #### plot the observed data using poissonian error bar
         self.getData_PoissonInterval(data_obs,mplot);
@@ -3794,23 +3804,8 @@ class doFit_wj_and_wlvj:
         model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("STop_line_invisible"), RooFit.Components("STop_xww_*"), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines());
 
 
-        ### signal scale to be visible in the plots
-        #label_tstring = TString(self.signal_sample);
-        #if label_tstring.Contains("600") and (not label_tstring.Contains("1600")):
-        #    signal_scale=20*self.xs_rescale;
-        #elif label_tstring.Contains("700") and (not label_tstring.Contains("1700")):
-        #    signal_scale=20*self.xs_rescale;
-        #elif label_tstring.Contains("750") and (not label_tstring.Contains("1750")):
-        #    signal_scale=20*self.xs_rescale;
-        #elif label_tstring.Contains("800") and (not label_tstring.Contains("1800")):
-        #    signal_scale=20*self.xs_rescale;
-        #else:
-        #    signal_scale=self.xs_rescale;
-        signal_scale=20;
-
-
         model_pdf_signal = RooAddPdf("model_pdf_signal","model_pdf_signal",RooArgList(model_pdf_signal1, model_pdf_signal2),RooArgList(rrv_number_signal1,rrv_number_signal2));
-        model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*signal_scale),RooFit.Name("%s #times %s"%(self.signal_sample, signal_scale)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
+        model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*self.signal_scale),RooFit.Name("%s #times %s"%(self.signal_sample, self.signal_scale)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
 
         #### plot the observed data using poissonian error bar
         self.getData_PoissonInterval(data_obs,mplot);
@@ -4124,23 +4119,8 @@ class doFit_wj_and_wlvj:
         model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("STop_line_invisible"), RooFit.Components("*STop*"), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines());
 
 
-        ### signal scale to be visible in the plots
-        #label_tstring = TString(self.signal_sample);
-        #if label_tstring.Contains("600") and (not label_tstring.Contains("1600")):
-        #    signal_scale=20*self.xs_rescale;
-        #elif label_tstring.Contains("700") and (not label_tstring.Contains("1700")):
-        #    signal_scale=20*self.xs_rescale;
-        #elif label_tstring.Contains("750") and (not label_tstring.Contains("1750")):
-        #    signal_scale=20*self.xs_rescale;
-        #elif label_tstring.Contains("800") and (not label_tstring.Contains("1800")):
-        #    signal_scale=20*self.xs_rescale;
-        #else:
-        #    signal_scale=self.xs_rescale;
-        signal_scale=20;
-
-
         model_pdf_signal = RooAddPdf("model_pdf_signal","model_pdf_signal",RooArgList(model_pdf_signal1, model_pdf_signal2),RooArgList(rrv_number_signal1,rrv_number_signal2));
-        model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*signal_scale),RooFit.Name("%s #times %s"%(self.signal_sample, signal_scale)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
+        model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*self.signal_scale),RooFit.Name("%s #times %s"%(self.signal_sample, self.signal_scale)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
 
         #### plot the observed data using poissonian error bar
         self.getData_PoissonInterval(data_obs,mplot);
@@ -4361,12 +4341,9 @@ class doFit_wj_and_wlvj:
         objName_signal_graviton = "";
         objNameLeg_signal_graviton = "";        
 
-        #if   self.categoryID == 0 or self.categoryID == 2: legHeader="e#nu";
-        #elif self.categoryID == 1 or self.categoryID == 3: legHeader="#mu#nu";
-
         if   self.channel == 'el': legHeader="W#rightarrowe#nu";
-        elif self.channel == 'mu': legHeader="W#rightarrow#mu#nu";
-        legHeader="W#rightarrowl#nu";
+        elif self.channel == 'mu': legHeader="W#rightarrow#mu#nu"; 
+        else: legHeader="W#rightarrowl#nu";
         
         for obj in range(int(plot.numItems()) ):
           objName = plot.nameOf(obj);
@@ -4441,79 +4418,79 @@ class doFit_wj_and_wlvj:
 
                        if TString(objName).Contains("WW600"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=0.6 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=0.6 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW700"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=0.7 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=0.7 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW750"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=750 GeV (#times20)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=750 GeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW800"):
                            objName_signal_graviton = theObj ; 
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=0.8 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=0.8 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW900"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=0.9 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=0.9 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW1000"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW1100"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.1 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.1 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW1200"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.2 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.2 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW1300"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.3 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.3 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW1400"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.4 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.4 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW1500"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.5 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.5 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW1600"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.6 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.6 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW1700"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.7 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.7 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW1800"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.8 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.8 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW1900"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.9 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.9 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW2000"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW2100"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.1 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.1 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW2200"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.2 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.2 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW2300"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.3 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.3 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW2400"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.4 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.4 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW2500"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.5 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.5 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW3000"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=3 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=3 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW3500"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=3.5 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=3.5 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW4000"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=4 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=4 TeV (#times%s)"%(self.signal_scale);
                        if TString(objName).Contains("WW4500"):
                            objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=4.5 TeV (#times100)";
+                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=4.5 TeV (#times%s)"%(self.signal_scale);
                     else : theLeg.AddEntry(theObj, objTitle,drawoption);
                 entryCnt=entryCnt+1;
             objName_before=objName;
