@@ -45,7 +45,7 @@ parser.add_option('--closuretest', action='store',type="int", dest='closuretest'
 #parser.add_option('--batchMode', action='store_true', dest='batchMode', default=False, help='no X11 windows')
 parser.add_option('--limitMode', action='store',type="int", dest='limitMode', default=0, help='limit Mode; 0: Asymptotic ; 1: ProfileLikelihood ; 2: FullCLs ; 3: MaxLikelihoodFit')
 #parser.add_option('--isReReco', action='store',type="int", dest='isReReco', default=1, help='limit Mode; 0: Old signal samples ; 1: New signal Samples')
-parser.add_option('--noSys', action='store',type="int", dest='noSys', default=0,help='run limit without systematic')
+parser.add_option('--Sys', action='store',type="int", dest='Sys', default=1, help='run limit with or without systematic')
 #parser.add_option('--plotPvalue', action='store',type="int", default=0, dest='plotPvalue', help='plot p value')
 #parser.add_option('--signalWidth', action='store',type="int", default=0, dest='signalWidth', help='analysis on non-narrow signals')
 
@@ -413,12 +413,12 @@ def doULPlot( suffix ):
         Extratext.SetNDC(); Extratext.SetTextSize(0.032); Extratext.SetTextFont(52); Extratext.SetTextAlign(11); Extratext.SetLineWidth(2); Extratext.Draw();
         
     os.system("mkdir -p %s/LimitResult/"%(os.getcwd()));
-    os.system("mkdir -p %s/LimitResult/Limit_sys%s/"%(os.getcwd(), options.noSys));
+    os.system("mkdir -p %s/LimitResult/Limit_sys%s/"%(os.getcwd(), options.Sys));
 
-    can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.png"%(options.noSys, suffix));
-    can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.pdf"%(options.noSys, suffix));
-    can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.root"%(options.noSys, suffix));
-    can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.C"%(options.noSys, suffix));
+    can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.png"%(options.Sys, suffix));
+    can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.pdf"%(options.Sys, suffix));
+    can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.root"%(options.Sys, suffix));
+    can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.C"%(options.Sys, suffix));
 
 
 #################
@@ -482,7 +482,7 @@ if __name__ == '__main__':
                     print cmd_comb
                     os.system(cmd_comb)
 
-                runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2 -S %d"%(mass[i],mass[i],options.channel ,mass[i],options.channel, options.noSys);
+                runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2 -S %d"%(mass[i],mass[i],options.channel ,mass[i],options.channel, options.Sys);
 
                 print runCmmd2;
                 os.system(runCmmd2);
