@@ -398,7 +398,7 @@ def doULPlot( suffix ):
 
     leg2.Draw();
 
-    banner = TLatex(0.95, 0.96, "2.1 fb^{-1} (13 TeV)");
+    banner = TLatex(0.95, 0.96, "2.6 fb^{-1} (13 TeV)");
     banner.SetNDC(); banner.SetTextSize(0.038); banner.SetTextFont(42); banner.SetTextAlign(31); banner.SetLineWidth(2); banner.Draw();
     CMStext = TLatex(0.15,0.96,"CMS");
     CMStext.SetNDC(); CMStext.SetTextSize(0.041); CMStext.SetTextFont(61); CMStext.SetTextAlign(11); CMStext.SetLineWidth(2); CMStext.Draw();
@@ -413,12 +413,12 @@ def doULPlot( suffix ):
         Extratext.SetNDC(); Extratext.SetTextSize(0.032); Extratext.SetTextFont(52); Extratext.SetTextAlign(11); Extratext.SetLineWidth(2); Extratext.Draw();
         
     os.system("mkdir -p %s/LimitResult/"%(os.getcwd()));
-    os.system("mkdir -p %s/LimitResult/Limit_ExpTail/"%(os.getcwd()));
+    os.system("mkdir -p %s/LimitResult/Limit_sys%s/"%(os.getcwd(), options.noSys));
 
-    can_SM.SaveAs("./LimitResult/Limit_ExpTail/Lim%s.png"%(suffix));
-    can_SM.SaveAs("./LimitResult/Limit_ExpTail/Lim%s.pdf"%(suffix));
-    can_SM.SaveAs("./LimitResult/Limit_ExpTail/Lim%s.root"%(suffix));
-    can_SM.SaveAs("./LimitResult/Limit_ExpTail/Lim%s.C"%(suffix));
+    can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.png"%(options.noSys, suffix));
+    can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.pdf"%(options.noSys, suffix));
+    can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.root"%(options.noSys, suffix));
+    can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.C"%(options.noSys, suffix));
 
 
 #################
