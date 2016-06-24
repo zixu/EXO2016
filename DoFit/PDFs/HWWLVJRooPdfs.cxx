@@ -125,7 +125,7 @@ Double_t  ErfPow(Double_t x,Double_t c, Double_t offset, Double_t width){
 
 
 Double_t ExpN(Double_t x, Double_t c, Double_t n){
-    return TMath::Exp( c*x/1000+n/x*1000 ); 
+    return TMath::Exp( c*x+n/x ); 
 }
 
 Double_t ExpTail(Double_t x, Double_t s, Double_t a){
