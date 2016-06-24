@@ -26,6 +26,7 @@ parser.add_option('-a', '--additioninformation',action="store",type="string",des
 parser.add_option('-b', action='store_true', dest='noX', default=True, help='no X11 windows')
 parser.add_option('-c', '--channel',action="store",type="string",dest="opt_channel",default="mu")
 #parser.add_option('-c', '--channel',action="store",type="string",dest="opt_channel",default="el")
+parser.add_option('-w', '--width',action="store",dest="opt_channel",default=True, help="bin width")#True: 100; False: 50
 
 parser.add_option('-s','--simple', action='store', dest='simple', default=True, help='pre-limit in simple mode')
 parser.add_option('-m','--multi', action='store', dest='multi', default=False, help='pre-limit in multi mode')
@@ -80,8 +81,10 @@ class doFit_wj_and_wlvj:
         if options.fitsignal == 1:
             self.BinWidth_mlvj=20.;
         else:
-            self.BinWidth_mlvj=50.;
-            #self.BinWidth_mlvj=100.;
+            if options.width == 1:
+                self.BinWidth_mlvj=100.;
+            else:
+                self.BinWidth_mlvj=50.;
            
 
         #narrow the BinWidth_mj and BinWidth_mlvj by a factor of 5. Because Higgs-Combination-Tools will generate a binned sample, so need the bin width narrow. So, as a easy selution, we will increase the bin-width by a factor of 5 when ploting m_j m_WW
@@ -3205,7 +3208,7 @@ class doFit_wj_and_wlvj:
         if mode == "unbin":
             datacard_out.write( "\nrate %0.5f %0.3f %0.3f %0.3f %0.3f "%(self.workspace4limit_.var("rate_%s_xww_for_unbin"%(self.signal_sample)).getVal(), self.workspace4limit_.var("rate_WJets_xww_for_unbin").getVal(), self.workspace4limit_.var("rate_TTbar_xww_for_unbin").getVal(), self.workspace4limit_.var("rate_STop_xww_for_unbin").getVal(), self.workspace4limit_.var("rate_VV_xww_for_unbin").getVal() ) )
         elif mode == "counting":
-            datacard_out.write( "\nrate %0.5f %0.3f %0.3f %0.3f %0.3f"%(self.workspace4limit_.var("rate_%s_xww_for_counting"%(self.signal_sample)).getVal(), self.workspace4limit_.var("rate_WJets_xww_for_counting").getVal(), self.workspace4limit_.var("rate_TTbar_xww_for_counting").getVal(), self.workspace4limit_.var("rate_STop_xww_for_counting").getVal(), self.workspace4limit_.var("rate_VV_xww_for_counting").getVal() ) )
+            datacard_out.write( "\nrate %0.7f %0.3f %0.3f %0.3f %0.3f"%(self.workspace4limit_.var("rate_%s_xww_for_counting"%(self.signal_sample)).getVal(), self.workspace4limit_.var("rate_WJets_xww_for_counting").getVal(), self.workspace4limit_.var("rate_TTbar_xww_for_counting").getVal(), self.workspace4limit_.var("rate_STop_xww_for_counting").getVal(), self.workspace4limit_.var("rate_VV_xww_for_counting").getVal() ) )
         else: raw_input("wrong mode:"+mode)
 
         datacard_out.write( "\n-------------------------------- " )
