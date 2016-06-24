@@ -160,7 +160,7 @@ class doFit_wj_and_wlvj:
         rrv_mass_lvj.setRange("high_mass",2500,in_mlvj_max);
 
         #prepare the data and mc files --> set the working directory and the files name
-        self.file_Directory="PKUTree_final_2p6fb/";
+        self.file_Directory="PKUTree_final_2p6fb_Jun24/";
 
         self.signal_sample=in_signal_sample;
 
@@ -399,8 +399,8 @@ class doFit_wj_and_wlvj:
             print "########### Double CB for Bulk graviton mlvj ############"
 
             if label_tstring.Contains("WW600"):#because the M_ljv lower limit is 800GeV, so, just use right side 
-                rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,630,550,680);
-                rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 50.4,40,60);
+                rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,621,550,680);
+                rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 47.9,40,60);
                 rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 31)#,15,60);
                 rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,5)#,0.1,10.);
                 rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2.2,0.01,35);
@@ -517,12 +517,12 @@ class doFit_wj_and_wlvj:
                 rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,3.,0.5,6.);
 
             elif label_tstring.Contains("WW4500"):#because the M_ljv lower limit is 800GeV, so, just use right side 
-                rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,4552,4000,5000);
-                rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 160,100 ,300);
-                rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 4.,0.01,45);
-                rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,5,0.1,10.);
-                rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2.,0.01,35);
-                rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,3.,0.5,6.);
+                rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,4545,4000,5000);
+                rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 155,100 ,300);
+                rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 7.5,0.01,45);
+                rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,1,0.1,10.);
+                rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2.7,0.01,35);
+                rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2.,0.5,6.);
 
             else :
                 raw_input("Please check your signal or backgroud: "+label)
@@ -5057,6 +5057,7 @@ class doFit_wj_and_wlvj:
         ### Build the dataset
         self.get_mj_and_mlvj_dataset(self.file_signal,"_%s_xww"%(self.signal_sample), "massVhadJEC")# to get the shape of m_lvj
         self.fit_mlvj_model_single_MC(self.file_signal,"_%s_xww"%(self.signal_sample),"_signal_region",model_narrow, 0, 0, 0, 1);
+        #raw_input("signal shape zixu")
         print "________________________________________________________________________"
 
     ##### Define the steps to fit WJets MC in the mj and mlvj spectra
