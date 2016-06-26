@@ -109,7 +109,7 @@ mjhi = [ 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150]
 ### mlvj range min and max used when run with option --makeCards
 #fit range
 mlo = [  600, 600, 600, 600, 600, 800, 800, 800, 800, 800, 800, 800]
-mhi = [ 1400,1400,1400,1400,1400,5000,5000,5000,5000,5000,5000,5000]
+mhi = [ 1500,1500,1500,1500,1500,5000,5000,5000,5000,5000,5000,5000]
 ### shape to be used for bkg when --makeCards
 #shape    = ["Exp","Exp","Exp","Exp","Exp",   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN"]
 #shapeAlt = ["Pow","Pow","Pow","Pow","Pow","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail"]
@@ -464,7 +464,7 @@ if __name__ == '__main__':
             #command_makeCards = "nohup python B2GWW_doFit_class.py %s BulkGravWW%03d %02d %02d %02d %02d %02d %02d %s %s -b -m %01d --inPath %s --category %s --closuretest %01d  -w %01d &"%(CHAN, mass[i], ccmlo[i], ccmhi[i], mjlo[i], mjhi[i], mlo[i], mhi[i], shape[i], shapeAlt[i], 1, os.getcwd(), options.category,options.closuretest, binwidth[i]);
             command_makeCards = "python B2GWW_doFit_class.py %s BulkGravWW%03d %02d %02d %02d %02d %02d %02d %s %s -b -m %01d --inPath %s --category %s --closuretest %01d  -w %01d "%(CHAN, mass[i], ccmlo[i], ccmhi[i], mjlo[i], mjhi[i], mlo[i], mhi[i], shape[i], shapeAlt[i], 1, os.getcwd(), options.category,options.closuretest, binwidth[i]);
             print command_makeCards ;
-            os.system(command_makeCards);
+            #os.system(command_makeCards);
                  
     ### Compute Limits
     if options.computeLimits:
