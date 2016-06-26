@@ -145,7 +145,7 @@ void draw_error_band(RooAbsData &rdata, RooAbsPdf &rpdf, RooRealVar &rrv_number_
 	errorband->SetFillStyle(3013);
 
 	if( TString(opt).Contains("F") ) mplot->addObject(errorband,"E3");             
-	if( TString(opt).Contains("L") ){ am->SetMarkerStyle(1); mplot->addObject(am); mplot->addObject(ap); }
+	if( TString(opt).Contains("L") ){ am->SetMarkerStyle(1);  ap->SetMarkerStyle(1); mplot->addObject(am); mplot->addObject(ap); }
 }
 
 /// Variation of the previous method using a workspace -> used to draw the band for the final extrapolation -> take in input decorrelated parameters
@@ -221,7 +221,7 @@ void draw_error_band( RooAbsPdf &rpdf, std::string xaxis_name, RooRealVar &rrv_n
 	errorband->SetFillStyle(3013);
 
 	if( TString(opt).Contains("F") ) mplot->addObject(errorband,"E3");
-	if( TString(opt).Contains("L") ){ am->SetMarkerStyle(1); mplot->addObject(am); mplot->addObject(ap); }
+	if( TString(opt).Contains("L") ){ am->SetMarkerStyle(1); ap->SetMarkerStyle(1); mplot->addObject(am); mplot->addObject(ap); }
 }
 
 void draw_error_band( RooAbsPdf &rpdf, std::string xaxis_name, RooRealVar &rrv_number_events , RooArgList &paras, RooWorkspace &ws, RooPlot *mplot, RooPlot *mplotP, RooDataHist *datahist, Int_t kcolor=6, std::string opt="F", Int_t number_point=100, const Int_t number_errorband=2000){
@@ -344,7 +344,7 @@ void draw_error_band( RooAbsPdf &rpdf, std::string xaxis_name, RooRealVar &rrv_n
 
 	if( TString(opt).Contains("F") ) mplot->addObject(errorband,"E3");
 	if( TString(opt).Contains("F") ) mplotP->addObject(errorbandP,"E3");
-	if( TString(opt).Contains("L") ){ mplot->addObject(am); mplot->addObject(ap); }
+	if( TString(opt).Contains("L") ){ am->SetMarkerStyle(1); ap->SetMarkerStyle(1);  mplot->addObject(am); mplot->addObject(ap); }
 }
 
 /// Draw error band giving directly the extended Pdf
@@ -418,7 +418,7 @@ void draw_error_band_extendPdf(RooAbsData &rdata, RooExtendPdf &rpdf, RooFitResu
 	errorband->SetFillStyle(3013);
 
 	if( TString(opt).Contains("F") ) mplot->addObject(errorband,"E3"); 
-	if( TString(opt).Contains("L") ){ mplot->addObject(am); mplot->addObject(ap); }
+	if( TString(opt).Contains("L") ){ am->SetMarkerStyle(1);ap->SetMarkerStyle(1);  mplot->addObject(am); mplot->addObject(ap); }
 }
 
 /// Draw error band giving directly the a general Pdf
@@ -492,7 +492,7 @@ void draw_error_band_extendPdf(RooAbsData &rdata, RooAbsPdf &rpdf, RooFitResult 
 	errorband->SetFillStyle(3013);
 
 	if( TString(opt).Contains("F") ) mplot->addObject(errorband,"E3"); 
-	if( TString(opt).Contains("L") ){ mplot->addObject(am); mplot->addObject(ap); }
+	if( TString(opt).Contains("L") ){am->SetMarkerStyle(1); ap->SetMarkerStyle(1);  mplot->addObject(am); mplot->addObject(ap); }
 }
 
 
@@ -569,6 +569,8 @@ void draw_error_band_Decor( std::string pdf_name, std::string xaxis_name, RooArg
 		mplot->addObject(bkgpred);
 	}
 	if( TString(opt).Contains("L") ){
+		ap->SetMarkerStyle(1); 
+		am->SetMarkerStyle(1); 
 		mplot->addObject(am); mplot->addObject(ap); 
 		mplot->addObject(bkgpred);
 	}
@@ -641,7 +643,7 @@ void draw_error_band_shape_Decor( std::string pdf_name, std::string xaxis_name, 
 	errorband->SetName(Form("%s %g#sigma",uncertainty_title.c_str(),sigma));
 
 	if( TString(opt).Contains("F") ){ mplot->addObject(errorband,"E3"); }
-	if( TString(opt).Contains("L") ){ mplot->addObject(am); mplot->addObject(ap); }
+	if( TString(opt).Contains("L") ){  am->SetMarkerStyle(1); ap->SetMarkerStyle(1);mplot->addObject(am); mplot->addObject(ap); }
 	for(Int_t ipara=0;ipara<paras.getSize();ipara++){
 		ws.var(paras[ipara].GetName())->setVal(0.);
 	}
