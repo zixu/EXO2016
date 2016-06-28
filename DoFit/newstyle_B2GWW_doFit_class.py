@@ -239,6 +239,8 @@ class doFit_wj_and_wlvj:
         if self.channel=="el": 
             self.controlplot_WJets_scale=0.95
             self.controlplot_TTbar_scale=0.73
+        self.controlplot_WJets_scale=1.0
+        self.controlplot_TTbar_scale=1.0
         
         #result files: The event number, parameters and error write into a txt file. The dataset and pdfs write into a root file
         self.datacardsDir =  "cards_%s/closuretest%s_%s_%s"%(options.additioninformation, options.closuretest,self.channel,self.wtagger_category)
@@ -1385,12 +1387,11 @@ class doFit_wj_and_wlvj:
         tmp_lumi=self.GetLumi()
         tmp_signal_scale=20
         weight_mc_forSignal="weight*%s*%s"%(tmp_lumi, tmp_signal_scale);
-        weight_mc_forV="weight*%s"%(tmp_lumi);
-        weight_mc_forT="weight*%s"%(tmp_lumi);
+        weight_mc_forV="weight*%s*%s"%(tmp_lumi, self.rrv_wtagger_eff_reweight_forV.getVal());
+        weight_mc_forT="weight*%s*%s"%(tmp_lumi, self.rrv_wtagger_eff_reweight_forT.getVal());
         weight_mc_forG="weight*%s"%(tmp_lumi); #General
-
-        weight_mc_forWJets="weight*%s*%s"%(tmp_lumi, self.controlplot_WJets_scale); #General
-        weight_mc_forTTBar="weight*%s*%s"%(tmp_lumi, self.controlplot_TTbar_scale); #General
+        weight_mc_forWJets="weight*%s*%s"%(tmp_lumi, self.controlplot_WJets_scale)
+        weight_mc_forTTBar="weight*%s*%s*%s"%(tmp_lumi, self.controlplot_TTbar_scale, self.rrv_wtagger_eff_reweight_forT.getVal())
 
         weightcut_mc_forSignal="(%s)*(%s)"%(weight_mc_forSignal,cut);
         weightcut_mc_forV="(%s)*(%s)"%(weight_mc_forV,cut);
@@ -2783,11 +2784,11 @@ class doFit_wj_and_wlvj:
                         tmp_event_weight=tmp_event_weight*self.rrv_wtagger_eff_reweight_forT.getVal();
                     else:
                         tmp_event_weight=tmp_event_weight*self.rrv_wtagger_eff_reweight_forV.getVal();
-                    #scale factor from control plots
-                    if TString(label).Contains("_TTbar"):
-                        tmp_event_weight=tmp_event_weight*self.controlplot_TTbar_scale;
-                    if TString(label).Contains("_WJets"):
-                        tmp_event_weight=tmp_event_weight*self.controlplot_WJets_scale;
+                    ###scale factor from control plots
+                    ##if TString(label).Contains("_TTbar"):
+                    ##    tmp_event_weight=tmp_event_weight*self.controlplot_TTbar_scale;
+                    ##if TString(label).Contains("_WJets"):
+                    ##    tmp_event_weight=tmp_event_weight*self.controlplot_WJets_scale;
                 
                 rrv_mass_lvj.setVal(treeIn.m_lvj);
 
@@ -2833,10 +2834,10 @@ class doFit_wj_and_wlvj:
                 tmp_scale_to_lumi=tmp_scale_to_lumi*self.rrv_wtagger_eff_reweight_forT.getVal();
             else:
                 tmp_scale_to_lumi=tmp_scale_to_lumi*self.rrv_wtagger_eff_reweight_forV.getVal();
-            if TString(label).Contains("_TTbar") :
-                tmp_scale_to_lumi=tmp_scale_to_lumi*self.controlplot_TTbar_scale
-            if TString(label).Contains("_WJets") :
-                tmp_scale_to_lumi=tmp_scale_to_lumi*self.controlplot_WJets_scale
+            ##if TString(label).Contains("_TTbar") :
+            ##    tmp_scale_to_lumi=tmp_scale_to_lumi*self.controlplot_TTbar_scale
+            ##if TString(label).Contains("_WJets") :
+            ##    tmp_scale_to_lumi=tmp_scale_to_lumi*self.controlplot_WJets_scale
 
         ### scaler to lumi for MC in 4fit datasets
         rrv_scale_to_lumi=RooRealVar("rrv_scale_to_lumi"+label+"_"+self.channel,"rrv_scale_to_lumi"+label+"_"+self.channel,tmp_scale_to_lumi)
