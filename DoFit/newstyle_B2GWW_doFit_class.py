@@ -36,7 +36,7 @@ parser.add_option('--check', action='store_true', dest='check', default=False, h
 parser.add_option('--combine', action='store_true', dest='combine', default=False, help='combine el and mu')
 parser.add_option('--control', action='store_true', dest='control', default=False, help='control plot')
 parser.add_option('--realdata', action='store',type="int", dest='realdata', default=0, help='real data or pdata')
-parser.add_option('--keepblind', action='store_true', dest='keepblind', default=True, help='keep blind for real data')
+parser.add_option('--keepblind', action='store',type="int", dest='keepblind', default=1, help='keep blind for real data')
 parser.add_option('--fitsignal', action='store',type="int", dest='fitsignal', default=0, help='fit only signal lineshape with a chosen model')
 parser.add_option('--closuretest', action='store',type="int", dest='closuretest', default=0, help='closure test; 0: no test; 1: A1->A2; 2: A->B')
 
@@ -306,13 +306,13 @@ class doFit_wj_and_wlvj:
         elif "WW2500" in self.signal_sample:
             self.signal_scale=500
         elif "WW3000" in self.signal_sample:
-            self.signal_scale=5000
+            self.signal_scale=1000
         elif "WW3500" in self.signal_sample:
-            self.signal_scale=50000
+            self.signal_scale=5000
         elif "WW4000" in self.signal_sample:
-            self.signal_scale=100000
+            self.signal_scale=10000
         elif "WW4500" in self.signal_sample:
-            self.signal_scale=500000
+            self.signal_scale=100000
         else:
             #self.signal_scale=100
             raw_input("can not find the signal:"+self.signal_sample)
@@ -1372,7 +1372,7 @@ class doFit_wj_and_wlvj:
 
     ######## ++++++++++++++
     def Make_Controlplots(self,cut,tag, TTBarControl=0):
-        self.make_controlplot("m_lvj",cut,tag,9,600,1500,"mass(lvj)","Events/(100 GeV)",0, TTBarControl );
+        self.make_controlplot("m_lvj",cut,tag,26,200,1500,"mass(lvj)","Events/(50 GeV)",0, TTBarControl );
         self.make_controlplot("massVhadJEC",cut,tag,23,40,155,"mass(j)","Events/(5 GeV)",0 , TTBarControl);
         self.make_controlplot("W_pt",cut,tag,30,200, 800,"W_pt","Events/(20 GeV)",0 , TTBarControl);
         self.make_controlplot("l_pt",cut,tag,26,0, 520,"l_pt","Events/(20 GeV)",0 , TTBarControl);
@@ -2767,7 +2767,7 @@ class doFit_wj_and_wlvj:
 
             if label =="_data" or label =="_data_xww" :
                 if tmp_jet_mass>105 and tmp_jet_mass<135: self.isGoodEvent = 0 #keep blind for VH analysis
-                if options.keepblind and tmp_jet_mass>65 and tmp_jet_mass<135: self.isGoodEvent = 0 ;   
+                if options.keepblind==1 and tmp_jet_mass>65 and tmp_jet_mass<135: self.isGoodEvent = 0 ;   
 
             if self.isGoodEvent == 1:
                 ### weigh MC events              
@@ -3300,9 +3300,9 @@ class doFit_wj_and_wlvj:
 
         ### rates for the different process
         if mode == "unbin":
-            datacard_out.write( "\nrate %0.7f %0.3f %0.3f %0.3f %0.3f "%(self.workspace4limit_.var("rate_%s_xww_for_unbin"%(self.signal_sample)).getVal(), self.workspace4limit_.var("rate_WJets_xww_for_unbin").getVal(), self.workspace4limit_.var("rate_TTbar_xww_for_unbin").getVal(), self.workspace4limit_.var("rate_STop_xww_for_unbin").getVal(), self.workspace4limit_.var("rate_VV_xww_for_unbin").getVal() ) )
+            datacard_out.write( "\nrate %0.7f %0.3f %0.3f %0.3f %0.3f "%(self.signal_scale*self.workspace4limit_.var("rate_%s_xww_for_unbin"%(self.signal_sample)).getVal(), self.workspace4limit_.var("rate_WJets_xww_for_unbin").getVal(), self.workspace4limit_.var("rate_TTbar_xww_for_unbin").getVal(), self.workspace4limit_.var("rate_STop_xww_for_unbin").getVal(), self.workspace4limit_.var("rate_VV_xww_for_unbin").getVal() ) )
         elif mode == "counting":
-            datacard_out.write( "\nrate %0.7f %0.3f %0.3f %0.3f %0.3f"%(self.workspace4limit_.var("rate_%s_xww_for_counting"%(self.signal_sample)).getVal(), self.workspace4limit_.var("rate_WJets_xww_for_counting").getVal(), self.workspace4limit_.var("rate_TTbar_xww_for_counting").getVal(), self.workspace4limit_.var("rate_STop_xww_for_counting").getVal(), self.workspace4limit_.var("rate_VV_xww_for_counting").getVal() ) )
+            datacard_out.write( "\nrate %0.7f %0.3f %0.3f %0.3f %0.3f "%(self.signal_scale*self.workspace4limit_.var("rate_%s_xww_for_counting"%(self.signal_sample)).getVal(), self.workspace4limit_.var("rate_WJets_xww_for_counting").getVal(), self.workspace4limit_.var("rate_TTbar_xww_for_counting").getVal(), self.workspace4limit_.var("rate_STop_xww_for_counting").getVal(), self.workspace4limit_.var("rate_VV_xww_for_counting").getVal() ) )
         else: raw_input("wrong mode:"+mode)
 
         datacard_out.write( "\n-------------------------------- " )
