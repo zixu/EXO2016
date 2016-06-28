@@ -246,7 +246,7 @@ class doFit_wj_and_wlvj:
             os.system("mkdir -p %s"%(self.datacardsDir))
 
         #self.plotsDir = "plots_%s_%s_%s_closuretest%s"%(options.additioninformation,self.channel,self.wtagger_category, options.closuretest)
-        self.plotsDir = "plots_%s/closuretest%s_%s_%s"%(options.additioninformation, options.closuretest,self.channel,self.wtagger_category)
+        self.plotsDir = "doFit_plots_%s/closuretest%s_%s_%s"%(options.additioninformation, options.closuretest,self.channel,self.wtagger_category)
         if not os.path.isdir(self.plotsDir):
             os.system("mkdir -p %s"%(self.plotsDir))
 
