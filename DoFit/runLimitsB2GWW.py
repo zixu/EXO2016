@@ -98,29 +98,24 @@ parser.add_option('--Sys', action='store',type="int", dest='Sys', default=1, hel
 ##shape_sig_narrow = ["DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
 
 ### mass point for signal to be fitted
-mass  = [600,700,750,800,900,1000,2000,2500,3000,3500,4000,4500]
-binwidth  = [0,0,0,0,0,1,1,1,1,1,1,1]
+mass      = [600,700,750,800,900,1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
+binwidth  = [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1]
 ### mass window for couting analysis
-ccmlo = [500,600,650,700, 800, 900,1900,2400,2900,3400,3900,4400 ] 
-ccmhi = [700,800,850,900,1000,1100,2100,2600,3100,3600,4100,4600 ]
+ccmlo     = [500,600,650,700, 800, 900,1100,1300,1500,1700,1900,2400,2900,3400,3900,4400 ] 
+ccmhi     = [700,800,850,900,1000,1100,1300,1500,1700,1900,2100,2600,3100,3600,4100,4600 ]
 ### jet mass range
-mjlo = [  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40]
-mjhi = [ 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150]
+mjlo      = [  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40]
+mjhi      = [ 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150]
 ### mlvj range min and max used when run with option --makeCards
 #fit range
-mlo = [  600, 600, 600, 600, 600, 800, 800, 800, 800, 800, 800, 800]
-mhi = [ 1500,1500,1500,1500,1500,5000,5000,5000,5000,5000,5000,5000]
+mlo       = [  600, 600, 600, 600, 600, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800]
+mhi       = [ 1500,1500,1500,1500,1500,5000,5000,5000,5000,5000,5000,5000,5000,5000,5000,5000]
 ### shape to be used for bkg when --makeCards
-#shape    = ["Exp","Exp","Exp","Exp","Exp",   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN"]
-#shapeAlt = ["Pow","Pow","Pow","Pow","Pow","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail"]
-#shape    = ["Exp","Exp","Exp","Exp","Exp","Exp","Exp","Exp","Exp","Exp","Exp","Exp"]
-#shapeAlt = ["Pow","Pow","Pow","Pow","Pow","Pow","Pow","Pow","Pow","Pow","Pow","Pow"]
-shape    = ["ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN"]
-shapeAlt = ["Exp","Exp","Exp","Exp","Exp","Exp","Exp","Exp","Exp","Exp","Exp","Exp"]
-#shapeAlt = ["ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail"]
+shape    = ["ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN"]
+shapeAlt = [ "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp"]
 ### shape to be used for bkg when --fitSignal
-shape_sig_width  = ["BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB"]
-shape_sig_narrow = ["DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
+shape_sig_width  = ["BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB"]
+shape_sig_narrow = ["DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
 
 
 #rMaxs = [ 1500,1500,1500,1500,1500,5000,5000,5000,5000,5000,5000,1e6]
@@ -395,7 +390,7 @@ def doULPlot( suffix ):
     curGraph_2s.Draw("F");
     curGraph_1s.Draw("Fsame");
     #curGraph_obs.Draw("PCsame");
-    curGraph_exp.Draw("Csame");
+    curGraph_exp.Draw("PLsame");
     curGraph_th.Draw("Csame");
        
     leg2 = ROOT.TLegend(0.36,0.78,0.8,0.92);
