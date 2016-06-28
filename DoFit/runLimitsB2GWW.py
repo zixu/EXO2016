@@ -123,6 +123,7 @@ shape_sig_width  = ["BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "
 shape_sig_narrow = ["DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
 
 
+#rMaxs = [ 1500,1500,1500,1500,1500,5000,5000,5000,5000,5000,5000,1e6]
 
 ### signal mass fraction for non narrow samples
 #mass_fraction = [0.15,0.05,0.3,0.3]
@@ -285,14 +286,26 @@ def doULPlot( suffix ):
             sf = xsDict_munubb[mass[i]]; #*0.1057*0.577; # BR(W->munu)*BR(H->bb)
         else:
             sf = xsDict[mass[i]];
+
+        if mass[i]==2000: sf=sf*10
+        elif mass[i]==2500: sf=sf*100
+        elif mass[i]==3000: sf=sf*100
+        elif mass[i]==3500: sf=sf*1000
+        elif mass[i]==4000: sf=sf*1000
+        elif mass[i]==4500: sf=sf*10000
         curAsymLimits = getAsymLimits(curFile);
+        print mass[i]
+        print curAsymLimits
+        print sf
+        raw_input("zixu")
         xbins.append( mass[i]/1000. );#GeV->TeV
         xbins_env.append( mass[i]/1000. );
         ybins_exp.append( curAsymLimits[3]*sf );
         ybins_obs.append( curAsymLimits[0]*sf );
         ybins_2s.append( curAsymLimits[1]*sf );
         ybins_1s.append( curAsymLimits[2]*sf );
-        ybins_th.append(sf);#/20.); #*0.25);
+        #ybins_th.append(sf);#/20.); #*0.25);
+        ybins_th.append(xsDict[mass[i]]);#/20.); #*0.25);
     
     for i in range( len(mass)-1, -1, -1 ):
         curFile = "higgsCombine_lim_%03d%s.Asymptotic.mH%03d.root"%(mass[i],suffix,mass[i]);
@@ -301,6 +314,14 @@ def doULPlot( suffix ):
           sf = xsDict_munubb[mass[i]]; #*0.1057*0.577; # BR(W->munu)*BR(H->bb)
         else:
           sf = xsDict[mass[i]];
+
+        if mass[i]==2000: sf=sf*10
+        elif mass[i]==2500: sf=sf*100
+        elif mass[i]==3000: sf=sf*100
+        elif mass[i]==3500: sf=sf*1000
+        elif mass[i]==4000: sf=sf*1000
+        elif mass[i]==4500: sf=sf*10000
+
         curAsymLimits = getAsymLimits(curFile);
         xbins_env.append( mass[i]/1000. );
         ybins_2s.append( curAsymLimits[5]*sf );
@@ -484,7 +505,8 @@ if __name__ == '__main__':
                     print cmd_comb
                     os.system(cmd_comb)
 
-                runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2 -S %d"%(mass[i],mass[i],options.channel ,mass[i],options.channel, options.Sys);
+                #runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2 -S %d --run expected --rMax rMaxs[i]"%(mass[i],mass[i],options.channel ,mass[i],options.channel, options.Sys);
+                runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2 -S %d --run expected "%(mass[i],mass[i],options.channel ,mass[i],options.channel, options.Sys);
 
                 print runCmmd2;
                 os.system(runCmmd2);
