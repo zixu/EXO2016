@@ -243,7 +243,7 @@ class doFit_wj_and_wlvj:
         self.controlplot_TTbar_scale=1.0
         
         #result files: The event number, parameters and error write into a txt file. The dataset and pdfs write into a root file
-        self.datacardsDir =  "cards_%s/closuretest%s_%s_%s"%(options.additioninformation, options.closuretest,self.channel,self.wtagger_category)
+        self.datacardsDir =  "cards_%s/closuretest%s_%s"%(options.additioninformation, options.closuretest,self.wtagger_category)
         if not os.path.isdir(self.datacardsDir):
             os.system("mkdir -p %s"%(self.datacardsDir))
 
