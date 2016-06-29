@@ -135,6 +135,7 @@ xsDict =  {
         1000:   20.4996930*1e-3,
         1200: 6.841404   *1e-3,  
         1400: 2.625789675*1e-3,  
+        1600: 1.1031223*1e-3,  
         1800: 0.49976082 *1e-3,  
         2000: 0.239518815*1e-3,  
         2500: 0.044885148*1e-3,  
@@ -152,6 +153,7 @@ xsDict_munubb =  {
         1000:   20.4996930*1e-3*0.3,
         1200: 6.841404   *1e-3*0.3,  
         1400: 2.625789675*1e-3*0.3,  
+        1600: 1.1031223*1e-3*0.3,  
         1800: 0.49976082 *1e-3*0.3,  
         2000: 0.239518815*1e-3*0.3,  
         2500: 0.044885148*1e-3*0.3,  
@@ -160,6 +162,26 @@ xsDict_munubb =  {
         4000: 0.000622786*1e-3*0.3,  
         4500: 0.000168503*1e-3*0.3
         }
+
+signal_scaleup =  {
+         600: 15, 
+         700: 15,
+         750: 20,    
+         800: 30, 
+         900: 40, 
+        1000: 50,
+        1200: 60,  
+        1400: 70,  
+        1600: 80,  
+        1800: 90,  
+        2000: 100,  
+        2500: 500,  
+        3000: 1000,  
+        3500: 5000,  
+        4000: 10000,  
+        4500: 100000
+        }
+
 
 ################################
 ## style setup for doUL plots ##
@@ -482,7 +504,7 @@ if __name__ == '__main__':
             #command_makeCards = "python B2GWW_doFit_class.py %s BulkGravWW%03d %02d %02d %02d %02d %02d %02d %s %s -b -m %01d --inPath %s --category %s --closuretest %01d  -w %01d "%(CHAN, mass[i], ccmlo[i], ccmhi[i], mjlo[i], mjhi[i], mlo[i], mhi[i], shape[i], shapeAlt[i], 1, os.getcwd(), options.category,options.closuretest, binwidth[i]);
             command_makeCards = "python newstyle_B2GWW_doFit_class.py %s BulkGravWW%03d %02d %02d %02d %02d %02d %02d %s %s -b -m %01d --inPath %s --category %s --closuretest %01d  --realdata 1 -w %01d "%(CHAN, mass[i], ccmlo[i], ccmhi[i], mjlo[i], mjhi[i], mlo[i], mhi[i], shape[i], shapeAlt[i], 1, os.getcwd(), options.category,options.closuretest, binwidth[i]);
             print command_makeCards ;
-            os.system(command_makeCards);
+            #os.system(command_makeCards);
                  
     ### Compute Limits
     if options.computeLimits:
