@@ -164,22 +164,22 @@ xsDict_munubb =  {
         }
 
 signal_scaleup =  {
-         600: 15, 
-         700: 15,
-         750: 20,    
-         800: 30, 
-         900: 40, 
-        1000: 50,
-        1200: 60,  
-        1400: 70,  
-        1600: 80,  
-        1800: 90,  
-        2000: 100,  
-        2500: 500,  
-        3000: 1000,  
-        3500: 5000,  
-        4000: 10000,  
-        4500: 100000
+         600: 1, 
+         700: 1,
+         750: 1,    
+         800: 1, 
+         900: 1, 
+        1000: 1,
+        1200: 1,  
+        1400: 1,  
+        1600: 3,  
+        1800: 5,  
+        2000: 10,  
+        2500: 50,  
+        3000: 300,  
+        3500: 2000,  
+        4000: 5000,  
+        4500: 20000
         }
 
 
@@ -300,21 +300,14 @@ def doULPlot( suffix ):
         curFile = "higgsCombine_lim_%03d%s.Asymptotic.mH%03d.root"%(mass[i],suffix,mass[i]);
         print "curFile: %s"%curFile;
         if options.lnubbBR:
-            sf = xsDict_munubb[mass[i]]; #*0.1057*0.577; # BR(W->munu)*BR(H->bb)
+            sf = signal_scaleup[mass[i]]*xsDict_munubb[mass[i]]; #*0.1057*0.577; # BR(W->munu)*BR(H->bb)
         else:
-            sf = xsDict[mass[i]];
+            sf = signal_scaleup[mass[i]]*xsDict[mass[i]];
 
-        if mass[i]==2000: sf=sf*10
-        elif mass[i]==2500: sf=sf*100
-        elif mass[i]==3000: sf=sf*100
-        elif mass[i]==3500: sf=sf*1000
-        elif mass[i]==4000: sf=sf*1000
-        elif mass[i]==4500: sf=sf*10000
         curAsymLimits = getAsymLimits(curFile);
-        print mass[i]
-        print curAsymLimits
-        print sf
-        raw_input("zixu")
+        #print mass[i]
+        #print curAsymLimits
+        #raw_input("zixu")
         xbins.append( mass[i]/1000. );#GeV->TeV
         xbins_env.append( mass[i]/1000. );
         ybins_exp.append( curAsymLimits[3]*sf );
@@ -328,16 +321,9 @@ def doULPlot( suffix ):
         curFile = "higgsCombine_lim_%03d%s.Asymptotic.mH%03d.root"%(mass[i],suffix,mass[i]);
         print "curFile: %s"%curFile;
         if options.lnubbBR:
-          sf = xsDict_munubb[mass[i]]; #*0.1057*0.577; # BR(W->munu)*BR(H->bb)
+          sf = signal_scaleup[mass[i]]*xsDict_munubb[mass[i]]; #*0.1057*0.577; # BR(W->munu)*BR(H->bb)
         else:
-          sf = xsDict[mass[i]];
-
-        if mass[i]==2000: sf=sf*10
-        elif mass[i]==2500: sf=sf*100
-        elif mass[i]==3000: sf=sf*100
-        elif mass[i]==3500: sf=sf*1000
-        elif mass[i]==4000: sf=sf*1000
-        elif mass[i]==4500: sf=sf*10000
+          sf = signal_scaleup[mass[i]]*xsDict[mass[i]];
 
         curAsymLimits = getAsymLimits(curFile);
         xbins_env.append( mass[i]/1000. );
@@ -473,7 +459,7 @@ if __name__ == '__main__':
 
     ### Set the working directory
     if options.computeLimits or options.plotLimits:
-	os.chdir("cards_B2GWW");    
+	os.chdir("cards_B2GWW/closuretest0_HP");    
 
     ### put in functionality to test just one mass point or just one cprime
 
@@ -504,7 +490,7 @@ if __name__ == '__main__':
             #command_makeCards = "python B2GWW_doFit_class.py %s BulkGravWW%03d %02d %02d %02d %02d %02d %02d %s %s -b -m %01d --inPath %s --category %s --closuretest %01d  -w %01d "%(CHAN, mass[i], ccmlo[i], ccmhi[i], mjlo[i], mjhi[i], mlo[i], mhi[i], shape[i], shapeAlt[i], 1, os.getcwd(), options.category,options.closuretest, binwidth[i]);
             command_makeCards = "python newstyle_B2GWW_doFit_class.py %s BulkGravWW%03d %02d %02d %02d %02d %02d %02d %s %s -b -m %01d --inPath %s --category %s --closuretest %01d  --realdata 1 -w %01d "%(CHAN, mass[i], ccmlo[i], ccmhi[i], mjlo[i], mjhi[i], mlo[i], mhi[i], shape[i], shapeAlt[i], 1, os.getcwd(), options.category,options.closuretest, binwidth[i]);
             print command_makeCards ;
-            #os.system(command_makeCards);
+            os.system(command_makeCards);
                  
     ### Compute Limits
     if options.computeLimits:
@@ -526,7 +512,7 @@ if __name__ == '__main__':
                 runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2 -S %d --run expected "%(mass[i],mass[i],options.channel ,mass[i],options.channel, options.Sys);
 
                 print runCmmd2;
-                os.system(runCmmd2);
+                #os.system(runCmmd2);
                 time.sleep(0.1);
 
 
