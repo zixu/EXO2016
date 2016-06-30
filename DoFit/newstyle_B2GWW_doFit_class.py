@@ -282,37 +282,37 @@ class doFit_wj_and_wlvj:
         }
         ### signal scale to be visible in the plots
         if "WW600" in self.signal_sample:
-            self.signal_scale=15
+            self.signal_scale=1
         elif "WW700" in self.signal_sample:
-            self.signal_scale=15
+            self.signal_scale=1
         elif "WW750" in self.signal_sample:
-            self.signal_scale=20
+            self.signal_scale=1
         elif "WW800" in self.signal_sample:
-            self.signal_scale=30
+            self.signal_scale=1
         elif "WW900" in self.signal_sample:
-            self.signal_scale=40
+            self.signal_scale=1
         elif "WW1000" in self.signal_sample:
-            self.signal_scale=50
+            self.signal_scale=1
         elif "WW1200" in self.signal_sample:
-            self.signal_scale=60
+            self.signal_scale=1
         elif "WW1400" in self.signal_sample:
-            self.signal_scale=70
+            self.signal_scale=1
         elif "WW1600" in self.signal_sample:
-            self.signal_scale=80
+            self.signal_scale=3
         elif "WW1800" in self.signal_sample:
-            self.signal_scale=90
+            self.signal_scale=5
         elif "WW2000" in self.signal_sample:
-            self.signal_scale=100
+            self.signal_scale=10
         elif "WW2500" in self.signal_sample:
-            self.signal_scale=500
+            self.signal_scale=50
         elif "WW3000" in self.signal_sample:
-            self.signal_scale=1000
+            self.signal_scale=300
         elif "WW3500" in self.signal_sample:
-            self.signal_scale=5000
+            self.signal_scale=2000
         elif "WW4000" in self.signal_sample:
-            self.signal_scale=10000
+            self.signal_scale=5000
         elif "WW4500" in self.signal_sample:
-            self.signal_scale=100000
+            self.signal_scale=20000
         else:
             #self.signal_scale=100
             raw_input("can not find the signal:"+self.signal_sample)
