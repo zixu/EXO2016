@@ -161,7 +161,7 @@ class doFit_wj_and_wlvj:
         rrv_mass_lvj.setRange("high_mass",2500,in_mlvj_max);
 
         #prepare the data and mc files --> set the working directory and the files name
-        self.file_Directory="PKUTree_final_2p6fb_Jun24/";
+        self.file_Directory="PKUTree_final_2p6fb_Jun30/";
 
         self.signal_sample=in_signal_sample;
 
