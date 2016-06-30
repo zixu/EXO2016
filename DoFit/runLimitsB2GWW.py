@@ -398,7 +398,7 @@ def doULPlot( suffix ):
     curGraph_2s.Draw("F");
     curGraph_1s.Draw("Fsame");
     #curGraph_obs.Draw("PCsame");
-    curGraph_exp.Draw("PLsame");
+    curGraph_exp.Draw("Lsame");
     curGraph_th.Draw("Csame");
        
     leg2 = ROOT.TLegend(0.36,0.78,0.8,0.92);
@@ -434,7 +434,7 @@ def doULPlot( suffix ):
         Extratext = TLatex(0.241, 0.96, "Preliminary W#rightarrow #mu#nu");
         Extratext.SetNDC(); Extratext.SetTextSize(0.032); Extratext.SetTextFont(52); Extratext.SetTextAlign(11); Extratext.SetLineWidth(2); Extratext.Draw();
     if suffix =="_combo" :
-        Extratext = TLatex(0.241, 0.96, "Preliminary e+#mu combined");
+        Extratext = TLatex(0.241, 0.96, "Preliminary W#rightarrow l#nu");
         Extratext.SetNDC(); Extratext.SetTextSize(0.032); Extratext.SetTextFont(52); Extratext.SetTextAlign(11); Extratext.SetLineWidth(2); Extratext.Draw();
         
     os.system("mkdir -p %s/LimitResult/"%(os.getcwd()));
@@ -512,7 +512,7 @@ if __name__ == '__main__':
                 runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2 -S %d --run expected "%(mass[i],mass[i],options.channel ,mass[i],options.channel, options.Sys);
 
                 print runCmmd2;
-                #os.system(runCmmd2);
+                os.system(runCmmd2);
                 time.sleep(0.1);
 
 
