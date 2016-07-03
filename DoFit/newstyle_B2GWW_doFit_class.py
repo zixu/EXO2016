@@ -161,7 +161,8 @@ class doFit_wj_and_wlvj:
         rrv_mass_lvj.setRange("high_mass",2500,in_mlvj_max);
 
         #prepare the data and mc files --> set the working directory and the files name
-        self.file_Directory="PKUTree_final_2p6fb_Jun30/";
+        #self.file_Directory="PKUTree_final_2p6fb_Jun30/";
+        self.file_Directory="PKUTree_final_4fb_Jul3/";
 
         self.signal_sample=in_signal_sample;
 
@@ -4259,7 +4260,7 @@ class doFit_wj_and_wlvj:
     def get_canvas(self,cname,isalpha=False):
 
        #tdrstyle.setTDRStyle()
-       CMS_lumi.lumi_13TeV = "2.6 fb^{-1}"
+       CMS_lumi.lumi_13TeV = "%s fb^{-1}"%(self.GetLumi())
        CMS_lumi.writeExtraText = 1
        CMS_lumi.extraText = "Preliminary"
 
@@ -5087,9 +5088,9 @@ class doFit_wj_and_wlvj:
 
     ##### Get Lumi for banner title
     def GetLumi(self):
-        if self.channel=="el":   return 2.6;
-        elif self.channel=="mu": return 2.6;
-        elif self.channel=="em": return 2.6;
+        if self.channel=="el":   return 4.0;
+        elif self.channel=="mu": return 4.0;
+        elif self.channel=="em": return 4.0;
 
     #### function to run the selection on data to build the datasets 
     def get_data(self):
