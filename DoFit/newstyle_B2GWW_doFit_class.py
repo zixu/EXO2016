@@ -1353,22 +1353,22 @@ class doFit_wj_and_wlvj:
     def ControlPlots(self):
         ##event selection         
         MET_cut = 40;
-        lpt_cut   = 40;
+        lpt_cut   = 50;
         if self.channel=="el":
             MET_cut= 80; 
-            lpt_cut = 45;
+            lpt_cut = 55;
 
         rrv_mass_j   = self.workspace4fit_.var("rrv_mass_j")
         rrv_mass_lvj = self.workspace4fit_.var("rrv_mass_lvj")
 
-        cut="(CategoryID==1 || CategoryID==-1 || CategoryID==2 || CategoryID==-2|| CategoryID==4 || CategoryID==-4) && m_lvj> 100 && m_lvj<3000 &&((massVhadJEC>40 && massVhadJEC<65)||(massVhadJEC>135&&massVhadJEC<150)) && l_pt> %s && MET_et>%s"%(lpt_cut, MET_cut)
-        self.Make_Controlplots(cut,"preselection");
+        #cut="(CategoryID==1 || CategoryID==-1 || CategoryID==2 || CategoryID==-2|| CategoryID==4 || CategoryID==-4) && m_lvj> 100 && m_lvj<3000 &&((massVhadJEC>40 && massVhadJEC<65)||(massVhadJEC>135&&massVhadJEC<150)) && l_pt> %s && MET_et>%s"%(lpt_cut, MET_cut)
+        #self.Make_Controlplots(cut,"preselection");
 
         #cut="(CategoryID==3 || CategoryID==-3) && m_lvj> 100 && m_lvj<4000 && massVhadJEC>40 && massVhadJEC<150 && l_pt>%s && MET_et>%s"%(lpt_cut, MET_cut) 
         #self.Make_Controlplots(cut,"TopControl",1);
 
-        #cut="(CategoryID==1 ) && m_lvj> 600 && m_lvj<14000 && (massVhadJEC>65 && massVhadJEC<95) && l_pt> %s && MET_et>%s"%(lpt_cut, MET_cut)
-        #self.Make_Controlplots(cut,"fulselection");
+        cut="(CategoryID==1 ) && m_lvj> 600 && m_lvj<14000 && (massVhadJEC>65 && massVhadJEC<95) && l_pt> %s && MET_et>%s"%(lpt_cut, MET_cut)
+        self.Make_Controlplots(cut,"fulselection");
 
 
     ######## ++++++++++++++
@@ -2774,9 +2774,25 @@ class doFit_wj_and_wlvj:
                 if options.keepblind==1 and tmp_jet_mass>65 and tmp_jet_mass<135: self.isGoodEvent = 0 ;   
 
             if self.isGoodEvent == 1:
+                ## HLT weight for mu channel
+                tmp_HLT_weight=1.0
+                if self.channel=="mu":
+                    if   treeIn.l_pt<60 and treeIn.l_pt>=50 and TMath.Abs(treeIn.l_eta)< 0.9 and TMath.Abs(treeIn.l_eta)>= 0  : tmp_HLT_weight= 0.975
+                    elif treeIn.l_pt<60 and treeIn.l_pt>=50 and TMath.Abs(treeIn.l_eta)< 1.2 and TMath.Abs(treeIn.l_eta)>= 0.9: tmp_HLT_weight= 0.921
+                    elif treeIn.l_pt<60 and treeIn.l_pt>=50 and TMath.Abs(treeIn.l_eta)< 2.1 and TMath.Abs(treeIn.l_eta)>= 1.2: tmp_HLT_weight= 0.886
+                    elif treeIn.l_pt<80 and treeIn.l_pt>=60 and TMath.Abs(treeIn.l_eta)< 0.9 and TMath.Abs(treeIn.l_eta)>= 0  : tmp_HLT_weight= 0.972
+                    elif treeIn.l_pt<80 and treeIn.l_pt>=60 and TMath.Abs(treeIn.l_eta)< 1.2 and TMath.Abs(treeIn.l_eta)>= 0.9: tmp_HLT_weight= 0.935
+                    elif treeIn.l_pt<80 and treeIn.l_pt>=60 and TMath.Abs(treeIn.l_eta)< 2.1 and TMath.Abs(treeIn.l_eta)>= 1.2: tmp_HLT_weight= 0.883
+                    elif                    treeIn.l_pt>=80 and TMath.Abs(treeIn.l_eta)< 0.9 and TMath.Abs(treeIn.l_eta)>= 0  : tmp_HLT_weight= 0.966
+                    elif                    treeIn.l_pt>=80 and TMath.Abs(treeIn.l_eta)< 1.2 and TMath.Abs(treeIn.l_eta)>= 0.9: tmp_HLT_weight= 0.902
+                    elif                    treeIn.l_pt>=80 and TMath.Abs(treeIn.l_eta)< 2.1 and TMath.Abs(treeIn.l_eta)>= 1.2: tmp_HLT_weight= 0.850
+                elif self.channel=="el":
+                    tmp_HLT_weight=0.92
+                #print "l_pt=%s, l_eta=%s, HLT=%s"%(treeIn.l_pt, treeIn.l_eta, tmp_HLT_weight)
+                #raw_input("zixu")
                 ### weigh MC events              
-                tmp_event_weight     = treeIn.weight*tmp_lumi;
-                tmp_event_weight4fit = treeIn.weight*tmp_lumi/tmp_scale_to_lumi;
+                tmp_event_weight     = treeIn.weight*tmp_HLT_weight*tmp_lumi;
+                tmp_event_weight4fit = treeIn.weight*tmp_HLT_weight*tmp_lumi/tmp_scale_to_lumi;
                 #tmp_event_weight4fit = tmp_event_weight;
                 ###### wtagger_eff_reweight
                 if label =="_data" or label =="_data_xww" :
