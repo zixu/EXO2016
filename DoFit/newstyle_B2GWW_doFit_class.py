@@ -89,7 +89,7 @@ class doFit_wj_and_wlvj:
            
 
         #narrow the BinWidth_mj and BinWidth_mlvj by a factor of 5. Because Higgs-Combination-Tools will generate a binned sample, so need the bin width narrow. So, as a easy selution, we will increase the bin-width by a factor of 5 when ploting m_j m_WW
-        self.binwidth_narrow_factor=1.;#bug now, keep it to 1
+        self.binwidth_narrow_factor=5.
 
         ## rounding the mj upper edge 
         self.BinWidth_mj=self.BinWidth_mj/self.binwidth_narrow_factor;
@@ -666,14 +666,22 @@ class doFit_wj_and_wlvj:
         if in_model_name == "ExpTail":
             print "########### ExpTai = levelled exp funtion for W+jets mlvj ############"
             label_tstring=TString(label);
-            if self.wtagger_category == "LP":
-                rrv_s_ExpTail = RooRealVar("rrv_s_ExpTail"+label+"_"+self.channel,"rrv_s_ExpTail"+label+"_"+self.channel, 250,-1.e6,1e6);
-                rrv_a_ExpTail = RooRealVar("rrv_a_ExpTail"+label+"_"+self.channel,"rrv_a_ExpTail"+label+"_"+self.channel, 1e-1,-1.e-2,1e6);
-            else:
-                rrv_s_ExpTail = RooRealVar("rrv_s_ExpTail"+label+"_"+self.channel,"rrv_s_ExpTail"+label+"_"+self.channel, 100,0.,500);
-                rrv_a_ExpTail = RooRealVar("rrv_a_ExpTail"+label+"_"+self.channel,"rrv_a_ExpTail"+label+"_"+self.channel, 0.5,-1, 5);
-      
-            model_pdf     = ROOT.RooExpTailPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_s_ExpTail, rrv_a_ExpTail);
+            ##if self.wtagger_category == "LP":
+            ##    rrv_s_ExpTail = RooRealVar("rrv_s_ExpTail"+label+"_"+self.channel,"rrv_s_ExpTail"+label+"_"+self.channel, 250,-1.e6,1e6);
+            ##    rrv_a_ExpTail = RooRealVar("rrv_a_ExpTail"+label+"_"+self.channel,"rrv_a_ExpTail"+label+"_"+self.channel, 1e-1,-1.e-2,1e6);
+            ##else:
+            ##    rrv_s_ExpTail = RooRealVar("rrv_s_ExpTail"+label+"_"+self.channel,"rrv_s_ExpTail"+label+"_"+self.channel, 100,0.,500);
+            ##    rrv_a_ExpTail = RooRealVar("rrv_a_ExpTail"+label+"_"+self.channel,"rrv_a_ExpTail"+label+"_"+self.channel, 0.5,-1, 5);
+            ##rrv_s_ExpTail = RooRealVar("rrv_s_ExpTail"+label+"_"+self.channel,"rrv_s_ExpTail"+label+"_"+self.channel, 200,0.,500);
+            ##rrv_a_ExpTail = RooRealVar("rrv_a_ExpTail"+label+"_"+self.channel,"rrv_a_ExpTail"+label+"_"+self.channel, 0.,-1, 1);
+            ##model_pdf     = ROOT.RooExpTailPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_s_ExpTail, rrv_a_ExpTail);
+
+            rrv_s_ExpTail = RooRealVar("rrv_s_ExpTail"+label+"_"+self.channel,"rrv_s_ExpTail"+label+"_"+self.channel, 2,-10.,10);
+            rrv_a_ExpTail = RooRealVar("rrv_a_ExpTail"+label+"_"+self.channel,"rrv_a_ExpTail"+label+"_"+self.channel, 0.,-10, 10);
+            rrv_sp_ExpTail      = RooFormulaVar("rrv_sp_ExpTail"+label+"_"+self.channel,"@0*100.",RooArgList(rrv_s_ExpTail));
+            rrv_ap_ExpTail      = RooFormulaVar("rrv_ap_ExpTail"+label+"_"+self.channel,"@0/100.",RooArgList(rrv_a_ExpTail));
+            model_pdf     = ROOT.RooExpTailPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_sp_ExpTail, rrv_ap_ExpTail);
+
 
         ## sum of two exponential 
         if in_model_name == "2Exp":
@@ -1568,8 +1576,10 @@ class doFit_wj_and_wlvj:
         ## make the fit
         rfresult = model.fitTo( rdataset, RooFit.Save(1), RooFit.SumW2Error(kTRUE) ,RooFit.Extended(kTRUE) );
         rfresult.Print();
+        #raw_input("fit result 0")
         rfresult = model.fitTo( rdataset, RooFit.Save(1), RooFit.SumW2Error(kTRUE) ,RooFit.Extended(kTRUE), RooFit.Minimizer("Minuit2") );
         rfresult.Print();
+        #raw_input("fit result 1")
 
         ## set the name of the result of the fit and put it in the workspace   
         rfresult.SetName("rfresult"+label+in_range+"_"+self.channel+"_mlvj")
@@ -1589,7 +1599,7 @@ class doFit_wj_and_wlvj:
         print mplot.chiSquare();
         print "#################### JENchi2 nPar=%s, chiSquare=%s/%s"%(nPar ,mplot.chiSquare(nPar)*ndof, ndof );
         datahist = rdataset.binnedClone( rdataset.GetName()+"_binnedClone",rdataset.GetName()+"_binnedClone" )
-	rdataset.Print()
+        rdataset.Print()
         ## get the pull 
         mplot_pull      = self.get_pull(rrv_mass_lvj,mplot);
         parameters_list = model.getParameters(rdataset);
@@ -3444,13 +3454,13 @@ class doFit_wj_and_wlvj:
         rrv_x = workspace.var("rrv_mass_lvj")
         data_obs = workspace.data("data_obs_xww_%s_%s"%(self.channel,self.wtagger_category));
         if TString(self.signal_sample).Contains("RS1G_WW"):
-         model_pdf_signal = workspace.pdf("RSWW_xww_%s_%s"%(self.channel,self.wtagger_category));
+            model_pdf_signal = workspace.pdf("RSWW_xww_%s_%s"%(self.channel,self.wtagger_category));
         elif TString(self.signal_sample).Contains("BulkGraviton"):
-         model_pdf_signal = workspace.pdf("BulkWW_xww_%s_%s"%(self.channel,self.wtagger_category));
+            model_pdf_signal = workspace.pdf("BulkWW_xww_%s_%s"%(self.channel,self.wtagger_category));
         elif TString(self.signal_sample).Contains("Wprime_WZ"):
-         model_pdf_signal = workspace.pdf("WprimeWZ_xww_%s_%s"%(self.channel,self.wtagger_category));
+            model_pdf_signal = workspace.pdf("WprimeWZ_xww_%s_%s"%(self.channel,self.wtagger_category));
         else:
-         model_pdf_signal = workspace.pdf("%s_xww_%s_%s"%(self.signal_sample,self.channel,self.wtagger_category));
+            model_pdf_signal = workspace.pdf("%s_xww_%s_%s"%(self.signal_sample,self.channel,self.wtagger_category));
             
         model_pdf_WJets  = workspace.pdf("WJets_xww_%s_%s"%(self.channel,self.wtagger_category));
         model_pdf_VV     = workspace.pdf("VV_xww_%s_%s"%(self.channel,self.wtagger_category));
@@ -3464,13 +3474,13 @@ class doFit_wj_and_wlvj:
         model_pdf_STop.Print();
 
         if TString(self.signal_sample).Contains("RS1G_WW"):
-         rrv_number_signal = workspace.var("rate_RSWW_xww_for_unbin");
+            rrv_number_signal = workspace.var("rate_RSWW_xww_for_unbin");
         elif TString(self.signal_sample).Contains("BulkGraviton"):
-         rrv_number_signal = workspace.var("rate_BulkWW_xww_for_unbin");
+            rrv_number_signal = workspace.var("rate_BulkWW_xww_for_unbin");
         elif TString(self.signal_sample).Contains("Wprime_WZ"):
-         rrv_number_signal = workspace.var("rate_WprimeWZ_xww_for_unbin");
+            rrv_number_signal = workspace.var("rate_WprimeWZ_xww_for_unbin");
         else:
-         rrv_number_signal = workspace.var("rate_%s_xww_for_unbin"%(self.signal_sample));
+            rrv_number_signal = workspace.var("rate_%s_xww_for_unbin"%(self.signal_sample));
             
          
         rrv_number_WJets  = workspace.var("rate_WJets_xww_for_unbin");
@@ -3502,12 +3512,12 @@ class doFit_wj_and_wlvj:
         model_Total_background_MC = RooAddPdf("model_Total_background_MC_xww","model_Total_background_MC_xww",RooArgList(model_pdf_WJets,model_pdf_VV,model_pdf_TTbar,model_pdf_STop),RooArgList(rrv_number_WJets,rrv_number_VV,rrv_number_TTbar,rrv_number_STop));
 
         if data_obs.sumEntries() != 0:
-         scale_number_signal = rrv_number_signal.getVal()/data_obs.sumEntries()
-         #### scale factor in order to scale MC to data in the final plot -> in order to avoid the normalization to data which is done by default in rooFit
-         scale_number_Total_background_MC = rrv_number_Total_background_MC.getVal()/data_obs.sumEntries()
+            #### scale factor in order to scale MC to data in the final plot -> in order to avoid the normalization to data which is done by default in rooFit
+            scale_number_signal = rrv_number_signal.getVal()/data_obs.sumEntries()
+            scale_number_Total_background_MC = rrv_number_Total_background_MC.getVal()/data_obs.sumEntries()
         else:
-	 scale_number_Total_background_MC = rrv_number_Total_background_MC.getVal()   
-	 scale_number_signal = rrv_number_signal.getVal()             
+            scale_number_Total_background_MC = rrv_number_Total_background_MC.getVal()   
+            scale_number_signal = rrv_number_signal.getVal()             
         #### create the frame
         mplot = rrv_x.frame(RooFit.Title("check_workspace"), RooFit.Bins(int(rrv_x.getBins()/self.binwidth_narrow_factor)));
         mplotP = rrv_x.frame(RooFit.Title("check_workspaceP"), RooFit.Bins(int(rrv_x.getBins()/self.binwidth_narrow_factor)));
@@ -3529,41 +3539,6 @@ class doFit_wj_and_wlvj:
 
         model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("STop_line_invisible"), RooFit.Components("STop_xww_%s_%s"%(self.channel,self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines());
 
-        ##model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("VV"), RooFit.Components("WJets_xww_%s_%s,VV_xww_%s_%s,TTbar_xww_%s_%s,STop_xww_%s_%s"%(self.channel,self.wtagger_category,self.channel,self.wtagger_category,self.channel,self.wtagger_category,self.channel,self.wtagger_category)),RooFit.DrawOption("F"), RooFit.FillColor(self.color_palet["VV"]), RooFit.LineColor(kBlack), RooFit.VLines());
-        ##
-        ##model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("STop"), RooFit.Components("STop_xww_%s_%s,TTbar_xww_%s_%s,WJets_xww_%s_%s"%(self.channel,self.wtagger_category,self.channel,self.wtagger_category,self.channel,self.wtagger_category)),RooFit.DrawOption("F"), RooFit.FillColor(self.color_palet["STop"]), RooFit.LineColor(kBlack), RooFit.VLines());
-          
-        ##model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("TTbar"), RooFit.Components("TTbar_xww_%s_%s,WJets_xww_%s_%s"%(self.channel,self.wtagger_category,self.channel,self.wtagger_category)),RooFit.DrawOption("F"), RooFit.FillColor(self.color_palet["TTbar"]), RooFit.LineColor(kBlack), RooFit.VLines());
-          
-        ##model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("WJets"), RooFit.Components("WJets_xww_%s_%s"%(self.channel,self.wtagger_category)),RooFit.DrawOption("F"), RooFit.FillColor(self.color_palet["WJets"]), RooFit.LineColor(kBlack), RooFit.VLines());
-          
-        ###solid line
-        ##model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("VV_line_invisible"), RooFit.Components("WJets_xww_%s_%s,VV_xww_%s_%s,TTbar_xww_%s_%s,STop_xww_%s_%s"%(self.channel,self.wtagger_category,self.channel,self.wtagger_category,self.channel,self.wtagger_category,self.channel,self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines());
-          
-        ##model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("STop_line_invisible"), RooFit.Components("STop_xww_%s_%s,TTbar_xww_%s_%s,WJets_xww_%s_%s"%(self.channel,self.wtagger_category,self.channel,self.wtagger_category,self.channel,self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines());
-          
-        ##model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("TTbar_line_invisible"), RooFit.Components("TTbar_xww_%s_%s,WJets_xww_%s_%s"%(self.channel,self.wtagger_category,self.channel,self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines());
-          
-        ##model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("WJets_line_invisible"), RooFit.Components("WJets_xww_%s_%s"%(self.channel,self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines());
-
-        ##model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("VV"), RooFit.Components("WJets_xww_%s_%s,VV_xww_%s_%s,TTbar_xww_%s_%s,STop_xww_%s_%s"%(self.channel,self.wtagger_category,self.channel,self.wtagger_category,self.channel,self.wtagger_category,self.channel,self.wtagger_category)),RooFit.DrawOption("F"), RooFit.FillColor(self.color_palet["VV"]), RooFit.LineColor(kBlack), RooFit.VLines());
-        ##
-        ##model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("STop"), RooFit.Components("STop_xww_%s_%s,TTbar_xww_%s_%s,WJets_xww_%s_%s"%(self.channel,self.wtagger_category,self.channel,self.wtagger_category,self.channel,self.wtagger_category)),RooFit.DrawOption("F"), RooFit.FillColor(self.color_palet["STop"]), RooFit.LineColor(kBlack), RooFit.VLines());
-          
-        ##model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("WJets"), RooFit.Components("TTbar_xww_%s_%s,WJets_xww_%s_%s"%(self.channel,self.wtagger_category,self.channel,self.wtagger_category)),RooFit.DrawOption("F"), RooFit.FillColor(self.color_palet["WJets"]), RooFit.LineColor(kBlack), RooFit.VLines());
-          
-        ##model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("TTbar"), RooFit.Components("TTbar_xww_%s_%s"%(self.channel,self.wtagger_category)),RooFit.DrawOption("F"), RooFit.FillColor(self.color_palet["TTbar"]), RooFit.LineColor(kBlack), RooFit.VLines());
-          
-        ###solid line
-        ##model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("VV_line_invisible"), RooFit.Components("WJets_xww_%s_%s,VV_xww_%s_%s,TTbar_xww_%s_%s,STop_xww_%s_%s"%(self.channel,self.wtagger_category,self.channel,self.wtagger_category,self.channel,self.wtagger_category,self.channel,self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines());
-          
-        ##model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("STop_line_invisible"), RooFit.Components("STop_xww_%s_%s,TTbar_xww_%s_%s,WJets_xww_%s_%s"%(self.channel,self.wtagger_category,self.channel,self.wtagger_category,self.channel,self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines());
-          
-        ##model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("WJets_line_invisible"), RooFit.Components("TTbar_xww_%s_%s,WJets_xww_%s_%s"%(self.channel,self.wtagger_category,self.channel,self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines());
-          
-        ##model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("TTbar_line_invisible"), RooFit.Components("TTbar_xww_%s_%s"%(self.channel,self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines());
-
-
         model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*self.signal_scale),RooFit.Name("%s #times %s"%(self.signal_sample, self.signal_scale)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
 
         #### plot the observed data using poissonian error bar
@@ -3575,7 +3550,9 @@ class doFit_wj_and_wlvj:
 
         datahist = data_obs.binnedClone( data_obs.GetName()+"_binnedClone",data_obs.GetName()+"_binnedClone" )
         ### Plot the list of floating parameters and the uncertainty band is draw taking into account this floating list defined in the prepare_limit
-        draw_error_band(model_Total_background_MC, rrv_x.GetName(), rrv_number_Total_background_MC,self.FloatingParams,workspace ,mplot,mplotP,datahist,self.color_palet["Uncertainty"],"F");
+        #draw_error_band(model_Total_background_MC, rrv_x.GetName(), rrv_number_Total_background_MC,self.FloatingParams,workspace ,mplot,mplotP,datahist,self.color_palet["Uncertainty"],"F");
+        hdata= datahist.createHistogram(rrv_x.GetName(), int(rrv_x.getBins()/self.binwidth_narrow_factor)) ;
+        draw_error_band(model_Total_background_MC, rrv_x.GetName(), rrv_number_Total_background_MC,self.FloatingParams,workspace ,mplot,mplotP,hdata,self.color_palet["Uncertainty"],"F");
 
         mplot.Print();
         self.leg = self.legend4Plot(mplot,0,1,-0.01,-0.05,0.11,0.);
@@ -4257,7 +4234,8 @@ class doFit_wj_and_wlvj:
     def getData_PoissonInterval(self,data_obs,mplot):
         rrv_x = self.workspace4fit_.var("rrv_mass_lvj");
         datahist   = data_obs.binnedClone(data_obs.GetName()+"_binnedClone",data_obs.GetName()+"_binnedClone");
-        data_histo = datahist.createHistogram("histo_data",rrv_x) ;
+        #data_histo = datahist.createHistogram("histo_data",rrv_x) ;
+        data_histo = datahist.createHistogram(rrv_x.GetName(), int(rrv_x.getBins()/self.binwidth_narrow_factor)) ;
         data_histo.SetName("data");
         data_plot  = RooHist(data_histo);
         data_plot.SetMarkerStyle(20);
@@ -4265,14 +4243,14 @@ class doFit_wj_and_wlvj:
         
         alpha = 1 - 0.6827;
         for iPoint  in range(data_plot.GetN()):
-          N = data_plot.GetY()[iPoint];
-          if N==0 : L = 0;
-          else : L = (ROOT.Math.gamma_quantile(alpha/2,N,1.));
-          U =  ROOT.Math.gamma_quantile_c(alpha/2,N+1,1);
-          data_plot.SetPointEYlow(iPoint, N-L);
-          data_plot.SetPointEYhigh(iPoint,U-N);
-          data_plot.SetPointEXlow(iPoint,0);        
-          data_plot.SetPointEXhigh(iPoint,0);        
+            N = data_plot.GetY()[iPoint];
+            if N==0 : L = 0;
+            else : L = (ROOT.Math.gamma_quantile(alpha/2,N,1.));
+            U =  ROOT.Math.gamma_quantile_c(alpha/2,N+1,1);
+            data_plot.SetPointEYlow(iPoint, N-L);
+            data_plot.SetPointEYhigh(iPoint,U-N);
+            data_plot.SetPointEXlow(iPoint,0);        
+            data_plot.SetPointEXhigh(iPoint,0);        
         
         mplot.addPlotable(data_plot,"PE");
 
