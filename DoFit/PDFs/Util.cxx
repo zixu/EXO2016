@@ -224,7 +224,8 @@ void draw_error_band( RooAbsPdf &rpdf, std::string xaxis_name, RooRealVar &rrv_n
 	if( TString(opt).Contains("L") ){ am->SetMarkerStyle(1); ap->SetMarkerStyle(1); mplot->addObject(am); mplot->addObject(ap); }
 }
 
-void draw_error_band( RooAbsPdf &rpdf, std::string xaxis_name, RooRealVar &rrv_number_events , RooArgList &paras, RooWorkspace &ws, RooPlot *mplot, RooPlot *mplotP, RooDataHist *datahist, Int_t kcolor=6, std::string opt="F", Int_t number_point=100, const Int_t number_errorband=2000){
+//void draw_error_band( RooAbsPdf &rpdf, std::string xaxis_name, RooRealVar &rrv_number_events , RooArgList &paras, RooWorkspace &ws, RooPlot *mplot, RooPlot *mplotP, RooDataHist *datahist, Int_t kcolor=6, std::string opt="F", Int_t number_point=100, const Int_t number_errorband=2000){
+void draw_error_band( RooAbsPdf &rpdf, std::string xaxis_name, RooRealVar &rrv_number_events , RooArgList &paras, RooWorkspace &ws, RooPlot *mplot, RooPlot *mplotP, TH1 *hdata, Int_t kcolor=6, std::string opt="F", Int_t number_point=100, const Int_t number_errorband=2000){
 	//void draw_error_band( RooAbsPdf &rpdf, std::string xaxis_name, RooRealVar &rrv_number_events , RooArgList &paras, RooWorkspace &ws, RooPlot *mplot, RooPlot *mplotP, Int_t kcolor=6, std::string opt="F", Int_t number_point=100, const Int_t number_errorband=2000){
 
 	//}
@@ -234,9 +235,10 @@ void draw_error_band( RooAbsPdf &rpdf, std::string xaxis_name, RooRealVar &rrv_n
 	//}
 
 	std::cout << "I AM HERE : draw_error_band " <<  std::endl;
-	Int_t hpoints = datahist->numEntries();
-	std::cout << hpoints<<endl;
-	TH1 *hdata=datahist->createHistogram("rrv_mass_lvj",hpoints);
+	//Int_t hpoints = datahist->numEntries();
+	//std::cout << hpoints<<endl;
+	//TH1 *hdata=datahist->createHistogram("rrv_mass_lvj",hpoints);
+	Int_t hpoints = hdata->GetNbinsX();
 
 
 	TRandom3 rand(1234);
