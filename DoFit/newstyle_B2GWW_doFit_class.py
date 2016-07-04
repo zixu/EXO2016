@@ -872,25 +872,25 @@ class doFit_wj_and_wlvj:
         if in_model_name == "2_2Gaus":
 
             print "########### 2Gaus +2Gaus for mj fit  ############"
-            mean1_tmp      = 8.3141e+01; mean1_tmp_err      = 1.63e-01;
-            deltamean_tmp  = 6.9129e+00; deltamean_tmp_err  = 1.24e+00;
-            sigma1_tmp     = 7.5145e+00; sigma1_tmp_err     = 1.99e-01;
-            scalesigma_tmp = 3.6819e+00; scalesigma_tmp_err = 2.11e-01;
-            frac_tmp       = 6.7125e-01; frac_tmp_err       = 2.09e-02;
+            mean1_tmp      = 8.3141e+01; #mean1_tmp_err      = 1.63e-01;
+            deltamean_tmp  = 9.0e+00; #deltamean_tmp_err  = 1.24e+00;
+            sigma1_tmp     = 7.5145e+00; #sigma1_tmp_err     = 1.99e-01;
+            scalesigma_tmp = 3.6819e+00; #scalesigma_tmp_err = 2.11e-01;
+            frac_tmp       = 6.7125e-01; #frac_tmp_err       = 2.09e-02;
 
             rrv_shift = RooRealVar("rrv_shift"+label+"_"+self.channel,"rrv_shift"+label+"_"+self.channel,10.8026) # Z mass: 91.1876; shift=91.1876-80.385=10.8026
 
             rrv_mean1_gaus = RooRealVar("rrv_mean1_gaus"+label+"_"+self.channel,"rrv_mean1_gaus"+label+"_"+self.channel,mean1_tmp, mean1_tmp-20, mean1_tmp+4);
-            rrv_sigma1_gaus = RooRealVar("rrv_sigma1_gaus"+label+"_"+self.channel,"rrv_sigma1_gaus"+label+"_"+self.channel,sigma1_tmp, sigma1_tmp-4,sigma1_tmp+4 );
+            rrv_sigma1_gaus = RooRealVar("rrv_sigma1_gaus"+label+"_"+self.channel,"rrv_sigma1_gaus"+label+"_"+self.channel,sigma1_tmp, 0,sigma1_tmp*2 );
             gaus1 = RooGaussian("gaus1"+label+"_"+self.channel,"gaus1"+label+"_"+self.channel, rrv_x,rrv_mean1_gaus,rrv_sigma1_gaus);
 
-            rrv_deltamean_gaus  = RooRealVar("rrv_deltamean_gaus"+label+"_"+self.channel,"rrv_deltamean_gaus"+label+"_"+self.channel,0.,-8,10);
+            rrv_deltamean_gaus  = RooRealVar("rrv_deltamean_gaus"+label+"_"+self.channel,"rrv_deltamean_gaus"+label+"_"+self.channel,deltamean_tmp,deltamean_tmp*-1,deltamean_tmp*3);
             rrv_mean2_gaus      = RooFormulaVar("rrv_mean2_gaus"+label+"_"+self.channel,"@0+@1",RooArgList(rrv_mean1_gaus, rrv_deltamean_gaus));
-            rrv_scalesigma_gaus = RooRealVar("rrv_scalesigma_gaus"+label+"_"+self.channel,"rrv_scalesigma_gaus"+label+"_"+self.channel,scalesigma_tmp, scalesigma_tmp-scalesigma_tmp_err*4, scalesigma_tmp+scalesigma_tmp_err*4);
+            rrv_scalesigma_gaus = RooRealVar("rrv_scalesigma_gaus"+label+"_"+self.channel,"rrv_scalesigma_gaus"+label+"_"+self.channel,scalesigma_tmp, 0, scalesigma_tmp*2);
             rrv_sigma2_gaus     = RooFormulaVar("rrv_sigma2_gaus"+label+"_"+self.channel,"@0*@1", RooArgList(rrv_sigma1_gaus,rrv_scalesigma_gaus));
             gaus2 = RooGaussian("gaus2"+label+"_"+self.channel,"gaus2"+label+"_"+self.channel, rrv_x,rrv_mean2_gaus,rrv_sigma2_gaus);
 
-            rrv_frac1 = RooRealVar("rrv_frac1"+label+"_"+self.channel,"rrv_frac1"+label+"_"+self.channel,frac_tmp, frac_tmp-frac_tmp_err*4, frac_tmp+frac_tmp_err*4);
+            rrv_frac1 = RooRealVar("rrv_frac1"+label+"_"+self.channel,"rrv_frac1"+label+"_"+self.channel,frac_tmp, 0, frac_tmp*2);
             gausguas_1 =RooAddPdf("gausguas_1"+label+"_"+self.channel+mass_spectrum,"gausguas_1"+label+"_"+self.channel+mass_spectrum,RooArgList(gaus1,gaus2),RooArgList(rrv_frac1),1)
 
             rrv_mean3_gaus = RooFormulaVar("rrv_mean3_gaus"+label+"_"+self.channel,"@0+@1",RooArgList(rrv_mean1_gaus, rrv_shift));
@@ -1361,14 +1361,14 @@ class doFit_wj_and_wlvj:
         rrv_mass_j   = self.workspace4fit_.var("rrv_mass_j")
         rrv_mass_lvj = self.workspace4fit_.var("rrv_mass_lvj")
 
-        #cut="(CategoryID==1 || CategoryID==-1 || CategoryID==2 || CategoryID==-2|| CategoryID==4 || CategoryID==-4) && m_lvj> 100 && m_lvj<3000 &&((massVhadJEC>40 && massVhadJEC<65)||(massVhadJEC>135&&massVhadJEC<150)) && l_pt> %s && MET_et>%s"%(lpt_cut, MET_cut)
-        #self.Make_Controlplots(cut,"preselection");
+        cut="(CategoryID==1 || CategoryID==-1 || CategoryID==2 || CategoryID==-2|| CategoryID==4 || CategoryID==-4) && m_lvj> 100 && m_lvj<3000 &&((massVhadJEC>40 && massVhadJEC<65)||(massVhadJEC>135&&massVhadJEC<150)) && l_pt> %s && MET_et>%s"%(lpt_cut, MET_cut)
+        self.Make_Controlplots(cut,"preselection");
 
         #cut="(CategoryID==3 || CategoryID==-3) && m_lvj> 100 && m_lvj<4000 && massVhadJEC>40 && massVhadJEC<150 && l_pt>%s && MET_et>%s"%(lpt_cut, MET_cut) 
         #self.Make_Controlplots(cut,"TopControl",1);
 
-        cut="(CategoryID==1 ) && m_lvj> 600 && m_lvj<14000 && (massVhadJEC>65 && massVhadJEC<95) && l_pt> %s && MET_et>%s"%(lpt_cut, MET_cut)
-        self.Make_Controlplots(cut,"fulselection");
+        #cut="(CategoryID==1 ) && m_lvj> 600 && m_lvj<14000 && (massVhadJEC>65 && massVhadJEC<95) && l_pt> %s && MET_et>%s"%(lpt_cut, MET_cut)
+        #self.Make_Controlplots(cut,"fulselection");
 
 
     ######## ++++++++++++++
@@ -2763,7 +2763,10 @@ class doFit_wj_and_wlvj:
             self.isGoodEvent = 0 ;   
             ## event in the whole range
             if self.channel == "mu" or self.channel == "el":                
-                if treeIn.CategoryID==self.categoryID and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() :
+                #if treeIn.CategoryID==self.categoryID and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() :
+                ## temporary using tau21 cut to replace categoryID
+                #if TMath.Abs(treeIn.CategoryID)< 3 and treeIn.tau21<=0.45 and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() :
+                if TMath.Abs(treeIn.CategoryID)< 3 and treeIn.tau21<=0.60 and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() :
                     self.isGoodEvent = 1 ;   
 
             if label =="_data" or label =="_data_xww" :
@@ -5141,18 +5144,7 @@ class doFit_wj_and_wlvj:
         ### Build the dataset
         self.get_mj_and_mlvj_dataset(self.file_VV_mc,"_VV_xww", "massVhadJEC")
 
-        ### fitting shape as a function of the mlvj region -> signal mass
-        if self.MODEL_4_mlvj=="ErfPowExp_v1" or self.MODEL_4_mlvj=="ErfPow2_v1" or self.MODEL_4_mlvj=="ErfExp_v1":
-            if self.wtagger_category=="LP":
-                self.fit_mj_single_MC(self.file_VV_mc,"_VV_xww","ExpGaus");
-            else:
-                #self.fit_mj_single_MC(self.file_VV_mc,"_VV_xww","2_2Gaus");
-                self.fit_mj_single_MC(self.file_VV_mc,"_VV_xww","2Gaus");
-        else:
-            if self.wtagger_category=="LP":
-                self.fit_mj_single_MC(self.file_VV_mc,"_VV_xww","ExpGaus");
-            else:
-                self.fit_mj_single_MC(self.file_VV_mc,"_VV_xww","2_2Gaus");
+        self.fit_mj_single_MC(self.file_VV_mc,"_VV_xww","2_2Gaus");
 
         if self.MODEL_4_mlvj=="ErfPowExp_v1" or self.MODEL_4_mlvj=="ErfPow2_v1" or self.MODEL_4_mlvj=="ErfExp_v1":
             self.fit_mlvj_model_single_MC(self.file_VV_mc,"_VV_xww","_sb_lo","ErfExp_v1", 0, 0, 1);
