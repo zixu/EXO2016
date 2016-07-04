@@ -469,12 +469,12 @@ class doFit_wj_and_wlvj:
                 rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2.2,0.01,35);
                 rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,1.94,1.0,4.0);
             elif label_tstring.Contains("WW700"):#because the M_ljv lower limit is 800GeV, so, just use right side 
-                rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,728,650, 780);
-                rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 57.5,50 ,70);
+                rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,720,650, 780);
+                rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 55,30 ,70);
                 rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 45.)#,0.01,45);
-                rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,1.71,1.,3.);
+                rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2,0.1,4.);
                 rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2.9,1.,5.);
-                rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2.12,1.,4.);
+                rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2,0.1,4.);
             elif label_tstring.Contains("WW750"):#because the M_ljv lower limit is 800GeV, so, just use right side 
                 rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,777,700,820);
                 rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 59.4,50,70);
