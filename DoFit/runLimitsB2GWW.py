@@ -56,47 +56,6 @@ parser.add_option('--Sys', action='store',type="int", dest='Sys', default=1, hel
 ### Global Variables for running jobs ###
 #########################################
 
-##### mass point for signal to be fitted
-##mass  = [600,700,750,800,900,1000]
-##### mass window for couting analysis
-##ccmlo = [500,600,650,700, 800, 900] 
-##ccmhi = [700,800,850,900,1000,1100]
-##### jet mass range
-##mjlo = [  40,  40,  40,  40,  40,  40]
-##mjhi = [ 150, 150, 150, 150, 150, 150]
-##### mlvj range min and max used when run with option --makeCards
-###fit range
-##mlo = [  600, 600, 600, 600, 600, 600]
-##mhi = [ 1400,1400,1400,1400,1400,1400]
-##### shape to be used for bkg when --makeCards
-##shape    = ["Exp","Exp","Exp","Exp","Exp","Exp"]
-##shapeAlt = ["Pow","Pow","Pow","Pow","Pow","Pow"]
-##### shape to be used for bkg when --fitSignal
-##shape_sig_width  = ["BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB"]
-##shape_sig_narrow = ["DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
-
-
-##### mass point for signal to be fitted
-##mass  = [1000,2000,2500,3000,4000]
-##### mass nalysis
-##ccmlo = [ 900,1900,2400,2900,3900] 
-##ccmhi = [1100,2100,2600,3100,4100]
-##### jet mass range
-##mjlo = [   40,  40,  40,  40,  40]
-##mjhi = [  150, 150, 150, 150, 150]
-##### mlvj range min and max used when run with option --makeCards
-###fit range
-##mlo = [  800, 800, 800, 800, 800]
-##mhi = [ 5000,5000,5000,5000,5000]
-##### shape to be used for bkg when --makeCards
-###shape    = [   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN",   "ExpN"]
-###shapeAlt = ["ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail","ExpTail"]
-##shape    = ["Exp", "Exp", "Exp", "Exp", "Exp"]
-##shapeAlt = ["Pow", "Pow", "Pow", "Pow", "Pow"]
-##### shape to be used for bkg when --fitSignal
-##shape_sig_width  = [ "BWDoubleCB", "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB"]
-##shape_sig_narrow = ["DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
-
 ### mass point for signal to be fitted
 mass      = [600,700,750,800,900,1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
 binwidth  = [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1]
@@ -117,8 +76,6 @@ shapeAlt = [ "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp
 shape_sig_width  = ["BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB"]
 shape_sig_narrow = ["DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
 
-
-#rMaxs = [ 1500,1500,1500,1500,1500,5000,5000,5000,5000,5000,5000,1e6]
 
 ### signal mass fraction for non narrow samples
 #mass_fraction = [0.15,0.05,0.3,0.3]
@@ -145,22 +102,22 @@ xsDict =  {
         4500: 0.000168503*1e-3
         }
 xsDict_munubb =  {
-        600:    406.830851*1e-3*0.3, 
-        700:    165.094354*1e-3*0.3, 
-        750:    110.500282*1e-3*0.3,    
-        800:    76.0582930*1e-3*0.3, 
-        900:    38.2161000*1e-3*0.3, 
-        1000:   20.4996930*1e-3*0.3,
-        1200: 6.841404   *1e-3*0.3,  
-        1400: 2.625789675*1e-3*0.3,  
-        1600: 1.1031223*1e-3*0.3,  
-        1800: 0.49976082 *1e-3*0.3,  
-        2000: 0.239518815*1e-3*0.3,  
-        2500: 0.044885148*1e-3*0.3,  
-        3000: 0.009824256*1e-3*0.3,  
-        3500: 0.002409958*1e-3*0.3,  
-        4000: 0.000622786*1e-3*0.3,  
-        4500: 0.000168503*1e-3*0.3
+        600:    406.830851*1e-3*0.44, 
+        700:    165.094354*1e-3*0.44, 
+        750:    110.500282*1e-3*0.44,    
+        800:    76.0582930*1e-3*0.44, 
+        900:    38.2161000*1e-3*0.44, 
+        1000:   20.4996930*1e-3*0.44,
+        1200: 6.841404   *1e-3*0.44,  
+        1400: 2.625789675*1e-3*0.44,  
+        1600: 1.1031223*1e-3*0.44,  
+        1800: 0.49976082 *1e-3*0.44,  
+        2000: 0.239518815*1e-3*0.44,  
+        2500: 0.044885148*1e-3*0.44,  
+        3000: 0.009824256*1e-3*0.44,  
+        3500: 0.002409958*1e-3*0.44,  
+        4000: 0.000622786*1e-3*0.44,  
+        4500: 0.000168503*1e-3*0.44
         }
 
 signal_scaleup =  {
@@ -423,7 +380,7 @@ def doULPlot( suffix ):
 
     leg2.Draw();
 
-    banner = TLatex(0.95, 0.96, "2.6 fb^{-1} (13 TeV)");
+    banner = TLatex(0.95, 0.96, "4.0 fb^{-1} (13 TeV)");
     banner.SetNDC(); banner.SetTextSize(0.038); banner.SetTextFont(42); banner.SetTextAlign(31); banner.SetLineWidth(2); banner.Draw();
     CMStext = TLatex(0.15,0.96,"CMS");
     CMStext.SetNDC(); CMStext.SetTextSize(0.041); CMStext.SetTextFont(61); CMStext.SetTextAlign(11); CMStext.SetLineWidth(2); CMStext.Draw();
