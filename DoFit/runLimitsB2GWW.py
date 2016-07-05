@@ -30,7 +30,7 @@ parser.add_option('--computeLimits', action='store_true', dest='computeLimits', 
 
 ### to plot limits
 parser.add_option('--plotLimits', action='store_true', dest='plotLimits', default=False, help='plot limits')
-parser.add_option('--lnubbBR', action='store_true', dest='lnubbBR', default=False, help='computing with munu BR')
+parser.add_option('--lnubbBR', action='store_true', dest='lnubbBR', default=True, help='computing with munu BR')
 
 ### to do just signal lineshape fits
 parser.add_option('--fitSignal', action='store_true', dest='fitSignal', default=False, help='do signal lineshape fits')
@@ -272,7 +272,10 @@ def doULPlot( suffix ):
         ybins_2s.append( curAsymLimits[1]*sf );
         ybins_1s.append( curAsymLimits[2]*sf );
         #ybins_th.append(sf);#/20.); #*0.25);
-        ybins_th.append(xsDict[mass[i]]);#/20.); #*0.25);
+        if options.lnubbBR:
+            ybins_th.append(xsDict_munubb[mass[i]]);#/20.); #*0.25);
+        else:
+            ybins_th.append(xsDict[mass[i]]);#/20.); #*0.25);
     
     for i in range( len(mass)-1, -1, -1 ):
         curFile = "higgsCombine_lim_%03d%s.Asymptotic.mH%03d.root"%(mass[i],suffix,mass[i]);
@@ -335,7 +338,7 @@ def doULPlot( suffix ):
     
     hrl_SM = can_SM.DrawFrame(mass[0]/1000.,1e-4, mass[nPoints-1]/1000., 1e2);
     if options.lnubbBR:
-        hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{Bulk} #rightarrow munubb) (pb)");
+        hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{Bulk} #rightarrow WW #rightarrow l#nuj) (pb)");
     else:
         hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{Bulk} #rightarrow WW) (pb)");
 
@@ -387,10 +390,10 @@ def doULPlot( suffix ):
     if suffix =="_el_HP" :
         Extratext = TLatex(0.241, 0.96, "Preliminary W#rightarrow e#nu");
         Extratext.SetNDC(); Extratext.SetTextSize(0.032); Extratext.SetTextFont(52); Extratext.SetTextAlign(11); Extratext.SetLineWidth(2); Extratext.Draw();
-    if suffix =="_mu_HP" :
+    elif suffix =="_mu_HP" :
         Extratext = TLatex(0.241, 0.96, "Preliminary W#rightarrow #mu#nu");
         Extratext.SetNDC(); Extratext.SetTextSize(0.032); Extratext.SetTextFont(52); Extratext.SetTextAlign(11); Extratext.SetLineWidth(2); Extratext.Draw();
-    if suffix =="_combo" :
+    elif suffix =="_em_HP" :
         Extratext = TLatex(0.241, 0.96, "Preliminary W#rightarrow l#nu");
         Extratext.SetNDC(); Extratext.SetTextSize(0.032); Extratext.SetTextFont(52); Extratext.SetTextAlign(11); Extratext.SetLineWidth(2); Extratext.Draw();
         
@@ -399,7 +402,7 @@ def doULPlot( suffix ):
 
     can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.png"%(options.Sys, suffix));
     can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.pdf"%(options.Sys, suffix));
-    can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.root"%(options.Sys, suffix));
+    #can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.root"%(options.Sys, suffix));
     can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.C"%(options.Sys, suffix));
 
 
