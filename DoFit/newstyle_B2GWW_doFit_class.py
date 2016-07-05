@@ -160,6 +160,11 @@ class doFit_wj_and_wlvj:
         rrv_mass_lvj.setRange("signal_region",self.mlvj_signal_min,self.mlvj_signal_max);
         rrv_mass_lvj.setRange("high_mass",2500,in_mlvj_max);
 
+
+        if self.channel=="el":   self.Lumi= 2.6;
+        elif self.channel=="mu": self.Lumi= 2.6;
+        elif self.channel=="em": self.Lumi= 2.6;
+
         #prepare the data and mc files --> set the working directory and the files name
         self.file_Directory="PKUTree_final_2p6fb_Jun30/";
         #self.file_Directory="PKUTree_final_4fb_Jul4/";
@@ -5084,9 +5089,10 @@ class doFit_wj_and_wlvj:
 
     ##### Get Lumi for banner title
     def GetLumi(self):
-        if self.channel=="el":   return 2.6;
-        elif self.channel=="mu": return 2.6;
-        elif self.channel=="em": return 2.6;
+        return self.Lumi
+        #if self.channel=="el":   return 2.6;
+        #elif self.channel=="mu": return 2.6;
+        #elif self.channel=="em": return 2.6;
 
     #### function to run the selection on data to build the datasets 
     def get_data(self):
