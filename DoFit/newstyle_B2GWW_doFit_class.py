@@ -2771,9 +2771,9 @@ class doFit_wj_and_wlvj:
             self.isGoodEvent = 0 ;   
             ## event in the whole range
             if self.channel == "mu" or self.channel == "el":                
-                if treeIn.CategoryID==self.categoryID and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() :
+                ##if treeIn.CategoryID==self.categoryID and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() :
                 ## temporary using tau21 cut to replace categoryID
-                #if TMath.Abs(treeIn.CategoryID)< 3 and treeIn.tau21<=0.45 and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() :
+                if TMath.Abs(treeIn.CategoryID)< 3 and treeIn.tau21<=0.45 and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() :
                 #if TMath.Abs(treeIn.CategoryID)< 3 and treeIn.tau21<=0.60 and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() :
                     self.isGoodEvent = 1 ;   
 
