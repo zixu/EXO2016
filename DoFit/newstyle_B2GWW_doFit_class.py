@@ -345,7 +345,7 @@ class doFit_wj_and_wlvj:
         self.datadriven_alpha_WJets_counting=-1;
 
         ### uncertainty for datacard
-        self.lumi_uncertainty    = 0.027;
+        self.lumi_uncertainty    = 0.05;
         self.XS_Signal_uncertainty = 0.17 ;#pdf uncertainty 13% + scale uncertainty 11%
         self.XS_STop_uncertainty = 0.050 ;
         self.XS_VV_uncertainty   = 0.030 ;
@@ -355,7 +355,7 @@ class doFit_wj_and_wlvj:
         self.XS_VV_NLO_uncertainty    = 0.10 ;# from AN-12-368 table8
 
         #el and mu trigger and eff uncertainty, B2G-16-4
-        self.lep_trigger_uncertainty = 0.03
+        self.lep_trigger_uncertainty = 0.05
         self.btag_scale_uncertainty  = 0.025
         self.signal_btag_uncertainty = 0.002
       
