@@ -161,13 +161,17 @@ class doFit_wj_and_wlvj:
         rrv_mass_lvj.setRange("high_mass",2500,in_mlvj_max);
 
 
-        if self.channel=="el":   self.Lumi= 2.6;
-        elif self.channel=="mu": self.Lumi= 2.6;
-        elif self.channel=="em": self.Lumi= 2.6;
+        #if self.channel=="el":   self.Lumi= 2.6;
+        #elif self.channel=="mu": self.Lumi= 2.6;
+        #elif self.channel=="em": self.Lumi= 2.6;
+        ##prepare the data and mc files --> set the working directory and the files name
+        #self.file_Directory="PKUTree_final_2p6fb_Jun30/";
 
-        #prepare the data and mc files --> set the working directory and the files name
-        self.file_Directory="PKUTree_final_2p6fb_Jun30/";
-        #self.file_Directory="PKUTree_final_4fb_Jul4/";
+
+        if self.channel=="el":   self.Lumi= 4.0
+        elif self.channel=="mu": self.Lumi= 4.0
+        elif self.channel=="em": self.Lumi= 4.0
+        self.file_Directory="PKUTree_final_4fb_Jul4/";
 
         self.signal_sample=in_signal_sample;
 
