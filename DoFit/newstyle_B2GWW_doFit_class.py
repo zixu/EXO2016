@@ -161,8 +161,8 @@ class doFit_wj_and_wlvj:
         rrv_mass_lvj.setRange("high_mass",2500,in_mlvj_max);
 
         #prepare the data and mc files --> set the working directory and the files name
-        #self.file_Directory="PKUTree_final_2p6fb_Jun30/";
-        self.file_Directory="PKUTree_final_4fb_Jul3/";
+        self.file_Directory="PKUTree_final_2p6fb_Jun30/";
+        #self.file_Directory="PKUTree_final_4fb_Jul4/";
 
         self.signal_sample=in_signal_sample;
 
@@ -1576,10 +1576,8 @@ class doFit_wj_and_wlvj:
         ## make the fit
         rfresult = model.fitTo( rdataset, RooFit.Save(1), RooFit.SumW2Error(kTRUE) ,RooFit.Extended(kTRUE) );
         rfresult.Print();
-        #raw_input("fit result 0")
         rfresult = model.fitTo( rdataset, RooFit.Save(1), RooFit.SumW2Error(kTRUE) ,RooFit.Extended(kTRUE), RooFit.Minimizer("Minuit2") );
         rfresult.Print();
-        #raw_input("fit result 1")
 
         ## set the name of the result of the fit and put it in the workspace   
         rfresult.SetName("rfresult"+label+in_range+"_"+self.channel+"_mlvj")
@@ -2773,10 +2771,10 @@ class doFit_wj_and_wlvj:
             self.isGoodEvent = 0 ;   
             ## event in the whole range
             if self.channel == "mu" or self.channel == "el":                
-                #if treeIn.CategoryID==self.categoryID and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() :
+                if treeIn.CategoryID==self.categoryID and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() :
                 ## temporary using tau21 cut to replace categoryID
                 #if TMath.Abs(treeIn.CategoryID)< 3 and treeIn.tau21<=0.45 and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() :
-                if TMath.Abs(treeIn.CategoryID)< 3 and treeIn.tau21<=0.60 and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() :
+                #if TMath.Abs(treeIn.CategoryID)< 3 and treeIn.tau21<=0.60 and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() :
                     self.isGoodEvent = 1 ;   
 
             if label =="_data" or label =="_data_xww" :
@@ -2798,6 +2796,7 @@ class doFit_wj_and_wlvj:
                     elif                    treeIn.l_pt>=80 and TMath.Abs(treeIn.l_eta)< 2.1 and TMath.Abs(treeIn.l_eta)>= 1.2: tmp_HLT_weight= 0.850
                 elif self.channel=="el":
                     tmp_HLT_weight=0.92
+                tmp_HLT_weight=1.0
                 #print "l_pt=%s, l_eta=%s, HLT=%s"%(treeIn.l_pt, treeIn.l_eta, tmp_HLT_weight)
                 #raw_input("zixu")
                 ### weigh MC events              
@@ -5085,9 +5084,9 @@ class doFit_wj_and_wlvj:
 
     ##### Get Lumi for banner title
     def GetLumi(self):
-        if self.channel=="el":   return 4.0;
-        elif self.channel=="mu": return 4.0;
-        elif self.channel=="em": return 4.0;
+        if self.channel=="el":   return 2.6;
+        elif self.channel=="mu": return 2.6;
+        elif self.channel=="em": return 2.6;
 
     #### function to run the selection on data to build the datasets 
     def get_data(self):
