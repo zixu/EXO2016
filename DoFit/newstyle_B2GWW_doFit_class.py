@@ -206,6 +206,11 @@ class doFit_wj_and_wlvj:
         else:
             raw_input("Fail to find correct categoryID. Please check your wtaggerI:%s and channel:%s"%(self.wtagger_category, self.channel));
             
+        if options.width==1: #high mass signal >1.0TeV
+            self.tau21_cut=0.6
+        else:#for 600GeV - 1TeV
+            self.tau21_cut=0.45
+        print "self.tau21_cut=%s"%(self.tau21_cut)
         #medium wtagger_eff reweight between data and mc #Wtagger_forV SF have be add to ntuple weight;
         if   self.wtagger_category=="LP":
             self.rrv_wtagger_eff_reweight_forT=RooRealVar("rrv_wtagger_eff_reweight_forT","rrv_wtagger_eff_reweight_forT",0.748);
@@ -213,16 +218,23 @@ class doFit_wj_and_wlvj:
             self.rrv_wtagger_eff_reweight_forV=RooRealVar("rrv_wtagger_eff_reweight_forV","rrv_wtagger_eff_reweight_forV",0.858);
             self.rrv_wtagger_eff_reweight_forV.setError(0.550);
         elif self.wtagger_category=="HP": 
-            self.rrv_wtagger_eff_reweight_forT=RooRealVar("rrv_wtagger_eff_reweight_forT","rrv_wtagger_eff_reweight_forT", 0.733);
-            self.rrv_wtagger_eff_reweight_forT.setError(0.031);
-            self.rrv_wtagger_eff_reweight_forV=RooRealVar("rrv_wtagger_eff_reweight_forV","rrv_wtagger_eff_reweight_forV",1.038);
-            self.rrv_wtagger_eff_reweight_forV.setError(0.110);
-            #self.rrv_wtagger_eff_reweight_forT=RooRealVar("rrv_wtagger_eff_reweight_forT","rrv_wtagger_eff_reweight_forT", 0.85 );
-            #self.rrv_wtagger_eff_reweight_forT.setError(0.040);
-            #self.rrv_wtagger_eff_reweight_forV=RooRealVar("rrv_wtagger_eff_reweight_forV","rrv_wtagger_eff_reweight_forV",0.69 );
-            #self.rrv_wtagger_eff_reweight_forV.setError(0.14);
+
+            if self.tau21_cut==0.6:
+                self.rrv_wtagger_eff_reweight_forT=RooRealVar("rrv_wtagger_eff_reweight_forT","rrv_wtagger_eff_reweight_forT", 0.776);
+                self.rrv_wtagger_eff_reweight_forT.setError(0.022);
+                self.rrv_wtagger_eff_reweight_forV=RooRealVar("rrv_wtagger_eff_reweight_forV","rrv_wtagger_eff_reweight_forV",0.998);
+                self.rrv_wtagger_eff_reweight_forV.setError(0.033);
+            elif self.tau21_cut==0.45:
+                self.rrv_wtagger_eff_reweight_forT=RooRealVar("rrv_wtagger_eff_reweight_forT","rrv_wtagger_eff_reweight_forT", 0.765);
+                self.rrv_wtagger_eff_reweight_forT.setError(0.026);
+                self.rrv_wtagger_eff_reweight_forV=RooRealVar("rrv_wtagger_eff_reweight_forV","rrv_wtagger_eff_reweight_forV",1.033);
+                self.rrv_wtagger_eff_reweight_forV.setError(0.084);
+            else:
+                print "self.tau21_cut=%s"%(self.tau21_cut)
+                raw_input("wrong tau21 cut value")
         else:
             raw_input("Fail to find correct categoryID. Please check your wtaggerI:%s and channel:%s"%(self.wtagger_category, self.channel));
+
         if not options.realdata==1:
             self.rrv_wtagger_eff_reweight_forT.setVal(1.0)
             self.rrv_wtagger_eff_reweight_forV.setVal(1.0)
@@ -2782,8 +2794,7 @@ class doFit_wj_and_wlvj:
             if self.channel == "mu" or self.channel == "el":                
                 ##if treeIn.CategoryID==self.categoryID and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() :
                 ## temporary using tau21 cut to replace categoryID
-                if TMath.Abs(treeIn.CategoryID)< 3 and treeIn.tau21<=0.45 and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() :
-                #if TMath.Abs(treeIn.CategoryID)< 3 and treeIn.tau21<=0.60 and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() :
+                if TMath.Abs(treeIn.CategoryID)< 3 and treeIn.tau21<=self.tau21_cut and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() :
                     self.isGoodEvent = 1 ;   
 
             if label =="_data" or label =="_data_xww" :
