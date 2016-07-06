@@ -346,7 +346,46 @@ class doFit_wj_and_wlvj:
 
         ### uncertainty for datacard
         self.lumi_uncertainty    = 0.05;
-        self.XS_Signal_uncertainty = 0.17 ;#pdf uncertainty 13% + scale uncertainty 11%
+
+        signal_uncertainty_PDF  = 0.13
+        signal_uncertainty_scale= 0.11
+
+        if "WW600" in self.signal_sample:
+            signal_uncertainty_PDF  = 0.13
+        elif "WW700" in self.signal_sample:
+            signal_uncertainty_PDF  = 0.13
+        elif "WW750" in self.signal_sample:
+            signal_uncertainty_PDF  = 0.13
+        elif "WW800" in self.signal_sample:
+            signal_uncertainty_PDF  = 0.13
+        elif "WW900" in self.signal_sample:
+            signal_uncertainty_PDF  = 0.13
+        elif "WW1000" in self.signal_sample:
+            signal_uncertainty_PDF  = 0.13
+        elif "WW1200" in self.signal_sample:
+            signal_uncertainty_PDF  = 0.14
+        elif "WW1400" in self.signal_sample:
+            signal_uncertainty_PDF  = 0.16
+        elif "WW1600" in self.signal_sample:
+            signal_uncertainty_PDF  = 0.19
+        elif "WW1800" in self.signal_sample:
+            signal_uncertainty_PDF  = 0.22
+        elif "WW2000" in self.signal_sample:
+            signal_uncertainty_PDF  = 0.25
+        elif "WW2500" in self.signal_sample:
+            signal_uncertainty_PDF  = 0.34
+        elif "WW3000" in self.signal_sample:
+            signal_uncertainty_PDF  = 0.45
+        elif "WW3500" in self.signal_sample:
+            signal_uncertainty_PDF  = 0.59
+        elif "WW4000" in self.signal_sample:
+            signal_uncertainty_PDF  = 0.78
+        elif "WW4500" in self.signal_sample:
+            signal_uncertainty_PDF  = 1.0
+        else:
+            raw_input("can not find the signal:"+self.signal_sample)
+
+        self.XS_Signal_uncertainty = (signal_uncertainty_PDF**2+ signal_uncertainty_scale**2)**0.5 ;#pdf uncertainty 13% + scale uncertainty 11%
         self.XS_STop_uncertainty = 0.050 ;
         self.XS_VV_uncertainty   = 0.030 ;
         self.XS_TTbar_uncertainty   = 0.12; #0.20 ;#qun
@@ -3439,8 +3478,8 @@ class doFit_wj_and_wlvj:
 
                                                                                                    
     #### Read the final workspace and produce the latest plots 
-    def read_workspace2(self, logy=0):
-        print "--------------------- read_workspace2 -------------------------";
+    def read_workspace(self, logy=0):
+        print "--------------------- read_workspace -------------------------";
 
         ### Taket the workspace for limits  
         file = TFile(self.file_rlt_root) ;
@@ -5240,7 +5279,7 @@ class doFit_wj_and_wlvj:
         ### Prepare the workspace and datacards     
         self.prepare_limit("sideband_correction_method1",1,0,0)
         ### finale plot and check of the workspace
-        self.read_workspace2(1)
+        self.read_workspace(1)
 
     ##### Analysis with no shape uncertainty on alpha
     def analysis_sideband_correction_method1_without_shape_and_psmodel_systermatic(self):
@@ -5256,7 +5295,7 @@ class doFit_wj_and_wlvj:
         #### prepare limit 
         self.prepare_limit("sideband_correction_method1",1,0,0)
         #### read the workspace
-        self.read_workspace2(1)
+        self.read_workspace(1)
 
    ###### Analysis fitting just signal lineshape in mlvj
     def fit_signal_only(self):
@@ -5311,7 +5350,7 @@ def control_single(channel):
 ### function to check the workspace once it has already created
 def check_workspace(channel, higgs):
     boostedW_fitter = doFit_wj_and_wlvj(channel,higgs);
-    boostedW_fitter.read_workspace2()
+    boostedW_fitter.read_workspace()
 
 def combine_workspace(channel, higgs):
     boostedW_fitter = doFit_wj_and_wlvj("mu",higgs);
