@@ -304,19 +304,19 @@ class doFit_wj_and_wlvj:
         }
         ### signal scale to be visible in the plots
         if "WW600" in self.signal_sample:
-            self.signal_scale=1
+            self.signal_scale=0.02
         elif "WW700" in self.signal_sample:
-            self.signal_scale=1
+            self.signal_scale=0.03
         elif "WW750" in self.signal_sample:
-            self.signal_scale=1
+            self.signal_scale=0.04
         elif "WW800" in self.signal_sample:
-            self.signal_scale=1
+            self.signal_scale=0.05
         elif "WW900" in self.signal_sample:
-            self.signal_scale=1
+            self.signal_scale=0.1
         elif "WW1000" in self.signal_sample:
-            self.signal_scale=1
+            self.signal_scale=0.15
         elif "WW1200" in self.signal_sample:
-            self.signal_scale=1
+            self.signal_scale=0.4
         elif "WW1400" in self.signal_sample:
             self.signal_scale=1
         elif "WW1600" in self.signal_sample:
