@@ -68,10 +68,12 @@ mjhi      = [ 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 1
 ### mlvj range min and max used when run with option --makeCards
 #fit range
 mlo       = [  600, 600, 600, 600, 600, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800]
+#mlo       = [  600, 600, 600, 600, 600,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000]
 mhi       = [ 1500,1500,1500,1500,1500,5000,5000,5000,5000,5000,5000,5000,5000,5000,5000,5000]
 ### shape to be used for bkg when --makeCards
 shape    = ["ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN"]
-shapeAlt = [ "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp"]
+#shapeAlt = [ "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp"]
+shapeAlt = [ "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail"]
 ### shape to be used for bkg when --fitSignal
 shape_sig_width  = ["BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB"]
 shape_sig_narrow = ["DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
@@ -120,14 +122,33 @@ xsDict_munubb =  {
         4500: 0.000168503*1e-3*0.44
         }
 
+#signal_scaleup =  {
+#         600: 1, 
+#         700: 1,
+#         750: 1,    
+#         800: 1, 
+#         900: 1, 
+#        1000: 1,
+#        1200: 1,  
+#        1400: 1,  
+#        1600: 3,  
+#        1800: 5,  
+#        2000: 10,  
+#        2500: 50,  
+#        3000: 300,  
+#        3500: 2000,  
+#        4000: 5000,  
+#        4500: 20000
+#        }
+
 signal_scaleup =  {
-         600: 1, 
-         700: 1,
-         750: 1,    
-         800: 1, 
-         900: 1, 
-        1000: 1,
-        1200: 1,  
+         600: 0.02, 
+         700: 0.03,
+         750: 0.04,    
+         800: 0.05, 
+         900: 0.1, 
+        1000: 0.15,
+        1200: 0.4,  
         1400: 1,  
         1600: 3,  
         1800: 5,  
