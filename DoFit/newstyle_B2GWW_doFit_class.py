@@ -160,10 +160,10 @@ class doFit_wj_and_wlvj:
         #self.file_Directory="PKUTree_final_2p6fb_Jun30/";
 
 
-        if self.channel=="el":   self.Lumi= 4.0
-        elif self.channel=="mu": self.Lumi= 4.0
-        elif self.channel=="em": self.Lumi= 4.0
-        self.file_Directory="PKUTree_final_4fb_Jul4/";
+        if self.channel=="el":   self.Lumi= 6.26
+        elif self.channel=="mu": self.Lumi= 6.26
+        elif self.channel=="em": self.Lumi= 6.26
+        self.file_Directory="data_4approval/";
 
         self.signal_sample=in_signal_sample;
 
@@ -212,15 +212,15 @@ class doFit_wj_and_wlvj:
         elif self.wtagger_category=="HP": 
 
             if self.tau21_cut==0.6:
-                self.rrv_wtagger_eff_reweight_forT=RooRealVar("rrv_wtagger_eff_reweight_forT","rrv_wtagger_eff_reweight_forT", 0.776);
-                self.rrv_wtagger_eff_reweight_forT.setError(0.022);
-                self.rrv_wtagger_eff_reweight_forV=RooRealVar("rrv_wtagger_eff_reweight_forV","rrv_wtagger_eff_reweight_forV",0.998);
-                self.rrv_wtagger_eff_reweight_forV.setError(0.033);
+                self.rrv_wtagger_eff_reweight_forT=RooRealVar("rrv_wtagger_eff_reweight_forT","rrv_wtagger_eff_reweight_forT", 0.805);
+                self.rrv_wtagger_eff_reweight_forT.setError(0.017);
+                self.rrv_wtagger_eff_reweight_forV=RooRealVar("rrv_wtagger_eff_reweight_forV","rrv_wtagger_eff_reweight_forV",0.988);
+                self.rrv_wtagger_eff_reweight_forV.setError(0.022);
             elif self.tau21_cut==0.45:
-                self.rrv_wtagger_eff_reweight_forT=RooRealVar("rrv_wtagger_eff_reweight_forT","rrv_wtagger_eff_reweight_forT", 0.765);
-                self.rrv_wtagger_eff_reweight_forT.setError(0.026);
-                self.rrv_wtagger_eff_reweight_forV=RooRealVar("rrv_wtagger_eff_reweight_forV","rrv_wtagger_eff_reweight_forV",1.033);
-                self.rrv_wtagger_eff_reweight_forV.setError(0.084);
+                self.rrv_wtagger_eff_reweight_forT=RooRealVar("rrv_wtagger_eff_reweight_forT","rrv_wtagger_eff_reweight_forT", 0.787);
+                self.rrv_wtagger_eff_reweight_forT.setError(0.020);
+                self.rrv_wtagger_eff_reweight_forV=RooRealVar("rrv_wtagger_eff_reweight_forV","rrv_wtagger_eff_reweight_forV",0.993);
+                self.rrv_wtagger_eff_reweight_forV.setError(0.066);
             else:
                 print "self.tau21_cut=%s"%(self.tau21_cut)
                 raw_input("wrong tau21 cut value")
@@ -242,17 +242,17 @@ class doFit_wj_and_wlvj:
             self.mean_shift = 0.0;# 0.0 means no correction
             self.sigma_scale= 1.0;# 1.0 means no correction
         else:
-            self.mean_shift = 83.5-83.7;# 0.0 means no correction
-            self.sigma_scale= 7.8/7.3;# 1.0 means no correction
+            self.mean_shift = 84.8-83.8;# 0.0 means no correction
+            self.sigma_scale= 8.0/7.5;# 1.0 means no correction
         print " mean correction for the W peak : ",self.mean_shift," Resolution correction : ",self.sigma_scale
 
         #SF of WJets and TTBar for ControlPlots, and these SF also passed to the final limit calculation
         if self.channel=="mu":
             self.controlplot_WJets_scale=1.01
-            self.controlplot_TTbar_scale=0.71
+            self.controlplot_TTbar_scale=0.78
         if self.channel=="el": 
-            self.controlplot_WJets_scale=0.95
-            self.controlplot_TTbar_scale=0.73
+            self.controlplot_WJets_scale=0.96
+            self.controlplot_TTbar_scale=0.80
         self.controlplot_WJets_scale=1.0
         self.controlplot_TTbar_scale=1.0
         
@@ -1453,12 +1453,12 @@ class doFit_wj_and_wlvj:
         weight_mc_forWJets="weight*%s*%s"%(tmp_lumi, self.controlplot_WJets_scale)
         weight_mc_forTTBar="weight*%s*%s*%s"%(tmp_lumi, self.controlplot_TTbar_scale, self.rrv_wtagger_eff_reweight_forT.getVal())
 
-        weightcut_mc_forSignal="(%s)*(%s)"%(weight_mc_forSignal,cut);
-        weightcut_mc_forV="(%s)*(%s)"%(weight_mc_forV,cut);
-        weightcut_mc_forT="(%s)*(%s)"%(weight_mc_forT,cut);
-        weightcut_mc_forG="(%s)*(%s)"%(weight_mc_forG,cut);
-        weightcut_mc_forWJets="(%s)*(%s)"%(weight_mc_forWJets,cut);
-        weightcut_mc_forTTBar="(%s)*(%s)"%(weight_mc_forTTBar,cut);
+        weightcut_mc_forSignal="(%s)*(%s)/IDweight"%(weight_mc_forSignal,cut);
+        weightcut_mc_forV="(%s)*(%s)/IDweight"%(weight_mc_forV,cut);
+        weightcut_mc_forT="(%s)*(%s)/IDweight"%(weight_mc_forT,cut);
+        weightcut_mc_forG="(%s)*(%s)/IDweight"%(weight_mc_forG,cut);
+        weightcut_mc_forWJets="(%s)*(%s)/IDweight"%(weight_mc_forWJets,cut);
+        weightcut_mc_forTTBar="(%s)*(%s)/IDweight"%(weight_mc_forTTBar,cut);
         weightcut_data="%s"%(cut);
         print "weightcut_mc_forV="+weightcut_mc_forV;
         print "weightcut_mc_forT="+weightcut_mc_forT;
@@ -2846,8 +2846,8 @@ class doFit_wj_and_wlvj:
                 #print "l_pt=%s, l_eta=%s, HLT=%s"%(treeIn.l_pt, treeIn.l_eta, tmp_HLT_weight)
                 #raw_input("zixu")
                 ### weigh MC events              
-                tmp_event_weight     = treeIn.weight*tmp_HLT_weight*tmp_lumi;
-                tmp_event_weight4fit = treeIn.weight*tmp_HLT_weight*tmp_lumi/tmp_scale_to_lumi;
+                tmp_event_weight     = treeIn.weight*tmp_HLT_weight*tmp_lumi/treeIn.IDweight;
+                tmp_event_weight4fit = (treeIn.weight/treeIn.IDweight)*tmp_HLT_weight*tmp_lumi/tmp_scale_to_lumi;
                 #tmp_event_weight4fit = tmp_event_weight;
                 ###### wtagger_eff_reweight
                 if label =="_data" or label =="_data_xww" :
