@@ -1,20 +1,11 @@
 #! /usr/bin/env python
 import os
-import glob
-import math
-import array
+from array import array
 import ROOT
 import ntpath
 import sys
-import subprocess
-from subprocess import Popen
 from optparse import OptionParser
 import CMS_lumi, tdrstyle
-from array import array
-
-
-from ROOT import gROOT, TPaveLabel, gStyle, gSystem, TGaxis, TStyle, TLatex, TString, TF1,TFile,TLine, TLegend, TH1D,TH2D,THStack, TGraph,TChain, TCanvas, TMatrixDSym, TMath, TText, TPad, RooFit, RooArgSet, RooArgList, RooArgSet, RooAbsData, RooAbsPdf, RooAddPdf, RooWorkspace, RooExtendPdf,RooCBShape, RooLandau, RooFFTConvPdf, RooGaussian, RooBifurGauss, RooArgusBG,RooDataSet, RooExponential,RooBreitWigner, RooVoigtian, RooNovosibirsk, RooRealVar,RooFormulaVar, RooDataHist, RooHist,RooCategory, RooChebychev, RooSimultaneous, RooGenericPdf,RooConstVar, RooKeysPdf, RooHistPdf, RooEffProd, RooProdPdf, TIter, kTRUE, kFALSE, kGray, kRed, kDashed, kGreen,kAzure, kOrange, kBlack,kBlue,kYellow,kCyan, kMagenta, kWhite
-
 
 ############################################
 #              Job steering                #
@@ -45,11 +36,12 @@ parser.add_option('--category', action="store",type="string",dest="opt_wtagger_c
 #parser.add_option('--category', action="store",type="string",dest="category",default="ALLP")
 
 (options, args) = parser.parse_args()
+
 ROOT.gSystem.Load(options.inPath+"/PDFs/PdfDiagonalizer_cc.so")
 ROOT.gSystem.Load(options.inPath+"/PDFs/Util_cxx.so")
 ROOT.gSystem.Load(options.inPath+"/PDFs/HWWLVJRooPdfs_cxx.so")
 
-from ROOT import draw_error_band, draw_error_band_extendPdf, draw_error_band_Decor, draw_error_band_shape_Decor, Calc_error_extendPdf, Calc_error, RooErfExpPdf, RooAlpha, RooAlpha4ErfPowPdf, RooAlpha4ErfPow2Pdf, RooAlpha4ErfPowExpPdf, PdfDiagonalizer, RooPowPdf, RooPow2Pdf, RooErfPowExpPdf, RooErfPowPdf, RooErfPow2Pdf, RooQCDPdf, RooUser1Pdf, RooBWRunPdf, RooAnaExpNPdf, RooExpNPdf,  RooExpTailPdf, RooAlpha4ExpTailPdf, Roo2ExpPdf, RooAlpha42ExpPdf
+from ROOT import gROOT, TPaveLabel, gStyle, gSystem, TGaxis, TStyle, TLatex, TString, TF1,TFile,TLine, TLegend, TH1D,TH2D,THStack, TGraph,TChain, TCanvas, TMatrixDSym, TMath, TText, TPad, RooFit, RooArgSet, RooArgList, RooAbsData, RooAbsPdf, RooAddPdf, RooWorkspace, RooExtendPdf,RooCBShape, RooFFTConvPdf, RooGaussian, RooBifurGauss, RooArgusBG,RooDataSet, RooExponential,RooBreitWigner, RooVoigtian, RooNovosibirsk, RooRealVar,RooFormulaVar, RooDataHist, RooHist,RooCategory, RooChebychev, RooSimultaneous, RooGenericPdf,RooConstVar, RooKeysPdf, RooHistPdf, RooEffProd, RooProdPdf, TIter, kTRUE, kFALSE, kGray, kRed, kDashed, kGreen, kOrange, kBlack, kBlue, kCyan, kMagenta, kWhite, draw_error_band, draw_error_band_extendPdf, draw_error_band_Decor, draw_error_band_shape_Decor, Calc_error_extendPdf, Calc_error, RooErfExpPdf, RooAlpha, RooAlpha4ErfPowPdf, RooAlpha4ErfPow2Pdf, RooAlpha4ErfPowExpPdf, PdfDiagonalizer, RooPowPdf, RooPow2Pdf, RooErfPowExpPdf, RooErfPowPdf, RooErfPow2Pdf, RooQCDPdf, RooUser1Pdf, RooBWRunPdf, RooAnaExpNPdf, RooExpNPdf,  RooExpTailPdf, RooAlpha4ExpTailPdf, Roo2ExpPdf, RooAlpha42ExpPdf
 
 ###############################
 ## doFit Class Implemetation ##
@@ -2245,7 +2237,7 @@ class doFit_wj_and_wlvj:
                 
             #self.draw_canvas_with_pull( mplot, mplot_pull,parameters_list,"plots_%s_%s_%s/m_lvj_fitting/"%(options.additioninformation, self.channel, self.wtagger_category), "m_lvj_sb_lo%s"%(label),"",1,1)
             #self.draw_canvas_with_pull( mplot, mplot_pull,parameters_list,self.plotsDir+"/m_lvj_fitting/", "m_lvj_sb_lo%s"%(label),"",1,1)
-            self.draw_canvas_with_pull1( rrv_mass_lvj,datahist,mplot, mplot_pull,ndof,parameters_list,"%s/m_lvj_fitting/"%(self.plotsDir), "m_lvj_sb_lo%s"%(label),"",1,1)
+            self.draw_canvas_with_pull1( rrv_mass_lvj,datahist,mplot, mplot_pull,ndof,parameters_list,"%s/m_lvj_fitting/"%(self.plotsDir), "m_lvj_sb_lo%s"%(label),mlvj_model,1,1)
 
         #### Decorrelate the parameters in order to have a proper shape in the workspace
         wsfit_tmp = RooWorkspace("wsfit_tmp%s_sb_lo_from_fitting_mlvj"%(label));
@@ -3040,9 +3032,9 @@ class doFit_wj_and_wlvj:
         self.fix_Pdf(self.workspace4limit_.pdf("WJets_xww_%s_%s"%(self.channel,self.wtagger_category)), RooArgSet(rrv_x));
         
         if TString(self.signal_sample).Contains("BulkG_WW"):            
-         self.fix_Pdf(self.workspace4limit_.pdf("BulkWW_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x));
+            self.fix_Pdf(self.workspace4limit_.pdf("BulkWW_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x));
         else:    
-         self.fix_Pdf(self.workspace4limit_.pdf(self.signal_sample+"_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x));
+            self.fix_Pdf(self.workspace4limit_.pdf(self.signal_sample+"_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x));
 
         print " ############## Workspace for limit ";
         parameters_workspace = self.workspace4limit_.allVars();
@@ -3086,13 +3078,13 @@ class doFit_wj_and_wlvj:
 
                 ### Do the same for the TTbar
                 if isTTbarFloating !=0 :
-                 self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_TTbar);
-                 self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_TTbar);
-                 self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_TTbar);
+                    self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_TTbar);
+                    self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_TTbar);
+                    self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_TTbar);
 
-                 params_list.append(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)));
-                 params_list.append(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)));
-                 params_list.append(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)));
+                    params_list.append(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)));
+                    params_list.append(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)));
+                    params_list.append(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)));
                 
 
             if self.MODEL_4_mlvj=="ErfPow2_v1" or self.MODEL_4_mlvj=="ErfPowExp_v1" :
@@ -3128,15 +3120,15 @@ class doFit_wj_and_wlvj:
 
 
                 if isTTbarFloating !=0 :
-                 self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_TTbar);
-                 self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_TTbar);
-                 self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_TTbar);
-                 self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_TTbar);
+                    self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_TTbar);
+                    self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_TTbar);
+                    self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_TTbar);
+                    self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_TTbar);
 
-                 params_list.append(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)));
-                 params_list.append(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)));
-                 params_list.append(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)));
-                 params_list.append(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)));
+                    params_list.append(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)));
+                    params_list.append(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)));
+                    params_list.append(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)));
+                    params_list.append(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)));
 
 
             if self.MODEL_4_mlvj=="Exp" or self.MODEL_4_mlvj=="Pow" :
@@ -3155,8 +3147,8 @@ class doFit_wj_and_wlvj:
                 params_list.append(self.workspace4limit_.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
 
                 if isTTbarFloating !=0 :
-                 self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_TTbar);
-                 params_list.append(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)));
+                    self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_TTbar);
+                    params_list.append(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)));
 
             if self.MODEL_4_mlvj=="ExpN" or self.MODEL_4_mlvj=="ExpTail" or self.MODEL_4_mlvj=="Pow2" :
 
@@ -3187,51 +3179,51 @@ class doFit_wj_and_wlvj:
 
                 ### VV use ExpTail:
                 if isVVFloating !=0:
-                  print "##################### VV will float in the limit procedure + final plot ######################";
-                  self.workspace4limit_.var("Deco_VV_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_VV);
-                  self.workspace4limit_.var("Deco_VV_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_VV);
-                  params_list.append(self.workspace4limit_.var("Deco_VV_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)));
-                  params_list.append(self.workspace4limit_.var("Deco_VV_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)));
+                    print "##################### VV will float in the limit procedure + final plot ######################";
+                    self.workspace4limit_.var("Deco_VV_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_VV);
+                    self.workspace4limit_.var("Deco_VV_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_VV);
+                    params_list.append(self.workspace4limit_.var("Deco_VV_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)));
+                    params_list.append(self.workspace4limit_.var("Deco_VV_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)));
  
                 ### STop use Exp:
                 if isSTopFloating !=0:
-                  print "##################### STop will float in the limit procedure + final plot ######################";
-                  self.workspace4limit_.var("Deco_STop_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_STop);
-                  params_list.append(self.workspace4limit_.var("Deco_STop_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)));
+                    print "##################### STop will float in the limit procedure + final plot ######################";
+                    self.workspace4limit_.var("Deco_STop_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)).setError(self.shape_para_error_STop);
+                    params_list.append(self.workspace4limit_.var("Deco_STop_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)));
                                        
                 
         #### add signal shape parameters' uncertainty -> increase the uncertainty on the mean and the sigma since we are using a CB or a Double CB or a BWxDB or BWxCB
         if self.workspace4limit_.var("rrv_mean_CB_%s_xww_signal_region_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category)):
 
-           self.workspace4limit_.var( "rrv_mean_shift_scale_lep_%s_xww_signal_region_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category)).setError(self.mean_signal_uncertainty_lep_scale);
-           self.workspace4limit_.var( "rrv_mean_shift_scale_jes_%s_xww_signal_region_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category)).setError(self.mean_signal_uncertainty_jet_scale);
-           self.workspace4limit_.var( "rrv_sigma_shift_lep_scale_%s_xww_signal_region_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category)).setError(self.sigma_signal_uncertainty_lep_scale);
-           self.workspace4limit_.var( "rrv_sigma_shift_jes_%s_xww_signal_region_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category)).setError(self.sigma_signal_uncertainty_jet_scale);
-           self.workspace4limit_.var( "rrv_sigma_shift_res_%s_xww_signal_region_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category)).setError(self.sigma_signal_uncertainty_jet_res);
+            self.workspace4limit_.var( "rrv_mean_shift_scale_lep_%s_xww_signal_region_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category)).setError(self.mean_signal_uncertainty_lep_scale);
+            self.workspace4limit_.var( "rrv_mean_shift_scale_jes_%s_xww_signal_region_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category)).setError(self.mean_signal_uncertainty_jet_scale);
+            self.workspace4limit_.var( "rrv_sigma_shift_lep_scale_%s_xww_signal_region_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category)).setError(self.sigma_signal_uncertainty_lep_scale);
+            self.workspace4limit_.var( "rrv_sigma_shift_jes_%s_xww_signal_region_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category)).setError(self.sigma_signal_uncertainty_jet_scale);
+            self.workspace4limit_.var( "rrv_sigma_shift_res_%s_xww_signal_region_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category)).setError(self.sigma_signal_uncertainty_jet_res);
 
-           if self.channel == "mu":
-               self.workspace4limit_.var("CMS_sig_p1_scale_m").setError(1);
-               self.workspace4limit_.var("CMS_sig_p2_scale_m").setError(1);
-               params_list.append(self.workspace4limit_.var("CMS_sig_p1_scale_m"));
-               params_list.append(self.workspace4limit_.var("CMS_sig_p2_scale_m"));
-           elif self.channel == "el":
-               self.workspace4limit_.var("CMS_sig_p1_scale_e").setError(1);
-               self.workspace4limit_.var("CMS_sig_p2_scale_e").setError(1);
-               params_list.append(self.workspace4limit_.var("CMS_sig_p1_scale_e"));
-               params_list.append(self.workspace4limit_.var("CMS_sig_p2_scale_e"));
-           elif self.channel == "em":
-               self.workspace4limit_.var("CMS_sig_p1_scale_em").setError(1);
-               self.workspace4limit_.var("CMS_sig_p2_scale_em").setError(1);
-               params_list.append(self.workspace4limit_.var("CMS_sig_p1_scale_em"));
-               params_list.append(self.workspace4limit_.var("CMS_sig_p2_scale_em"));
-               
-           self.workspace4limit_.var("CMS_sig_p1_jes").setError(1);
-           self.workspace4limit_.var("CMS_sig_p2_jes").setError(1);
-           self.workspace4limit_.var("CMS_sig_p2_jer").setError(1);
+            if self.channel == "mu":
+                self.workspace4limit_.var("CMS_sig_p1_scale_m").setError(1);
+                self.workspace4limit_.var("CMS_sig_p2_scale_m").setError(1);
+                params_list.append(self.workspace4limit_.var("CMS_sig_p1_scale_m"));
+                params_list.append(self.workspace4limit_.var("CMS_sig_p2_scale_m"));
+            elif self.channel == "el":
+                self.workspace4limit_.var("CMS_sig_p1_scale_e").setError(1);
+                self.workspace4limit_.var("CMS_sig_p2_scale_e").setError(1);
+                params_list.append(self.workspace4limit_.var("CMS_sig_p1_scale_e"));
+                params_list.append(self.workspace4limit_.var("CMS_sig_p2_scale_e"));
+            elif self.channel == "em":
+                self.workspace4limit_.var("CMS_sig_p1_scale_em").setError(1);
+                self.workspace4limit_.var("CMS_sig_p2_scale_em").setError(1);
+                params_list.append(self.workspace4limit_.var("CMS_sig_p1_scale_em"));
+                params_list.append(self.workspace4limit_.var("CMS_sig_p2_scale_em"));
+                
+            self.workspace4limit_.var("CMS_sig_p1_jes").setError(1);
+            self.workspace4limit_.var("CMS_sig_p2_jes").setError(1);
+            self.workspace4limit_.var("CMS_sig_p2_jer").setError(1);
 
-           params_list.append(self.workspace4limit_.var("CMS_sig_p1_jes"));
-           params_list.append(self.workspace4limit_.var("CMS_sig_p2_jes"));
-           params_list.append(self.workspace4limit_.var("CMS_sig_p2_jer"));
+            params_list.append(self.workspace4limit_.var("CMS_sig_p1_jes"));
+            params_list.append(self.workspace4limit_.var("CMS_sig_p2_jes"));
+            params_list.append(self.workspace4limit_.var("CMS_sig_p2_jer"));
 
         
         ### calculate the shape uncertainty for cut-and-counting
@@ -3245,105 +3237,111 @@ class doFit_wj_and_wlvj:
         self.print_limit_datacard("unbin",params_list);
         self.print_limit_datacard("counting");
 
-        if mode=="sideband_correction_method1":
-          if self.MODEL_4_mlvj=="ErfExp_v1" or self.MODEL_4_mlvj=="ErfPow_v1" or self.MODEL_4_mlvj=="2Exp" :
-
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)) );
-
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig4"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig5"%(self.channel, self.wtagger_category)) );
-
-                if isTTbarFloating!=0:
-                    self.FloatingParams.add(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
-                    self.FloatingParams.add(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
-                    self.FloatingParams.add(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
-
-          if self.MODEL_4_mlvj=="ErfPow2_v1" or self.MODEL_4_mlvj=="ErfPowExp_v1" :
-
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig4"%(self.channel, self.wtagger_category)) );
-
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig4"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig5"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig6"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig7"%(self.channel, self.wtagger_category)) );
-
-                if isTTbarFloating!=0:
-                    self.FloatingParams.add(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)));
-                    self.FloatingParams.add(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)));
-                    self.FloatingParams.add(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)));
-                    self.FloatingParams.add(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)));
-
-          if self.MODEL_4_mlvj=="Exp" or self.MODEL_4_mlvj=="Pow" :
-
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
-
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
-
-                if isTTbarFloating!=0:
-                    self.FloatingParams.add(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel,self.wtagger_category)));
-
-
-          if self.MODEL_4_mlvj=="ExpN" or self.MODEL_4_mlvj=="ExpTail" or self.MODEL_4_mlvj=="Pow2" :
-
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
-
-
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
-                self.FloatingParams.add(self.workspace4limit_.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)) );
-
-                if isTTbarFloating!=0:
-                    self.FloatingParams.add(self.workspace4limit_.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel,self.wtagger_category)));
-
-                if isVVFloating!=0:     
-                    self.FloatingParams.add(self.workspace4limit_.var("Deco_VV_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)));
-                    self.FloatingParams.add(self.workspace4limit_.var("Deco_VV_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)));
-
-                if isSTopFloating!=0:
-                    self.FloatingParams.add(self.workspace4limit_.var("Deco_STop_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel,self.wtagger_category)));
-                    
-
-          if self.workspace4limit_.var("rrv_mean_CB_%s_xww_signal_region_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category)):
-
-             if self.channel == "mu":
-                 self.FloatingParams.add(self.workspace4limit_.var("CMS_sig_p1_scale_m"));
-                 self.FloatingParams.add(self.workspace4limit_.var("CMS_sig_p2_scale_m"));
-             elif self.channel == "el":
-                 self.FloatingParams.add(self.workspace4limit_.var("CMS_sig_p1_scale_e"));
-                 self.FloatingParams.add(self.workspace4limit_.var("CMS_sig_p2_scale_e"));
-             elif self.channel == "em":
-                 self.FloatingParams.add(self.workspace4limit_.var("CMS_sig_p1_scale_em"));
-                 self.FloatingParams.add(self.workspace4limit_.var("CMS_sig_p2_scale_em"));
-
-             self.FloatingParams.add(self.workspace4limit_.var("CMS_sig_p1_jes"));
-             self.FloatingParams.add(self.workspace4limit_.var("CMS_sig_p2_jes"));
-             self.FloatingParams.add(self.workspace4limit_.var("CMS_sig_p2_jer"));
-
+        self.setFloatingParams(self.workspace4limit_, self.FloatingParams, mode, isTTbarFloating, isVVFloating, isSTopFloating)
         ### Add the floating list to the combiner --> the pdf which are not fixed are floating by default
         getattr(self.workspace4limit_,"import")(self.FloatingParams);
 
         ### Save the workspace
         self.save_workspace_to_file();
+
+
+    ##adding floating params to a list
+    def setFloatingParams(self, workspace, param_list, mode, isTTbarFloating=0, isVVFloating=0, isSTopFloating=0):
+        if mode=="sideband_correction_method1":
+            if self.MODEL_4_mlvj=="ErfExp_v1" or self.MODEL_4_mlvj=="ErfPow_v1" or self.MODEL_4_mlvj=="2Exp" :
+                param_list.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)) );
+
+                param_list.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig4"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig5"%(self.channel, self.wtagger_category)) );
+
+                if isTTbarFloating!=0:
+                    param_list.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+                    param_list.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+                    param_list.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
+
+            elif self.MODEL_4_mlvj=="ErfPow2_v1" or self.MODEL_4_mlvj=="ErfPowExp_v1" :
+
+                param_list.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig4"%(self.channel, self.wtagger_category)) );
+
+                param_list.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig4"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig5"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig6"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig7"%(self.channel, self.wtagger_category)) );
+
+                if isTTbarFloating!=0:
+                    param_list.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)));
+                    param_list.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)));
+                    param_list.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)));
+                    param_list.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)));
+
+            elif self.MODEL_4_mlvj=="Exp" or self.MODEL_4_mlvj=="Pow" :
+
+                param_list.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+
+                param_list.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+
+                if isTTbarFloating!=0:
+                    param_list.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel,self.wtagger_category)));
+
+
+            elif self.MODEL_4_mlvj=="ExpN" or self.MODEL_4_mlvj=="ExpTail" or self.MODEL_4_mlvj=="Pow2" :
+
+                param_list.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
+
+
+                param_list.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
+                param_list.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)) );
+
+                if isTTbarFloating!=0:
+                    param_list.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel,self.wtagger_category)));
+
+                if isVVFloating!=0:     
+                    param_list.add(workspace.var("Deco_VV_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)));
+                    param_list.add(workspace.var("Deco_VV_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)));
+
+                if isSTopFloating!=0:
+                    param_list.add(workspace.var("Deco_STop_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel,self.wtagger_category)));
+            else:
+                print self.MODEL_4_mlvj
+                raw_input("wrong MODEL_4_mlvj")
+
+            if workspace.var("rrv_mean_CB_%s_xww_signal_region_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category)):
+                if self.channel == "mu":
+                    param_list.add(workspace.var("CMS_sig_p1_scale_m"));
+                    param_list.add(workspace.var("CMS_sig_p2_scale_m"));
+                elif self.channel == "el":
+                    param_list.add(workspace.var("CMS_sig_p1_scale_e"));
+                    param_list.add(workspace.var("CMS_sig_p2_scale_e"));
+                elif self.channel == "em":
+                    param_list.add(workspace.var("CMS_sig_p1_scale_em"));
+                    param_list.add(workspace.var("CMS_sig_p2_scale_em"));
+
+                param_list.add(workspace.var("CMS_sig_p1_jes"));
+                param_list.add(workspace.var("CMS_sig_p2_jes"));
+                param_list.add(workspace.var("CMS_sig_p2_jer"));
+        else:
+            raw_input("this mode:%s is not support!"%(mode));
 
     #### Method used in order to save the workspace in a output root file
     def save_workspace_to_file(self):
@@ -3478,7 +3476,7 @@ class doFit_wj_and_wlvj:
 
                                                                                                    
     #### Read the final workspace and produce the latest plots 
-    def read_workspace(self, logy=0):
+    def read_workspace(self, logy=1, mode="sideband_correction_method1", isTTbarFloating=1, isVVFloating=0, isSTopFloating=0):
         print "--------------------- read_workspace -------------------------";
 
         ### Taket the workspace for limits  
@@ -3609,6 +3607,103 @@ class doFit_wj_and_wlvj:
         datahist = data_obs.binnedClone( data_obs.GetName()+"_binnedClone",data_obs.GetName()+"_binnedClone" )
         ### Plot the list of floating parameters and the uncertainty band is draw taking into account this floating list defined in the prepare_limit
         #draw_error_band(model_Total_background_MC, rrv_x.GetName(), rrv_number_Total_background_MC,self.FloatingParams,workspace ,mplot,mplotP,datahist,self.color_palet["Uncertainty"],"F");
+        self.FloatingParams.Print();
+        print self.FloatingParams.getSize()
+        if self.FloatingParams.getSize()==0:
+            self.setFloatingParams(workspace, self.FloatingParams, mode, isTTbarFloating, isVVFloating, isSTopFloating)
+        ##if self.FloatingParams.getSize()==0:
+        ##    if self.MODEL_4_mlvj=="ErfExp_v1" or self.MODEL_4_mlvj=="ErfPow_v1" or self.MODEL_4_mlvj=="2Exp" :
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)) );
+
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig4"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig5"%(self.channel, self.wtagger_category)) );
+
+        ##        if isTTbarFloating!=0:
+        ##            self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+        ##            self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+        ##            self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
+
+        ##    elif self.MODEL_4_mlvj=="ErfPow2_v1" or self.MODEL_4_mlvj=="ErfPowExp_v1" :
+
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig4"%(self.channel, self.wtagger_category)) );
+
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig4"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig5"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig6"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig7"%(self.channel, self.wtagger_category)) );
+
+        ##        if isTTbarFloating!=0:
+        ##            self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)));
+        ##            self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)));
+        ##            self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)));
+        ##            self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)));
+
+        ##    elif self.MODEL_4_mlvj=="Exp" or self.MODEL_4_mlvj=="Pow" :
+
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+
+        ##        if isTTbarFloating!=0:
+        ##            self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel,self.wtagger_category)));
+
+        ##    elif self.MODEL_4_mlvj=="ExpN" or self.MODEL_4_mlvj=="ExpTail" or self.MODEL_4_mlvj=="Pow2" :
+        ##        print "Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)
+        ##        workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)).Print() 
+        ##        raw_input("haha")
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
+
+
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
+        ##        self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)) );
+
+        ##        if isTTbarFloating!=0:
+        ##            self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel,self.wtagger_category)));
+
+        ##        if isVVFloating!=0:     
+        ##            self.FloatingParams.add(workspace.var("Deco_VV_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)));
+        ##            self.FloatingParams.add(workspace.var("Deco_VV_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)));
+
+        ##        if isSTopFloating!=0:
+        ##            self.FloatingParams.add(workspace.var("Deco_STop_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel,self.wtagger_category)));
+        ##    else:
+        ##        raw_input("this mode:%s is not support!"%(mode))
+        ##    if workspace.var("rrv_mean_CB_%s_xww_signal_region_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category)):
+        ##        if self.channel == "mu":
+        ##            self.FloatingParams.add(workspace.var("CMS_sig_p1_scale_m"));
+        ##            self.FloatingParams.add(workspace.var("CMS_sig_p2_scale_m"));
+        ##        elif self.channel == "el":
+        ##            self.FloatingParams.add(workspace.var("CMS_sig_p1_scale_e"));
+        ##            self.FloatingParams.add(workspace.var("CMS_sig_p2_scale_e"));
+        ##        elif self.channel == "em":
+        ##            self.FloatingParams.add(workspace.var("CMS_sig_p1_scale_em"));
+        ##            self.FloatingParams.add(workspace.var("CMS_sig_p2_scale_em"));
+
+        ##        self.FloatingParams.add(workspace.var("CMS_sig_p1_jes"));
+        ##        self.FloatingParams.add(workspace.var("CMS_sig_p2_jes"));
+        ##        self.FloatingParams.add(workspace.var("CMS_sig_p2_jer"));
+        self.FloatingParams.Print();
         hdata= datahist.createHistogram(rrv_x.GetName(), int(rrv_x.getBins()/self.binwidth_narrow_factor)) ;
         draw_error_band(model_Total_background_MC, rrv_x.GetName(), rrv_number_Total_background_MC,self.FloatingParams,workspace ,mplot,mplotP,hdata,self.color_palet["Uncertainty"],"F");
 
@@ -3639,7 +3734,293 @@ class doFit_wj_and_wlvj:
         print "nPar=%s, chiSquare=%s/%s"%(self.nPar_float_in_fitTo, mplot.chiSquare( self.nPar_float_in_fitTo )*ndof, ndof );
 
         parameters_list = RooArgList();
-        self.draw_canvas_with_pull2( rrv_x,datahist,mplot, mplotP, mplot_pull,ndof,parameters_list,"%s/m_lvj_fitting/"%(self.plotsDir),"check_workspace_for_limit","",0,1);
+        self.draw_canvas_with_pull2( rrv_x,datahist,mplot, mplotP, mplot_pull,ndof,parameters_list,"%s/m_lvj_fitting/"%(self.plotsDir),"check_workspace_for_limit",self.MODEL_4_mlvj,0,1);
+     
+
+    #### Read the final workspace and produce the latest plots 
+    def read_postfit_workspace(self, logy=0, isTTbarFloating=1, isVVFloating=0, isSTopFloating=0):
+        print "--------------------- read_workspace -------------------------";
+
+        ### Taket the workspace for limits  
+        file = TFile(self.file_rlt_root) ;
+        workspace = file.Get("workspace4limit_") ;
+        workspace.Print()
+
+
+        self.file_rlt_root_postfit = self.datacardsDir+"higgsCombinewwlvj_BulkGraviton_newxsec750_em_HP_unbin.Asymptotic.mH750.root"
+        file_postfit = TFile(self.file_rlt_root_postfit) ;
+        workspace_postfit= file_postfit.Get("w");
+        file_postfit.Print()
+        workspace_postfit.Print()
+        #raw_input("zijun postfit 1");
+        print workspace_postfit.loadSnapshot("clean")
+
+
+
+        ### iterate on the workspace element parameters
+        print "----------- Parameter Workspace -------------";
+        parameters_workspace = workspace.allVars();
+        par = parameters_workspace.createIterator();
+        par.Reset();
+        param = par.Next()
+        while (param):
+            param.Print();
+            param=par.Next()
+        print "---------------------------------------------";
+
+
+        ### iterate on the workspace element parameters
+        print "----------- Parameter postfit Workspace -------------";
+        parameters_workspace = workspace_postfit.allVars();
+        par = parameters_workspace.createIterator();
+        par.Reset();
+        param = par.Next()
+        while (param):
+            param.Print();
+            param=par.Next()
+        print "---------------------------------------------";
+        raw_input("zixu postfit")
+
+
+        workspace.data("data_obs_xww_%s_%s"%(self.channel,self.wtagger_category)).Print()
+
+        print "----------- Pdf in the Workspace -------------";
+        pdfs_workspace = workspace.allPdfs();
+        par = pdfs_workspace.createIterator();
+        par.Reset();
+        param=par.Next()
+        while (param):
+            param.Print();
+            param = par.Next()
+        print "----------------------------------------------";
+
+        rrv_x = workspace.var("rrv_mass_lvj")
+        data_obs = workspace.data("data_obs_xww_%s_%s"%(self.channel,self.wtagger_category));
+        if TString(self.signal_sample).Contains("RS1G_WW"):
+            model_pdf_signal = workspace.pdf("RSWW_xww_%s_%s"%(self.channel,self.wtagger_category));
+        elif TString(self.signal_sample).Contains("BulkGraviton"):
+            model_pdf_signal = workspace.pdf("BulkWW_xww_%s_%s"%(self.channel,self.wtagger_category));
+        elif TString(self.signal_sample).Contains("Wprime_WZ"):
+            model_pdf_signal = workspace.pdf("WprimeWZ_xww_%s_%s"%(self.channel,self.wtagger_category));
+        else:
+            model_pdf_signal = workspace.pdf("%s_xww_%s_%s"%(self.signal_sample,self.channel,self.wtagger_category));
+            
+        model_pdf_WJets  = workspace.pdf("WJets_xww_%s_%s"%(self.channel,self.wtagger_category));
+        model_pdf_VV     = workspace.pdf("VV_xww_%s_%s"%(self.channel,self.wtagger_category));
+        model_pdf_TTbar  = workspace.pdf("TTbar_xww_%s_%s"%(self.channel,self.wtagger_category));
+        model_pdf_STop   = workspace.pdf("STop_xww_%s_%s"%(self.channel,self.wtagger_category));
+
+        model_pdf_signal.Print();
+        model_pdf_WJets.Print();
+        model_pdf_VV.Print();
+        model_pdf_TTbar.Print();
+        model_pdf_STop.Print();
+
+        if TString(self.signal_sample).Contains("RS1G_WW"):
+            rrv_number_signal = workspace.var("rate_RSWW_xww_for_unbin");
+        elif TString(self.signal_sample).Contains("BulkGraviton"):
+            rrv_number_signal = workspace.var("rate_BulkWW_xww_for_unbin");
+        elif TString(self.signal_sample).Contains("Wprime_WZ"):
+            rrv_number_signal = workspace.var("rate_WprimeWZ_xww_for_unbin");
+        else:
+            rrv_number_signal = workspace.var("rate_%s_xww_for_unbin"%(self.signal_sample));
+            
+         
+        rrv_number_WJets  = workspace.var("rate_WJets_xww_for_unbin");
+        rrv_number_VV     = workspace.var("rate_VV_xww_for_unbin");
+        rrv_number_TTbar  = workspace.var("rate_TTbar_xww_for_unbin");
+        rrv_number_STop   = workspace.var("rate_STop_xww_for_unbin");
+
+        rrv_number_signal.Print();
+        rrv_number_WJets.Print();
+        rrv_number_VV.Print();
+        rrv_number_TTbar.Print();
+        rrv_number_STop.Print();
+
+        #### Prepare the final plot starting from total background 
+        rrv_number_Total_background_MC = RooRealVar("rrv_number_Total_background_MC_xww","rrv_number_Total_background_MC_xww",
+                rrv_number_WJets.getVal()+
+                rrv_number_VV.getVal()+
+                rrv_number_TTbar.getVal()+
+                rrv_number_STop.getVal());
+
+        rrv_number_Total_background_MC.setError(TMath.Sqrt(
+                rrv_number_WJets.getError()* rrv_number_WJets.getError()+
+                rrv_number_VV.getError()* rrv_number_VV.getError()+
+                rrv_number_TTbar.getError()* rrv_number_TTbar.getError()+
+                rrv_number_STop.getError() *rrv_number_STop.getError()
+                ));
+
+        #### Total pdf 
+        model_Total_background_MC = RooAddPdf("model_Total_background_MC_xww","model_Total_background_MC_xww",RooArgList(model_pdf_WJets,model_pdf_VV,model_pdf_TTbar,model_pdf_STop),RooArgList(rrv_number_WJets,rrv_number_VV,rrv_number_TTbar,rrv_number_STop));
+
+        if data_obs.sumEntries() != 0:
+            #### scale factor in order to scale MC to data in the final plot -> in order to avoid the normalization to data which is done by default in rooFit
+            scale_number_signal = rrv_number_signal.getVal()/data_obs.sumEntries()
+            scale_number_Total_background_MC = rrv_number_Total_background_MC.getVal()/data_obs.sumEntries()
+        else:
+            scale_number_Total_background_MC = rrv_number_Total_background_MC.getVal()   
+            scale_number_signal = rrv_number_signal.getVal()             
+        #### create the frame
+        mplot = rrv_x.frame(RooFit.Title("check_workspace"), RooFit.Bins(int(rrv_x.getBins()/self.binwidth_narrow_factor)));
+        mplotP = rrv_x.frame(RooFit.Title("check_workspaceP"), RooFit.Bins(int(rrv_x.getBins()/self.binwidth_narrow_factor)));
+        data_obs.plotOn(mplot , RooFit.Name("data_invisible"), RooFit.MarkerSize(1), RooFit.DataError(RooAbsData.Poisson), RooFit.XErrorSize(0), RooFit.MarkerColor(0), RooFit.LineColor(0));
+        model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("WJets"), RooFit.Components("WJets_xww_%s_%s,VV_xww_%s_%s,TTbar_xww_%s_%s,STop_xww_%s_%s"%(self.channel,self.wtagger_category,self.channel,self.wtagger_category,self.channel,self.wtagger_category,self.channel,self.wtagger_category)),RooFit.DrawOption("F"), RooFit.FillColor(self.color_palet["WJets"]), RooFit.LineColor(kBlack), RooFit.VLines());
+        
+        model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("VV"), RooFit.Components("VV_xww_%s_%s,TTbar_xww_%s_%s,STop_xww_%s_%s"%(self.channel,self.wtagger_category,self.channel,self.wtagger_category,self.channel,self.wtagger_category)),RooFit.DrawOption("F"), RooFit.FillColor(self.color_palet["VV"]), RooFit.LineColor(kBlack), RooFit.VLines());
+
+        model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("TTbar"), RooFit.Components("TTbar_xww_%s_%s,STop_xww_%s_%s"%(self.channel,self.wtagger_category,self.channel,self.wtagger_category)),RooFit.DrawOption("F"), RooFit.FillColor(self.color_palet["TTbar"]), RooFit.LineColor(kBlack), RooFit.VLines());
+
+        model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("STop"), RooFit.Components("STop_xww_%s_%s"%(self.channel,self.wtagger_category)),RooFit.DrawOption("F"), RooFit.FillColor(self.color_palet["STop"]), RooFit.LineColor(kBlack), RooFit.VLines());
+
+        #solid line
+        model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("WJets_line_invisible"), RooFit.Components("WJets_xww_%s_%s,VV_xww_%s_%s,TTbar_xww_%s_%s,STop_xww_%s_%s"%(self.channel,self.wtagger_category,self.channel,self.wtagger_category,self.channel,self.wtagger_category,self.channel,self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines());
+
+        model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("VV_line_invisible"), RooFit.Components("VV_xww_%s_%s,TTbar_xww_%s_%s,STop_xww_%s_%s"%(self.channel,self.wtagger_category,self.channel,self.wtagger_category,self.channel,self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines());
+ 
+        model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("TTbar_line_invisible"), RooFit.Components("TTbar_xww_%s_%s,STop_xww_%s_%s"%(self.channel,self.wtagger_category,self.channel,self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines());
+
+        model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("STop_line_invisible"), RooFit.Components("STop_xww_%s_%s"%(self.channel,self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines());
+
+        model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*self.signal_scale*20),RooFit.Name("%s #times %s"%(self.signal_sample, self.signal_scale*20)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
+
+        #### plot the observed data using poissonian error bar
+        self.getData_PoissonInterval(data_obs,mplot);
+        
+        model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Invisible());
+
+        mplot_pull=self.get_pull(rrv_x,mplot);
+
+        datahist = data_obs.binnedClone( data_obs.GetName()+"_binnedClone",data_obs.GetName()+"_binnedClone" )
+        ### Plot the list of floating parameters and the uncertainty band is draw taking into account this floating list defined in the prepare_limit
+        #draw_error_band(model_Total_background_MC, rrv_x.GetName(), rrv_number_Total_background_MC,self.FloatingParams,workspace ,mplot,mplotP,datahist,self.color_palet["Uncertainty"],"F");
+        self.FloatingParams.Print();
+        print self.FloatingParams.getSize()
+        if self.FloatingParams.getSize()==0:
+            if self.MODEL_4_mlvj=="ErfExp_v1" or self.MODEL_4_mlvj=="ErfPow_v1" or self.MODEL_4_mlvj=="2Exp" :
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)) );
+
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig4"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig5"%(self.channel, self.wtagger_category)) );
+
+                if isTTbarFloating!=0:
+                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
+
+            elif self.MODEL_4_mlvj=="ErfPow2_v1" or self.MODEL_4_mlvj=="ErfPowExp_v1" :
+
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig4"%(self.channel, self.wtagger_category)) );
+
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig4"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig5"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig6"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig7"%(self.channel, self.wtagger_category)) );
+
+                if isTTbarFloating!=0:
+                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)));
+                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)));
+                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)));
+                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)));
+
+            elif self.MODEL_4_mlvj=="Exp" or self.MODEL_4_mlvj=="Pow" :
+
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+
+                if isTTbarFloating!=0:
+                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel,self.wtagger_category)));
+
+            elif self.MODEL_4_mlvj=="ExpN" or self.MODEL_4_mlvj=="ExpTail" or self.MODEL_4_mlvj=="Pow2" :
+                print "Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)
+                workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)).Print() 
+                raw_input("haha")
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
+
+
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)) );
+                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)) );
+
+                if isTTbarFloating!=0:
+                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel,self.wtagger_category)));
+
+                if isVVFloating!=0:     
+                    self.FloatingParams.add(workspace.var("Deco_VV_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)));
+                    self.FloatingParams.add(workspace.var("Deco_VV_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)));
+
+                if isSTopFloating!=0:
+                    self.FloatingParams.add(workspace.var("Deco_STop_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel,self.wtagger_category)));
+            else:
+                raw_input("this mode:%s is not support!"%(mode))
+            if workspace.var("rrv_mean_CB_%s_xww_signal_region_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category)):
+                if self.channel == "mu":
+                    self.FloatingParams.add(workspace.var("CMS_sig_p1_scale_m"));
+                    self.FloatingParams.add(workspace.var("CMS_sig_p2_scale_m"));
+                elif self.channel == "el":
+                    self.FloatingParams.add(workspace.var("CMS_sig_p1_scale_e"));
+                    self.FloatingParams.add(workspace.var("CMS_sig_p2_scale_e"));
+                elif self.channel == "em":
+                    self.FloatingParams.add(workspace.var("CMS_sig_p1_scale_em"));
+                    self.FloatingParams.add(workspace.var("CMS_sig_p2_scale_em"));
+
+                self.FloatingParams.add(workspace.var("CMS_sig_p1_jes"));
+                self.FloatingParams.add(workspace.var("CMS_sig_p2_jes"));
+                self.FloatingParams.add(workspace.var("CMS_sig_p2_jer"));
+        self.FloatingParams.Print();
+        #raw_input("zixu")
+        hdata= datahist.createHistogram(rrv_x.GetName(), int(rrv_x.getBins()/self.binwidth_narrow_factor)) ;
+        draw_error_band(model_Total_background_MC, rrv_x.GetName(), rrv_number_Total_background_MC,self.FloatingParams,workspace ,mplot,mplotP,hdata,self.color_palet["Uncertainty"],"F");
+
+        mplot.Print();
+        self.leg = self.legend4Plot(mplot,0,1,-0.01,-0.05,0.11,0.);
+        #self.leg.SetTextSize(0.036);
+        mplot.addObject(self.leg);
+        #pt1 = ROOT.TPaveText(0.6180905,0.4355644,0.8291457,0.507992,"NDC")
+        #pt1.SetTextFont(42)
+        #pt1.SetTextSize(0.05)
+        #pt1.SetFillColor(0)
+        #pt1.SetFillStyle(0)
+        #pt1.SetBorderSize(0)
+        #text = pt1.AddText("")
+        #if options.category.find('Z') != -1: text = pt1.AddText("WZ category")
+        #elif options.category.find('W') != -1: text = pt1.AddText("WW category")
+        #text.SetTextFont(62)
+        #mplot.addObject(pt1)
+	            
+        mplot.GetYaxis().SetRangeUser(1e-2,mplot.GetMaximum()*1.2);
+            
+        if workspace.var("rrv_num_floatparameter_in_last_fitting"):
+            self.nPar_float_in_fitTo = int(workspace.var("rrv_num_floatparameter_in_last_fitting").getVal());
+        else:
+            self.nPar_float_in_fitTo = self.FloatingParams.getSize();
+        nBinX = mplot.GetNbinsX();
+        ndof  = nBinX-self.nPar_float_in_fitTo;
+        print "nPar=%s, chiSquare=%s/%s"%(self.nPar_float_in_fitTo, mplot.chiSquare( self.nPar_float_in_fitTo )*ndof, ndof );
+
+        parameters_list = RooArgList();
+        self.draw_canvas_with_pull2( rrv_x,datahist,mplot, mplotP, mplot_pull,ndof,parameters_list,"%s/m_lvj_fitting/"%(self.plotsDir),"check_postfit_workspace_for_limit",self.MODEL_4_mlvj,0,1);
      
 
 
@@ -3877,7 +4258,7 @@ class doFit_wj_and_wlvj:
 
 
         #self.draw_canvas_with_pull2( rrv_x,datahist,mplot, mplotP, mplot_pull,ndof,parameters_list,"%s/m_lvj_fitting/"%(self.plotsDir),"check_workspace_for_limit","",0,1);
-        self.draw_canvas_with_pull2( rrv_x,datahist,mplot, mplotP, mplot_pull,ndof,parameters_list,"plot_em_prefit/m_lvj_fitting/","check_workspace_for_limit","",0,1);
+        self.draw_canvas_with_pull2( rrv_x,datahist,mplot, mplotP, mplot_pull,ndof,parameters_list,"plot_em_prefit/m_lvj_fitting/","check_workspace_for_limit",self.MODEL_4_mlvj,0,1);
              
         #if workspace1.var("rrv_num_floatparameter_in_last_fitting"):
         #    self.nPar_float_in_fitTo = int(workspace1.var("rrv_num_floatparameter_in_last_fitting").getVal());
@@ -4192,7 +4573,7 @@ class doFit_wj_and_wlvj:
 
 
         #self.draw_canvas_with_pull2( rrv_x,datahist,mplot, mplotP, mplot_pull,ndof,parameters_list,"%s/m_lvj_fitting/"%(self.plotsDir),"check_workspace_for_limit","",0,1);
-        self.draw_canvas_with_pull2( rrv_x,datahist,mplot, mplotP, mplot_pull,ndof,parameters_list,"plot_em_postfit/m_lvj_fitting/","check_workspace_for_limit","",0,1);
+        self.draw_canvas_with_pull2( rrv_x,datahist,mplot, mplotP, mplot_pull,ndof,parameters_list,"plot_em_postfit/m_lvj_fitting/","check_workspace_for_limit",self.MODEL_4_mlvj,0,1);
              
         #if workspace1.var("rrv_num_floatparameter_in_last_fitting"):
         #    self.nPar_float_in_fitTo = int(workspace1.var("rrv_num_floatparameter_in_last_fitting").getVal());
@@ -4203,91 +4584,39 @@ class doFit_wj_and_wlvj:
         #print "nPar=%s, chiSquare=%s/%s"%(self.nPar_float_in_fitTo, mplot.chiSquare( self.nPar_float_in_fitTo )*ndof, ndof );
 
     ### in order to get the pull
-
-
-
-
-#    ### in order to get the pull
-#    def get_pull(self, rrv_x, mplot_orig):
-#
-#        #print "############### draw the pull plot ########################"
-#        hpull = mplot_orig.pullHist();
-#        x = ROOT.Double(0.); y = ROOT.Double(0) ;
-#        for ipoint in range(0,hpull.GetN()):
-#          hpull.GetPoint(ipoint,x,y);
-#          if(y == 0):
-#           hpull.SetPoint(ipoint,x,10)
-#       
-#        mplot_pull = rrv_x.frame(RooFit.Title("Pull Distribution"), RooFit.Bins(int(rrv_x.getBins()/self.binwidth_narrow_factor)));
-#        medianLine = TLine(rrv_x.getMin(),0.,rrv_x.getMax(),0); medianLine.SetLineWidth(2); medianLine.SetLineColor(kRed);
-#        mplot_pull.addObject(medianLine);
-#        mplot_pull.addPlotable(hpull,"P");
-#        mplot_pull.SetTitle("");
-#        mplot_pull.GetXaxis().SetTitle("");
-#        mplot_pull.GetYaxis().SetRangeUser(-5,5);
-#        mplot_pull.GetYaxis().SetTitleSize(0.10);
-#        mplot_pull.GetYaxis().SetLabelSize(0.10);
-#        mplot_pull.GetXaxis().SetTitleSize(0.10);
-#        mplot_pull.GetXaxis().SetLabelSize(0.10);
-#        mplot_pull.GetYaxis().SetTitleOffset(0.40);
-#        mplot_pull.GetYaxis().SetTitle("#frac{Data-Fit}{#sigma_{data}}");
-#        mplot_pull.GetYaxis().CenterTitle();
-#
-#        return mplot_pull;
     def get_pull(self, rrv_x, mplot_orig):
-
         print "############### draw the pull plot ########################"
         hpull = mplot_orig.pullHist();
         x = ROOT.Double(0.); y = ROOT.Double(0) ;
         for ipoint in range(0,hpull.GetN()):
-          hpull.GetPoint(ipoint,x,y);
-	  #print x,y
-          if(y == 0):
-           hpull.SetPoint(ipoint,x,10)
-       
-   	gt = ROOT.TH1F("gt","gt",int(rrv_x.getBins()/self.binwidth_narrow_factor),rrv_x.getMin(),rrv_x.getMax());
-   	gt.SetMinimum(-3.999);
-   	gt.SetMaximum(3.999);
-   	gt.SetDirectory(0);
-   	gt.SetStats(0);
-   	gt.SetLineStyle(0);
-   	gt.SetMarkerStyle(20);
-   	gt.GetXaxis().SetTitle(rrv_x.GetTitle());
-   	gt.GetXaxis().SetLabelFont(42);
-   	gt.GetXaxis().SetLabelOffset(0.02);
-   	gt.GetXaxis().SetLabelSize(0.15);
-   	gt.GetXaxis().SetTitleSize(0.15);
-   	gt.GetXaxis().SetTitleOffset(1.2);
-   	gt.GetXaxis().SetTitleFont(42);
-   	gt.GetYaxis().SetTitle("#frac{Data-Fit}{#sigma_{data}}");
-   	gt.GetYaxis().CenterTitle(True);
-   	gt.GetYaxis().SetNdivisions(205);
-   	gt.GetYaxis().SetLabelFont(42);
-   	gt.GetYaxis().SetLabelOffset(0.007);
-   	gt.GetYaxis().SetLabelSize(0.15);
-   	gt.GetYaxis().SetTitleSize(0.15);
-   	gt.GetYaxis().SetTitleOffset(0.35);
-   	gt.GetYaxis().SetTitleFont(42);
-   	#gt.GetXaxis().SetNdivisions(505)
-	hpull.SetHistogram(gt)
-	return hpull
-        #mplot_pull = rrv_x.frame(RooFit.Title("Pull Distribution"), RooFit.Bins(int(rrv_x.getBins()/self.binwidth_narrow_factor)));
-        #medianLine = TLine(rrv_x.getMin(),0.,rrv_x.getMax(),0); medianLine.SetLineWidth(2); medianLine.SetLineColor(kRed);
-        #mplot_pull.addObject(medianLine);
-        #mplot_pull.addPlotable(hpull,"P");
-        #mplot_pull.SetTitle("");
-        #mplot_pull.GetXaxis().SetTitle("");
-        #mplot_pull.GetYaxis().SetRangeUser(-5,5);
-        #mplot_pull.GetYaxis().SetTitleSize(0.10);
-        #mplot_pull.GetYaxis().SetLabelSize(0.10);
-        #mplot_pull.GetXaxis().SetTitleSize(0.10);
-        #mplot_pull.GetXaxis().SetLabelSize(0.10);
-        #mplot_pull.GetYaxis().SetTitleOffset(0.40);
-        #mplot_pull.GetYaxis().SetTitle("#frac{Data-Fit}{#sigma_{data}}");
-        #mplot_pull.GetYaxis().CenterTitle();
-
-        return mplot_pull;
-
+            hpull.GetPoint(ipoint,x,y);
+            if(y == 0):
+                hpull.SetPoint(ipoint,x,10)
+   	    gt = ROOT.TH1F("gt","gt",int(rrv_x.getBins()/self.binwidth_narrow_factor),rrv_x.getMin(),rrv_x.getMax());
+   	    gt.SetMinimum(-3.999);
+   	    gt.SetMaximum(3.999);
+   	    gt.SetDirectory(0);
+   	    gt.SetStats(0);
+   	    gt.SetLineStyle(0);
+   	    gt.SetMarkerStyle(20);
+   	    gt.GetXaxis().SetTitle(rrv_x.GetTitle());
+   	    gt.GetXaxis().SetLabelFont(42);
+   	    gt.GetXaxis().SetLabelOffset(0.02);
+   	    gt.GetXaxis().SetLabelSize(0.15);
+   	    gt.GetXaxis().SetTitleSize(0.15);
+   	    gt.GetXaxis().SetTitleOffset(1.2);
+   	    gt.GetXaxis().SetTitleFont(42);
+   	    gt.GetYaxis().SetTitle("#frac{Data-Fit}{#sigma_{data}}");
+   	    gt.GetYaxis().CenterTitle(True);
+   	    gt.GetYaxis().SetNdivisions(205);
+   	    gt.GetYaxis().SetLabelFont(42);
+   	    gt.GetYaxis().SetLabelOffset(0.007);
+   	    gt.GetYaxis().SetLabelSize(0.15);
+   	    gt.GetYaxis().SetTitleSize(0.15);
+   	    gt.GetYaxis().SetTitleOffset(0.35);
+   	    gt.GetYaxis().SetTitleFont(42);
+	    hpull.SetHistogram(gt)
+	    return hpull
 
     def getData_PoissonInterval(self,data_obs,mplot):
         rrv_x = self.workspace4fit_.var("rrv_mass_lvj");
@@ -4313,40 +4642,39 @@ class doFit_wj_and_wlvj:
         mplot.addPlotable(data_plot,"PE");
 
     def get_canvas(self,cname,isalpha=False):
+        #tdrstyle.setTDRStyle()
+        CMS_lumi.lumi_13TeV = "%s fb^{-1}"%(self.GetLumi())
+        CMS_lumi.writeExtraText = 1
+        CMS_lumi.extraText = "Preliminary"
 
-       #tdrstyle.setTDRStyle()
-       CMS_lumi.lumi_13TeV = "%s fb^{-1}"%(self.GetLumi())
-       CMS_lumi.writeExtraText = 1
-       CMS_lumi.extraText = "Preliminary"
+        iPos = 11
+        if( iPos==0 ): CMS_lumi.relPosX = 0.15
 
-       iPos = 11
-       if( iPos==0 ): CMS_lumi.relPosX = 0.15
+        H_ref = 600; 
+        W_ref = 800; 
+        W = W_ref
+        H  = H_ref
 
-       H_ref = 600; 
-       W_ref = 800; 
-       W = W_ref
-       H  = H_ref
+        T = 0.08*H_ref
+        B = 0.12*H_ref 
+        L = 0.12*W_ref
+        R = 0.06*W_ref
 
-       T = 0.08*H_ref
-       B = 0.12*H_ref 
-       L = 0.12*W_ref
-       R = 0.06*W_ref
-
-       canvas = ROOT.TCanvas(cname,cname,W,H)
-       canvas.SetFillColor(0)
-       canvas.SetBorderMode(0)
-       canvas.SetFrameFillStyle(0)
-       canvas.SetFrameBorderMode(0)
-       canvas.SetLeftMargin( L/W )
-       canvas.SetRightMargin( R/W )
-       canvas.SetTopMargin( T/H )
-       canvas.SetBottomMargin( B/H+0.03 )
-       canvas.SetTickx()
-       canvas.SetTicky()
-       if isalpha:
-        canvas.SetTicky(0)
-       
-       return canvas
+        canvas = ROOT.TCanvas(cname,cname,W,H)
+        canvas.SetFillColor(0)
+        canvas.SetBorderMode(0)
+        canvas.SetFrameFillStyle(0)
+        canvas.SetFrameBorderMode(0)
+        canvas.SetLeftMargin( L/W )
+        canvas.SetRightMargin( R/W )
+        canvas.SetTopMargin( T/H )
+        canvas.SetBottomMargin( B/H+0.03 )
+        canvas.SetTickx()
+        canvas.SetTicky()
+        if isalpha:
+            canvas.SetTicky(0)
+        
+        return canvas
 
 
     #### in order to make the banner on the plots
@@ -4369,7 +4697,7 @@ class doFit_wj_and_wlvj:
           if self.channel=="em":
               banner = TLatex(0.22,0.96,("CMS Preliminary, %.1f fb^{-1} at #sqrt{s} = 13TeV, W#rightarrow #mu,e #nu "%(self.GetLumi())));
           banner.SetNDC(); banner.SetTextSize(0.033)
-                                                                                                         
+
       return banner;
 
     ### in order to make the legend
@@ -4409,19 +4737,18 @@ class doFit_wj_and_wlvj:
         else: legHeader="W#rightarrowl#nu";
         
         for obj in range(int(plot.numItems()) ):
-          objName = plot.nameOf(obj);
-	  #if objName.find("TPave") != -1: continue
-          if objName == "errorband" : objName = "Uncertainty";
-          print objName;
-          if not ( ( (plot.getInvisible(objName)) and (not TString(objName).Contains("Uncertainty")) ) or TString(objName).Contains("invisi") or TString(objName).Contains("TLine") or objName ==objName_before ):
-            theObj = plot.getObject(obj);
-            objTitle = objName;
-            drawoption= plot.getDrawOptions(objName).Data()
-            if drawoption=="P":drawoption="PE"
-            if TString(objName).Contains("Uncertainty") or TString(objName).Contains("sigma"):  objName_before=objName; continue ;
-            elif TString(objName).Contains("Graph") :  objName_before=objName; continue ;
-            elif TString(objName).Data()=="data" : theLeg.AddEntry(theObj, "Data "+legHeader,"PE");  objName_before=objName;                 
-            else: objName_before=objName; continue ;
+            objName = plot.nameOf(obj);
+            if objName == "errorband" : objName = "Uncertainty";
+            print objName;
+            if not ( ( (plot.getInvisible(objName)) and (not TString(objName).Contains("Uncertainty")) ) or TString(objName).Contains("invisi") or TString(objName).Contains("TLine") or objName ==objName_before ):
+                theObj = plot.getObject(obj);
+                objTitle = objName;
+                drawoption= plot.getDrawOptions(objName).Data()
+                if drawoption=="P":drawoption="PE"
+                if TString(objName).Contains("Uncertainty") or TString(objName).Contains("sigma"):  objName_before=objName; continue ;
+                elif TString(objName).Contains("Graph") :  objName_before=objName; continue ;
+                elif TString(objName).Data()=="data" : theLeg.AddEntry(theObj, "Data "+legHeader,"PE");  objName_before=objName;                 
+                else: objName_before=objName; continue ;
 
         entryCnt = 0;
         objName_before = "";
@@ -4429,18 +4756,18 @@ class doFit_wj_and_wlvj:
         objNameLeg_signal_graviton = "";        
                    
         for obj in range(int(plot.numItems()) ):
-          objName = plot.nameOf(obj);
-          if objName == "errorband" : objName = "Uncertainty";
-          print objName;
-          if not ( ( (plot.getInvisible(objName)) and (not TString(objName).Contains("Uncertainty")) ) or TString(objName).Contains("invisi") or TString(objName).Contains("TLine") or objName ==objName_before ):
-            theObj = plot.getObject(obj);
-            objTitle = objName;
-            drawoption= plot.getDrawOptions(objName).Data()
-            if drawoption=="P":drawoption="PE"
-            if TString(objName).Contains("Uncertainty") or TString(objName).Contains("sigma"):  objName_before=objName; continue ;
-            elif TString(objName).Contains("Graph") :  objName_before=objName; continue ;
-            elif TString(objName).Data()=="WJets" : theLeg.AddEntry(theObj, "W+jets","F");  objName_before=objName;                 
-            else:  objName_before=objName; continue ;
+            objName = plot.nameOf(obj);
+            if objName == "errorband" : objName = "Uncertainty";
+            print objName;
+            if not ( ( (plot.getInvisible(objName)) and (not TString(objName).Contains("Uncertainty")) ) or TString(objName).Contains("invisi") or TString(objName).Contains("TLine") or objName ==objName_before ):
+                theObj = plot.getObject(obj);
+                objTitle = objName;
+                drawoption= plot.getDrawOptions(objName).Data()
+                if drawoption=="P":drawoption="PE"
+                if TString(objName).Contains("Uncertainty") or TString(objName).Contains("sigma"):  objName_before=objName; continue ;
+                elif TString(objName).Contains("Graph") :  objName_before=objName; continue ;
+                elif TString(objName).Data()=="WJets" : theLeg.AddEntry(theObj, "W+jets","F");  objName_before=objName;                 
+                else:  objName_before=objName; continue ;
 
         entryCnt = 0;
         objName_before = "";
@@ -4471,89 +4798,89 @@ class doFit_wj_and_wlvj:
                     elif TString(objName).Contains("vbfH"): theLeg.AddEntry(theObj, (TString(objName).ReplaceAll("vbfH","qqH")).Data() ,"L");
                     elif TString(objName).Contains("Uncertainty"): theLeg.AddEntry(theObj, objTitle,drawoption);
                     elif TString(objName).Contains("Wprime") and TString(objName).Contains("M2000"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "W' M_{W'}=2 TeV";
+                        objName_signal_graviton = theObj ;
+                        objNameLeg_signal_graviton = "W' M_{W'}=2 TeV";
                     elif TString(objName).Contains("RS1") or TString(objName).Contains("Bulk"):
-                       print "!!!! objName ",  objName
-                       prefix = ""
-                       if TString(objName).Contains("RS1"): prefix = "RS"
-                       elif TString(objName).Contains("Bulk"): prefix = "Bulk"
+                        print "!!!! objName ",  objName
+                        prefix = ""
+                        if TString(objName).Contains("RS1"): prefix = "RS"
+                        elif TString(objName).Contains("Bulk"): prefix = "Bulk"
 
-                       if TString(objName).Contains("WW600"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=0.6 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW700"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=0.7 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW750"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=750 GeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW800"):
-                           objName_signal_graviton = theObj ; 
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=0.8 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW900"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=0.9 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW1000"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW1100"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.1 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW1200"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.2 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW1300"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.3 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW1400"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.4 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW1500"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.5 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW1600"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.6 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW1700"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.7 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW1800"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.8 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW1900"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.9 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW2000"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW2100"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.1 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW2200"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.2 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW2300"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.3 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW2400"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.4 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW2500"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.5 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW3000"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=3 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW3500"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=3.5 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW4000"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=4 TeV (#times%s)"%(self.signal_scale*20);
-                       if TString(objName).Contains("WW4500"):
-                           objName_signal_graviton = theObj ;
-                           objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=4.5 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW600"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=0.6 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW700"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=0.7 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW750"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=750 GeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW800"):
+                            objName_signal_graviton = theObj ; 
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=0.8 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW900"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=0.9 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW1000"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW1100"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.1 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW1200"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.2 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW1300"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.3 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW1400"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.4 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW1500"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.5 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW1600"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.6 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW1700"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.7 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW1800"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.8 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW1900"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.9 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW2000"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW2100"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.1 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW2200"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.2 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW2300"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.3 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW2400"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.4 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW2500"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.5 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW3000"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=3 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW3500"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=3.5 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW4000"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=4 TeV (#times%s)"%(self.signal_scale*20);
+                        if TString(objName).Contains("WW4500"):
+                            objName_signal_graviton = theObj ;
+                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=4.5 TeV (#times%s)"%(self.signal_scale*20);
                     else : theLeg.AddEntry(theObj, objTitle,drawoption);
                 entryCnt=entryCnt+1;
             objName_before=objName;
@@ -4571,7 +4898,6 @@ class doFit_wj_and_wlvj:
             in_obj.GetYaxis().SetRangeUser(1e-2,in_obj.GetMaximum()/200)
         elif not frompull and logy :
             in_obj.GetYaxis().SetRangeUser(0.00001,in_obj.GetMaximum())
-            
 
         if is_range:
             h2=TH2D("h2","",100,400,1400,4,0.00001,4);
@@ -4599,7 +4925,7 @@ class doFit_wj_and_wlvj:
         Directory=TString(in_directory+self.signal_sample+"/");
         if not Directory.EndsWith("/"):Directory=Directory.Append("/");
         if not os.path.isdir(Directory.Data()):
-              os.system("mkdir -p "+Directory.Data());
+            os.system("mkdir -p "+Directory.Data());
 
         rlt_file=TString(Directory.Data()+in_file_name);
         if rlt_file.EndsWith(".root"):
@@ -4626,76 +4952,6 @@ class doFit_wj_and_wlvj:
             cMassFit.SaveAs(rlt_file.Data());
             rlt_file.ReplaceAll(".pdf",".png");
             cMassFit.SaveAs(rlt_file.Data());
-     
-    ###### jusr drawing canvas with no pull
-    ##def draw_canvas(self, in_obj,in_directory, in_file_name, is_range=0, logy=0, frompull=0):
-    ##    #print "############### draw the canvas without pull ########################"
-    ##    #cMassFit = TCanvas("cMassFit","cMassFit", 600,600);
-    ##    cMassFit = self.get_canvas("cMassFit")
-
-    ##    if frompull and logy :
-    ##        in_obj.GetYaxis().SetRangeUser(1e-2,in_obj.GetMaximum()/200)
-    ##    elif not frompull and logy :
-    ##        in_obj.GetYaxis().SetRangeUser(0.00001,in_obj.GetMaximum())
-    ##        
-
-    ##    if is_range:
-    ##        h2=TH2D("h2","",100,400,1400,4,0.00001,4);
-    ##        h2.Draw();
-    ##        in_obj.Draw("same")
-    ##    else :
-    ##        in_obj.Draw()
-
-    ##    in_obj.GetXaxis().SetTitleSize(0.045);
-    ##    in_obj.GetXaxis().SetTitleOffset(1.15);
-    ##    in_obj.GetXaxis().SetLabelSize(0.04);
-
-    ##    in_obj.GetYaxis().SetTitleSize(0.055);
-    ##    in_obj.GetYaxis().SetTitleOffset(1.40);
-    ##    in_obj.GetYaxis().SetLabelSize(0.04);
-
-    ##    self.leg.SetTextSize(0.031); 
-
-    ##    banner = self.banner4Plot();
-    ##    banner.Draw();
-    ##    
-    ##    Directory=TString(in_directory+self.signal_sample+"/");
-    ##    if not Directory.EndsWith("/"):Directory=Directory.Append("/");
-    ##    if not os.path.isdir(Directory.Data()):
-    ##          os.system("mkdir -p "+Directory.Data());
-
-    ##    rlt_file=TString(Directory.Data()+in_file_name);
-    ##    if rlt_file.EndsWith(".root"):
-    ##        rlt_file.ReplaceAll(".root","_rlt_without_pull_and_paramters.png");
-    ##    else:
-    ##        rlt_file.ReplaceAll(".root","");
-    ##        rlt_file = rlt_file.Append(".png");
-
-    ##    cMassFit.SaveAs(rlt_file.Data());
-    ##    if logy:
-    ##        in_obj.GetYaxis().SetRangeUser(1e-3,in_obj.GetMaximum()*200);
-    ##        cMassFit.SetLogy() ;
-    ##        cMassFit.Update();
-    ##        rlt_file.ReplaceAll(".png","_log.png");
-    ##        cMassFit.SaveAs(rlt_file.Data());
-
-    ##    #rlt_file.ReplaceAll(".png",".pdf");
-    ##    #cMassFit.SaveAs(rlt_file.Data());
-
-    ##    #rlt_file.ReplaceAll(".pdf",".root");
-    ##    #cMassFit.SaveAs(rlt_file.Data());
-
-    ##    #if logy:
-    ##    #    in_obj.GetYaxis().SetRangeUser(1e-3,in_obj.GetMaximum()*200);
-    ##    #    cMassFit.SetLogy() ;
-    ##    #    cMassFit.Update();
-    ##    #    rlt_file.ReplaceAll(".root","_log.root");
-    ##    #    cMassFit.SaveAs(rlt_file.Data());
-    ##    #    rlt_file.ReplaceAll(".root",".pdf");
-    ##    #    cMassFit.SaveAs(rlt_file.Data());
-    ##    #    rlt_file.ReplaceAll(".pdf",".png");
-    ##    #    cMassFit.SaveAs(rlt_file.Data());
-     
 
     #### draw canvas with plots with pull
     def draw_canvas_with_pull(self, mplot, mplot_pull,parameters_list,in_directory, in_file_name, in_model_name="", show_constant_parameter=0, logy=0):# mplot + pull
@@ -4720,18 +4976,18 @@ class doFit_wj_and_wlvj:
         param_first=par_first.Next()
         doParameterPlot = 0 ;
         if param_first and doParameterPlot != 0:
-         pad1=TPad("pad1","pad1",0.,0. ,0.8,0.24);
-         pad2=TPad("pad2","pad2",0.,0.24,0.8,1. );
-         pad3=TPad("pad3","pad3",0.8,0.,1,1);
-         pad1.Draw();
-         pad2.Draw();
-         pad3.Draw();
+            pad1=TPad("pad1","pad1",0.,0. ,0.8,0.24);
+            pad2=TPad("pad2","pad2",0.,0.24,0.8,1. );
+            pad3=TPad("pad3","pad3",0.8,0.,1,1);
+            pad1.Draw();
+            pad2.Draw();
+            pad3.Draw();
         else:
-         pad1=TPad("pad1","pad1",0.,0. ,0.99,0.24);
-         pad2=TPad("pad2","pad2",0.,0.24,0.99,1. );
-         pad1.Draw();
-         pad2.Draw();
-                                                                                                                                                                              
+            pad1=TPad("pad1","pad1",0.,0. ,0.99,0.24);
+            pad2=TPad("pad2","pad2",0.,0.24,0.99,1. );
+            pad1.Draw();
+            pad2.Draw();
+
         pad2.cd();
         mplot.Draw();
         banner = self.banner4Plot(1);
@@ -4815,23 +5071,11 @@ class doFit_wj_and_wlvj:
     def draw_canvas_with_pull1(self, rrv_x, datahist, mplot, mplot_pull,ndof,parameters_list,in_directory, in_file_name, in_model_name="", show_constant_parameter=0, logy=0,ismj=0,isPull=0):# mplot + pull
 
         print "############### draw the canvas with pull ########################" 
-	#hist_ = datahist.createHistogram(rrv_x.GetName(),int(rrv_x.getBins()/self.binwidth_narrow_factor))
-        #chi2_ = self.calculate_chi2(datahist,rrv_x,mplot,ndof,ismj)
-	mplot.GetXaxis().SetTitle("")
-	#mplot.GetXaxis().SetTitleOffset(1.1);
-        #mplot.GetYaxis().SetTitleOffset(1.3);
-        #mplot.GetXaxis().SetTitleSize(0.055);
-        #mplot.GetYaxis().SetTitleSize(0.055);
-        #mplot.GetXaxis().SetLabelSize(0.045);
-        #mplot.GetYaxis().SetLabelSize(0.045);
+        mplot.GetXaxis().SetTitle("")
         mplot.GetYaxis().SetTitleSize(0.07)
         mplot.GetYaxis().SetTitleOffset(0.9)
         mplot.GetYaxis().SetLabelSize(0.06)
-	mplot.GetXaxis().SetLabelSize(0);
-        #mplot_pull.GetXaxis().SetLabelSize(0.14);
-        #mplot_pull.GetYaxis().SetLabelSize(0.14);
-        #mplot_pull.GetYaxis().SetTitleSize(0.15);
-        #mplot_pull.GetYaxis().SetNdivisions(205);
+        mplot.GetXaxis().SetLabelSize(0);
 	
         cMassFit = self.get_canvas("cMassFit")#TCanvas("cMassFit","cMassFit", 600,600);
         # if parameters_list is empty, don't draw pad3
@@ -4840,70 +5084,39 @@ class doFit_wj_and_wlvj:
         param_first=par_first.Next()
         doParameterPlot = 0 ;
         if param_first and doParameterPlot != 0:
-         pad1=TPad("pad1","pad1",0.,0. ,0.8,0.24);
-         pad2=TPad("pad2","pad2",0.,0.24,0.8,1. );
-         pad3=TPad("pad3","pad3",0.8,0.,1,1);
-         pad1.Draw();
-         pad2.Draw();
-         pad3.Draw();
+            pad1=TPad("pad1","pad1",0.,0. ,0.8,0.24);
+            pad2=TPad("pad2","pad2",0.,0.24,0.8,1. );
+            pad3=TPad("pad3","pad3",0.8,0.,1,1);
+            pad1.Draw();
+            pad2.Draw();
+            pad3.Draw();
         else:
-         pad1=TPad("pad1","pad1",0.,0. ,1,0.30); #pad1 - pull
-         pad2=TPad("pad2","pad2",0.,0.3,1.,1. ); #pad0
+            pad1=TPad("pad1","pad1",0.,0. ,1,0.30); #pad1 - pull
+            pad2=TPad("pad2","pad2",0.,0.3,1.,1. ); #pad0
 
-   	 pad2.SetRightMargin(0.1);
-   	 pad2.SetTopMargin(0.1);
-   	 pad2.SetBottomMargin(0.0001);
-   	 pad1.SetRightMargin(0.1)
-   	 pad1.SetTopMargin(0)
-   	 pad1.SetBottomMargin(0.4)   
-	 #pad1.SetRightMargin(0.05)
-	 #pad2.SetRightMargin(0.05)
-         pad1.Draw();
-         pad2.Draw();
-                                                                                                                                                                              
+   	    pad2.SetRightMargin(0.1);
+   	    pad2.SetTopMargin(0.1);
+   	    pad2.SetBottomMargin(0.0001);
+   	    pad1.SetRightMargin(0.1)
+   	    pad1.SetTopMargin(0)
+   	    pad1.SetBottomMargin(0.4)   
+        pad1.Draw();
+        pad2.Draw();
         pad2.cd();
-	
-	'''	
-	if ismj:
-	 pt = ROOT.TPaveText(0.6243719,0.4080919,0.8756281,0.547952,"NDC")
-	 pt.SetTextSize(0.03746254)
-	else:
-	 pt = ROOT.TPaveText(0.5175879,0.7152847,0.8027638,0.8551449,"NDC")
-	 pt.SetTextSize(0.054)
-	 
-	pt.SetTextFont(62)	
-	pt.SetTextAlign(12)
-	pt.SetFillColor(0)
-	pt.SetBorderSize(0)
-	pt.SetFillStyle(0)
-	text = pt.AddText("#chi^2/d.o.f = %.2f/%i = %.2f" %(chi2_[0],chi2_[1],chi2_[0]/chi2_[1]))
-	text.SetTextFont(62)
-	'''
-	
         mplot.Draw();
-	#pt.Draw()
-
-        #banner = self.banner4Plot(1);
-        #banner.Draw();
-
         pad1.cd();
         mplot_pull.Draw("AP");
 
         mplot.Print("v");
         if mplot.FindObject("errorband") != 0: 
-          print " Pull  !!!! "       
-          mplot_pull.Print("v");
-#        TGraphAsymmErrors::errorband
-#        npoints = errorband.GetN();
-#        errorband_pull = errorband.Clone();
-#        for ipoint in range(1,errorband_pull->GetN()):
+            print " Pull  !!!! "       
+            mplot_pull.Print("v");
 
         medianLine = TLine(mplot.GetXaxis().GetXmin(),0.,mplot.GetXaxis().GetXmax(),0); medianLine.SetLineWidth(2); medianLine.SetLineColor(kRed);
-	medianLine.Draw()
-	mplot_pull.Draw("Psame");
-	
-        if param_first and doParameterPlot != 0:
+        medianLine.Draw()
+        mplot_pull.Draw("Psame");
 
+        if param_first and doParameterPlot != 0:
             pad3.cd();
             latex=TLatex();
             latex.SetTextSize(0.1);
@@ -4920,18 +5133,17 @@ class doFit_wj_and_wlvj:
                     latex.DrawLatex(0,0.9-i*0.04-0.02," #color[%s]{%4.3e +/- %2.1e}"%(icolor,param.getVal(),param.getError()) );
                     i=i+1;
                 param=par.Next();
+        cMassFit.Update()
+        pad2.cd()
+        CMS_lumi.CMS_lumi(pad2, 4, 11)	
+        pad2.cd()
+        pad2.Update()
+        pad2.RedrawAxis()
+        frame = pad2.GetFrame()
+        frame.Draw()   
+        cMassFit.cd()
+        cMassFit.Update()
 
-	cMassFit.Update()
-	pad2.cd()
-	CMS_lumi.CMS_lumi(pad2, 4, 11)	
-	pad2.cd()
-	pad2.Update()
-	pad2.RedrawAxis()
-	frame = pad2.GetFrame()
-	frame.Draw()   
-	cMassFit.cd()
-	cMassFit.Update()
-			
         ## create the directory where store the plots
         Directory = TString(in_directory+self.signal_sample);
         if not Directory.EndsWith("/"):Directory = Directory.Append("/");
@@ -5141,6 +5353,7 @@ class doFit_wj_and_wlvj:
         print "Chi2/ndof = %f/%f = %f" %(chi2,ndof,chi2/ndof)
         return chi2,ndof
 
+
     ##### Get Lumi for banner title
     def GetLumi(self):
         return self.Lumi
@@ -5349,8 +5562,9 @@ def control_single(channel):
 
 ### function to check the workspace once it has already created
 def check_workspace(channel, higgs):
-    boostedW_fitter = doFit_wj_and_wlvj(channel,higgs);
+    boostedW_fitter = doFit_wj_and_wlvj(channel,higgs,500,700,40,140,400,1400,"ExpN","ExpTail");#all the param is useless. only the pre-fit will be included in the picture name
     boostedW_fitter.read_workspace()
+    #boostedW_fitter.read_postfit_workspace()
 
 def combine_workspace(channel, higgs):
     boostedW_fitter = doFit_wj_and_wlvj("mu",higgs);
@@ -5393,7 +5607,6 @@ if __name__ == '__main__':
  
     if options.check:
         print '################# check workspace for %s sample'%(channel);
-        #check_workspace(channel,"BulkGraviton_newxsec750");
         check_workspace(channel,"BulkGravWW750");
 
     if options.combine:
