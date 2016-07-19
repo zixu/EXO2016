@@ -163,7 +163,7 @@ class doFit_wj_and_wlvj:
         if self.channel=="el":   self.Lumi= 6.26
         elif self.channel=="mu": self.Lumi= 6.26
         elif self.channel=="em": self.Lumi= 6.26
-        self.file_Directory="data_4approval/";
+        self.file_Directory="PKUTree_final_6p26fb_Jul18/";
 
         self.signal_sample=in_signal_sample;
 
@@ -2820,7 +2820,7 @@ class doFit_wj_and_wlvj:
             if self.channel == "mu" or self.channel == "el":                
                 ##if treeIn.CategoryID==self.categoryID and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() :
                 ## temporary using tau21 cut to replace categoryID
-                if TMath.Abs(treeIn.CategoryID)< 3 and treeIn.tau21<=self.tau21_cut and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() :
+                if TMath.Abs(treeIn.CategoryID)< 3 and treeIn.tau21<=self.tau21_cut and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() and treeIn.passFilter_HBHE>0 and treeIn.passFilter_GlobalHalo>0 and treeIn.passFilter_HBHEIso>0 and treeIn.passFilter_ECALDeadCell>0 and treeIn.passFilter_GoodVtx>0 and treeIn.passFilter_EEBadSc>0 and treeIn.passFilter_badMuon>0 and treeIn.passFilter_badChargedHadron>0:
                     self.isGoodEvent = 1 ;   
 
             if label =="_data" or label =="_data_xww" :
