@@ -30,12 +30,14 @@ parser.add_option('--computeLimits', action='store_true', dest='computeLimits', 
 
 ### to plot limits
 parser.add_option('--plotLimits', action='store_true', dest='plotLimits', default=False, help='plot limits')
-parser.add_option('--lnubbBR', action='store_true', dest='lnubbBR', default=True, help='computing with munu BR')
+parser.add_option('--lvjBR', action='store_true', dest='lvjBR', default=True, help='computing with munu BR')
 
 ### to do just signal lineshape fits
 parser.add_option('--fitSignal', action='store_true', dest='fitSignal', default=False, help='do signal lineshape fits')
 
 ### other options 
+parser.add_option('--signal',action="store",type="string",dest="signal",default="BulkGravWW")
+#parser.add_option('--signal',action="store",type="string",dest="signal",default="WprimeWZ")
 parser.add_option('--channel',action="store",type="string",dest="channel",default="mu")
 parser.add_option('--massPoint',action="store",type="int",dest="massPoint",default=-1)
 #parser.add_option('--cPrime',action="store",type="int",dest="cPrime",default=-1)
@@ -56,109 +58,166 @@ parser.add_option('--Sys', action='store',type="int", dest='Sys', default=1, hel
 ### Global Variables for running jobs ###
 #########################################
 
-### mass point for signal to be fitted
-mass      = [600,700,750,800,900,1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
-binwidth  = [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1]
-### mass window for couting analysis
-ccmlo     = [500,600,650,700, 800, 900,1100,1300,1500,1700,1900,2400,2900,3400,3900,4400 ] 
-ccmhi     = [700,800,850,900,1000,1100,1300,1500,1700,1900,2100,2600,3100,3600,4100,4600 ]
-### jet mass range
-mjlo      = [  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40]
-mjhi      = [ 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150]
-### mlvj range min and max used when run with option --makeCards
-#fit range
-mlo       = [  600, 600, 600, 600, 600, 600, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800]
-#mlo       = [  600, 600, 600, 600, 600, 600,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000]
-mhi       = [ 1500,1500,1500,1500,1500,1500,5000,5000,5000,5000,5000,5000,5000,5000,5000,5000]
-### shape to be used for bkg when --makeCards
-shape    = ["ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN"]
-#shapeAlt = [ "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp"]
-shapeAlt = [ "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail"]
-### shape to be used for bkg when --fitSignal
-shape_sig_width  = ["BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB"]
-shape_sig_narrow = ["DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
+if options.signals= "BulkGravWW":
+    ### mass point for signal to be fitted
+    mass      = [600,700,750,800,900,1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
+    binwidth  = [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1]
+    ### mass window for couting analysis
+    ccmlo     = [500,600,650,700, 800, 900,1100,1300,1500,1700,1900,2400,2900,3400,3900,4400 ] 
+    ccmhi     = [700,800,850,900,1000,1100,1300,1500,1700,1900,2100,2600,3100,3600,4100,4600 ]
+    ### jet mass range
+    mjlo      = [  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40]
+    mjhi      = [ 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150]
+    ### mlvj range min and max used when run with option --makeCards
+    #fit range
+    mlo       = [  600, 600, 600, 600, 600, 600, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800]
+    #mlo       = [  600, 600, 600, 600, 600, 600,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000]
+    mhi       = [ 1500,1500,1500,1500,1500,1500,5000,5000,5000,5000,5000,5000,5000,5000,5000,5000]
+    ### shape to be used for bkg when --makeCards
+    shape    = ["ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN"]
+    shapeAlt = [ "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail"]
+    #shapeAlt = [ "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp"]
+
+    ### shape to be used for bkg when --fitSignal
+    #shape_sig_width  = ["BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB"]
+    #shape_sig_narrow = ["DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
+    
+    
+    ##################################################
+    #  cross-sections for HVT and LH model  #
+    ##################################################
+    xsDict =  {
+            600:    406.830851*1e-3, 
+            700:    165.094354*1e-3,
+            750:    110.500282*1e-3,
+            800:    76.0582930*1e-3, 
+            900:    38.2161000*1e-3, 
+            1000:   20.4996930*1e-3,
+            1200: 6.841404   *1e-3,  
+            1400: 2.625789675*1e-3,  
+            1600: 1.1031223*1e-3,  
+            1800: 0.49976082 *1e-3,  
+            2000: 0.239518815*1e-3,  
+            2500: 0.044885148*1e-3,  
+            3000: 0.009824256*1e-3,  
+            3500: 0.002409958*1e-3,  
+            4000: 0.000622786*1e-3,  
+            4500: 0.000168503*1e-3
+            }
+    xsDict_lvj =  {
+            600:    406.830851*1e-3*0.44, 
+            700:    165.094354*1e-3*0.44, 
+            750:    110.500282*1e-3*0.44,    
+            800:    76.0582930*1e-3*0.44, 
+            900:    38.2161000*1e-3*0.44, 
+            1000:   20.4996930*1e-3*0.44,
+            1200: 6.841404   *1e-3*0.44,  
+            1400: 2.625789675*1e-3*0.44,  
+            1600: 1.1031223*1e-3*0.44,  
+            1800: 0.49976082 *1e-3*0.44,  
+            2000: 0.239518815*1e-3*0.44,  
+            2500: 0.044885148*1e-3*0.44,  
+            3000: 0.009824256*1e-3*0.44,  
+            3500: 0.002409958*1e-3*0.44,  
+            4000: 0.000622786*1e-3*0.44,  
+            4500: 0.000168503*1e-3*0.44
+            }
+    
+    table_signalscale =  {
+             600: 1, 
+             700: 1,
+             750: 1,    
+             800: 1, 
+             900: 1, 
+            1000: 1,
+            1200: 1,  
+            1400: 1,  
+            1600: 3,  
+            1800: 5,  
+            2000: 10,  
+            2500: 50,  
+            3000: 300,  
+            3500: 2000,  
+            4000: 5000,  
+            4500: 20000
+            }
 
 
-### signal mass fraction for non narrow samples
-#mass_fraction = [0.15,0.05,0.3,0.3]
+elif option.signal= "WprimeWZ":
+    ### mass point for signal to be fitted
+    mass      = [800,900,1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
+    binwidth  = [0,0,0,1,1,1,1,1,1,1,1,1,1]
+    ### mass window for couting analysis
+    ccmlo     = [700, 800, 900,1100,1300,1500,1700,1900,2400,2900,3400,3900,4400 ] 
+    ccmhi     = [900,1000,1100,1300,1500,1700,1900,2100,2600,3100,3600,4100,4600 ]
+    ### jet mass range
+    mjlo      = [ 40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40]
+    mjhi      = [150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150]
+    ### mlvj range min and max used when run with option --makeCards
+    #fit range
+    mlo       = [ 600, 600, 600, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800]
+    #mlo       = [ 600, 600, 600,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000]
+    mhi       = [1500,1500,1500,5000,5000,5000,5000,5000,5000,5000,5000,5000,5000]
+    ### shape to be used for bkg when --makeCards
+    shape    = ["ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN"]
+    shapeAlt = ["ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail"]
+    #shapeAlt = [ "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp"]
 
-##################################################
-#  cross-sections for HVT and LH model  #
-##################################################
-xsDict =  {
-        600:    406.830851*1e-3, 
-        700:    165.094354*1e-3,
-        750:    110.500282*1e-3,
-        800:    76.0582930*1e-3, 
-        900:    38.2161000*1e-3, 
-        1000:   20.4996930*1e-3,
-        1200: 6.841404   *1e-3,  
-        1400: 2.625789675*1e-3,  
-        1600: 1.1031223*1e-3,  
-        1800: 0.49976082 *1e-3,  
-        2000: 0.239518815*1e-3,  
-        2500: 0.044885148*1e-3,  
-        3000: 0.009824256*1e-3,  
-        3500: 0.002409958*1e-3,  
-        4000: 0.000622786*1e-3,  
-        4500: 0.000168503*1e-3
-        }
-xsDict_munubb =  {
-        600:    406.830851*1e-3*0.44, 
-        700:    165.094354*1e-3*0.44, 
-        750:    110.500282*1e-3*0.44,    
-        800:    76.0582930*1e-3*0.44, 
-        900:    38.2161000*1e-3*0.44, 
-        1000:   20.4996930*1e-3*0.44,
-        1200: 6.841404   *1e-3*0.44,  
-        1400: 2.625789675*1e-3*0.44,  
-        1600: 1.1031223*1e-3*0.44,  
-        1800: 0.49976082 *1e-3*0.44,  
-        2000: 0.239518815*1e-3*0.44,  
-        2500: 0.044885148*1e-3*0.44,  
-        3000: 0.009824256*1e-3*0.44,  
-        3500: 0.002409958*1e-3*0.44,  
-        4000: 0.000622786*1e-3*0.44,  
-        4500: 0.000168503*1e-3*0.44
-        }
+    ### shape to be used for bkg when --fitSignal
+    #shape_sig_width  = ["BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB"]
+    #shape_sig_narrow = ["DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
+    
+    
+    ##################################################
+    #  cross-sections for HVT and LH model  #
+    ##################################################
+    xsDict =  {
+            800:    76.0582930*1e-3, 
+            900:    38.2161000*1e-3, 
+            1000:   20.4996930*1e-3,
+            1200: 6.841404   *1e-3,  
+            1400: 2.625789675*1e-3,  
+            1600: 1.1031223*1e-3,  
+            1800: 0.49976082 *1e-3,  
+            2000: 0.239518815*1e-3,  
+            2500: 0.044885148*1e-3,  
+            3000: 0.009824256*1e-3,  
+            3500: 0.002409958*1e-3,  
+            4000: 0.000622786*1e-3,  
+            4500: 0.000168503*1e-3
+            }
+    xsDict_lvj =  {
+            800:    76.0582930*1e-3*0.44, 
+            900:    38.2161000*1e-3*0.44, 
+            1000:   20.4996930*1e-3*0.44,
+            1200: 6.841404   *1e-3*0.44,  
+            1400: 2.625789675*1e-3*0.44,  
+            1600: 1.1031223*1e-3*0.44,  
+            1800: 0.49976082 *1e-3*0.44,  
+            2000: 0.239518815*1e-3*0.44,  
+            2500: 0.044885148*1e-3*0.44,  
+            3000: 0.009824256*1e-3*0.44,  
+            3500: 0.002409958*1e-3*0.44,  
+            4000: 0.000622786*1e-3*0.44,  
+            4500: 0.000168503*1e-3*0.44
+            }
+    
+    table_signalscale =  {
+             800: 1, 
+             900: 1, 
+            1000: 1,
+            1200: 1,  
+            1400: 1,  
+            1600: 3,  
+            1800: 5,  
+            2000: 10,  
+            2500: 50,  
+            3000: 300,  
+            3500: 2000,  
+            4000: 5000,  
+            4500: 20000
+            }
 
-#signal_scaleup =  {
-#         600: 1, 
-#         700: 1,
-#         750: 1,    
-#         800: 1, 
-#         900: 1, 
-#        1000: 1,
-#        1200: 1,  
-#        1400: 1,  
-#        1600: 3,  
-#        1800: 5,  
-#        2000: 10,  
-#        2500: 50,  
-#        3000: 300,  
-#        3500: 2000,  
-#        4000: 5000,  
-#        4500: 20000
-#        }
-
-signal_scaleup =  {
-         600: 1, 
-         700: 1,
-         750: 1,    
-         800: 1, 
-         900: 1, 
-        1000: 1,
-        1200: 1,  
-        1400: 1,  
-        1600: 3,  
-        1800: 5,  
-        2000: 10,  
-        2500: 50,  
-        3000: 300,  
-        3500: 2000,  
-        4000: 5000,  
-        4500: 20000
-        }
 
 
 ################################
@@ -277,10 +336,10 @@ def doULPlot( suffix ):
     for i in range(len(mass)):
         curFile = "higgsCombine_lim_%03d%s.Asymptotic.mH%03d.root"%(mass[i],suffix,mass[i]);
         print "curFile: %s"%curFile;
-        if options.lnubbBR:
-            sf = signal_scaleup[mass[i]]*xsDict_munubb[mass[i]]; #*0.1057*0.577; # BR(W->munu)*BR(H->bb)
+        if options.lvjBR:
+            sf = table_signalscale[mass[i]]*xsDict_lvj[mass[i]]; #*0.1057*0.577; # BR(W->munu)*BR(H->bb)
         else:
-            sf = signal_scaleup[mass[i]]*xsDict[mass[i]];
+            sf = table_signalscale[mass[i]]*xsDict[mass[i]];
 
         curAsymLimits = getAsymLimits(curFile);
         #print mass[i]
@@ -293,18 +352,18 @@ def doULPlot( suffix ):
         ybins_2s.append( curAsymLimits[1]*sf );
         ybins_1s.append( curAsymLimits[2]*sf );
         #ybins_th.append(sf);#/20.); #*0.25);
-        if options.lnubbBR:
-            ybins_th.append(xsDict_munubb[mass[i]]);#/20.); #*0.25);
+        if options.lvjBR:
+            ybins_th.append(xsDict_lvj[mass[i]]);#/20.); #*0.25);
         else:
             ybins_th.append(xsDict[mass[i]]);#/20.); #*0.25);
     
     for i in range( len(mass)-1, -1, -1 ):
         curFile = "higgsCombine_lim_%03d%s.Asymptotic.mH%03d.root"%(mass[i],suffix,mass[i]);
         print "curFile: %s"%curFile;
-        if options.lnubbBR:
-          sf = signal_scaleup[mass[i]]*xsDict_munubb[mass[i]]; #*0.1057*0.577; # BR(W->munu)*BR(H->bb)
+        if options.lvjBR:
+          sf = table_signalscale[mass[i]]*xsDict_lvj[mass[i]]; #*0.1057*0.577; # BR(W->munu)*BR(H->bb)
         else:
-          sf = signal_scaleup[mass[i]]*xsDict[mass[i]];
+          sf = table_signalscale[mass[i]]*xsDict[mass[i]];
 
         curAsymLimits = getAsymLimits(curFile);
         xbins_env.append( mass[i]/1000. );
@@ -358,7 +417,7 @@ def doULPlot( suffix ):
     can_SM = ROOT.TCanvas("can_SM","can_SM",630,600);
     
     hrl_SM = can_SM.DrawFrame(mass[0]/1000.,1e-4, mass[nPoints-1]/1000., 1e2);
-    if options.lnubbBR:
+    if options.lvjBR:
         hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{Bulk} #rightarrow WW #rightarrow l#nuj) (pb)");
     else:
         hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{Bulk} #rightarrow WW) (pb)");
