@@ -14,6 +14,7 @@ import CMS_lumi, tdrstyle
 parser = OptionParser()
 
 parser.add_option('-a', '--additioninformation',action="store",type="string",dest="additioninformation",default="B2GWW")
+#parser.add_option('-a', '--additioninformation',action="store",type="string",dest="additioninformation",default="B2GWZ")
 parser.add_option('-b', action='store_true', dest='noX', default=True, help='no X11 windows')
 parser.add_option('-c', '--channel',action="store",type="string",dest="opt_channel",default="mu")
 #parser.add_option('-c', '--channel',action="store",type="string",dest="opt_channel",default="el")
@@ -117,13 +118,31 @@ class doFit_wj_and_wlvj:
         #prepare workspace for unbin-Limit -> just for the stuff on which running the limit 
         self.workspace4limit_ = RooWorkspace("workspace4limit_","workspace4limit_");
 
+
+
+        self.signal_sample=in_signal_sample;
+        self.signal_model=  filter(str.isalpha, in_signal_sample)  
+        self.signal_mass=  int( filter(str.isdigit, in_signal_sample))  #GeV
+        ##print self.signal_sample
+        ##print self.signal_model
+        ##print self.signal_mass
+        ##raw_input("zixu")
+
+
         ## different code operation mode -> just normal analysis
         if options.closuretest ==0:
             self.mj_sideband_lo_min = in_mj_min;
-            self.mj_sideband_lo_max = 65;#65;
-            self.mj_signal_min = 65;#65;
-            self.mj_signal_max = 95;#85 or 105;
-            self.mj_sideband_hi_min = 135;#105;
+            self.mj_sideband_lo_max = 65;
+            if self.signal_model=="BulkGravWW":
+                self.mj_signal_min = 65;
+                self.mj_signal_max = 95;
+            elif self.signal_model=="WprimeWZ":
+                self.mj_signal_min = 75;
+                self.mj_signal_max =105;
+            else:
+                print self.signal_model
+                raw_input("failed to find the signal!")
+            self.mj_sideband_hi_min = 135;
             self.mj_sideband_hi_max = in_mj_max;
         if options.closuretest ==1: ##closure test A1->A2
             self.mj_sideband_lo_min = in_mj_min;
@@ -165,7 +184,6 @@ class doFit_wj_and_wlvj:
         elif self.channel=="em": self.Lumi= 6.26
         self.file_Directory="PKUTree_final_6p26fb_Jul18/";
 
-        self.signal_sample=in_signal_sample;
 
         if options.realdata==1:
             self.file_data = (self.channel+"_PKUTree_16B.root");#keep blind!!!!
@@ -294,42 +312,25 @@ class doFit_wj_and_wlvj:
             'Uncertainty' : kBlack,
             'Other_Backgrounds' : kBlue
         }
-        ### signal scale to be visible in the plots
-        if "WW600" in self.signal_sample:
-            self.signal_scale=1
-        elif "WW700" in self.signal_sample:
-            self.signal_scale=1
-        elif "WW750" in self.signal_sample:
-            self.signal_scale=1
-        elif "WW800" in self.signal_sample:
-            self.signal_scale=1
-        elif "WW900" in self.signal_sample:
-            self.signal_scale=1
-        elif "WW1000" in self.signal_sample:
-            self.signal_scale=1
-        elif "WW1200" in self.signal_sample:
-            self.signal_scale=1
-        elif "WW1400" in self.signal_sample:
-            self.signal_scale=1
-        elif "WW1600" in self.signal_sample:
-            self.signal_scale=3
-        elif "WW1800" in self.signal_sample:
-            self.signal_scale=5
-        elif "WW2000" in self.signal_sample:
-            self.signal_scale=10
-        elif "WW2500" in self.signal_sample:
-            self.signal_scale=50
-        elif "WW3000" in self.signal_sample:
-            self.signal_scale=300
-        elif "WW3500" in self.signal_sample:
-            self.signal_scale=2000
-        elif "WW4000" in self.signal_sample:
-            self.signal_scale=5000
-        elif "WW4500" in self.signal_sample:
-            self.signal_scale=20000
-        else:
-            #self.signal_scale=100
-            raw_input("can not find the signal:"+self.signal_sample)
+        ### signal scaled up to save to datacard, the signal will be scalue up by additional 20 in the plots
+        table_signalscale =  {
+             600: 1, 
+             700: 1, 
+             750: 1, 
+             800: 1, 
+             900: 1, 
+            1000: 1,
+            1200: 1,  
+            1400: 1,  
+            1600: 3,  
+            1800: 5,  
+            2000: 10,  
+            2500: 50,  
+            3000: 300,  
+            3500: 2000,  
+            4000: 5000,  
+            4500: 20000 }
+        self.signal_scale=table_signalscale[self.signal_mass];
 
         # parameters of data-driven method to get the WJets background event number.
         self.number_WJets_insideband=-1;
@@ -339,43 +340,49 @@ class doFit_wj_and_wlvj:
         ### uncertainty for datacard
         self.lumi_uncertainty    = 0.05;
 
-        signal_uncertainty_PDF  = 0.13
-        signal_uncertainty_scale= 0.11
-
-        if "WW600" in self.signal_sample:
-            signal_uncertainty_PDF  = 0.13
-        elif "WW700" in self.signal_sample:
-            signal_uncertainty_PDF  = 0.13
-        elif "WW750" in self.signal_sample:
-            signal_uncertainty_PDF  = 0.13
-        elif "WW800" in self.signal_sample:
-            signal_uncertainty_PDF  = 0.13
-        elif "WW900" in self.signal_sample:
-            signal_uncertainty_PDF  = 0.13
-        elif "WW1000" in self.signal_sample:
-            signal_uncertainty_PDF  = 0.13
-        elif "WW1200" in self.signal_sample:
-            signal_uncertainty_PDF  = 0.14
-        elif "WW1400" in self.signal_sample:
-            signal_uncertainty_PDF  = 0.16
-        elif "WW1600" in self.signal_sample:
-            signal_uncertainty_PDF  = 0.19
-        elif "WW1800" in self.signal_sample:
-            signal_uncertainty_PDF  = 0.22
-        elif "WW2000" in self.signal_sample:
-            signal_uncertainty_PDF  = 0.25
-        elif "WW2500" in self.signal_sample:
-            signal_uncertainty_PDF  = 0.34
-        elif "WW3000" in self.signal_sample:
-            signal_uncertainty_PDF  = 0.45
-        elif "WW3500" in self.signal_sample:
-            signal_uncertainty_PDF  = 0.59
-        elif "WW4000" in self.signal_sample:
-            signal_uncertainty_PDF  = 0.78
-        elif "WW4500" in self.signal_sample:
-            signal_uncertainty_PDF  = 1.0
+        if self.signal_model=="BulkGravWW":
+            table_signaluncertainty =  {
+                 600: 0.13, 
+                 700: 0.13, 
+                 750: 0.13, 
+                 800: 0.13, 
+                 900: 0.13, 
+                1000: 0.13,
+                1200: 0.14,
+                1400: 0.16,
+                1600: 0.19,
+                1800: 0.22,
+                2000: 0.25,
+                2500: 0.34,
+                3000: 0.45, 
+                3500: 0.59,  
+                4000: 0.78,  
+                4500: 1.0   }
+        elif self.signal_model=="WprimeWZ":
+            table_signaluncertainty =  {
+                 600: 0.05, 
+                 700: 0.05, 
+                 750: 0.05, 
+                 800: 0.05, 
+                 900: 0.05, 
+                1000: 0.05,
+                1200: 0.05,
+                1400: 0.05,
+                1600: 0.06,
+                1800: 0.06,
+                2000: 0.06,
+                2500: 0.07,
+                3000: 0.08, 
+                3500: 0.10,  
+                4000: 0.14,  
+                4500: 0.18  }
         else:
-            raw_input("can not find the signal:"+self.signal_sample)
+            print self.signal_model
+            raw_input("failed to find the signal model")
+
+        signal_uncertainty_PDF  = table_signaluncertainty[self.signal_mass]
+
+        signal_uncertainty_scale= 0.11
 
         self.XS_Signal_uncertainty = (signal_uncertainty_PDF**2+ signal_uncertainty_scale**2)**0.5 ;#pdf uncertainty 13% + scale uncertainty 11%
         self.XS_STop_uncertainty = 0.050 ;
@@ -513,42 +520,43 @@ class doFit_wj_and_wlvj:
             label_tstring=TString(label);
             print "########### Double CB for Bulk graviton mlvj ############"
 
-            if label_tstring.Contains("WW600"):#because the M_ljv lower limit is 800GeV, so, just use right side 
+            if label_tstring.Contains(self.signal_model+"600"):#because the M_ljv lower limit is 800GeV, so, just use right side 
                 rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,621,550,680);
                 rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 47.9,40,60);
                 rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 31)#,15,60);
                 rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,5)#,0.1,10.);
                 rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2.2,0.01,35);
                 rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,1.94,1.0,4.0);
-            elif label_tstring.Contains("WW700"):#because the M_ljv lower limit is 800GeV, so, just use right side 
+            elif label_tstring.Contains(self.signal_model+"700"):#because the M_ljv lower limit is 800GeV, so, just use right side 
                 rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,720,650, 780);
                 rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 55,30 ,70);
                 rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 45.)#,0.01,45);
                 rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2,0.1,4.);
                 rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2.9,1.,5.);
                 rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2,0.1,4.);
-            elif label_tstring.Contains("WW750"):#because the M_ljv lower limit is 800GeV, so, just use right side 
-                rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,777,700,820);
+            elif label_tstring.Contains(self.signal_model+"750"):#because the M_ljv lower limit is 800GeV, so, just use right side 
+                #rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,777,700,820);
+                rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,777,700,950);
                 rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 59.4,50,70);
                 rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 45.)#,0.01,45);
                 rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,1.66,1.,3.);
                 rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,4.,1,10);
                 rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,1.8,0.5,5.);
-            elif label_tstring.Contains("WW800"):#because the M_ljv lower limit is 800GeV, so, just use right side 
+            elif label_tstring.Contains(self.signal_model+"800"):#because the M_ljv lower limit is 800GeV, so, just use right side 
                 rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,826,770,900);
                 rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 61.2,50,80);
                 rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 45)#4.,0.01,45);
                 rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,1.52,1,3.);
                 rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,5.4,1,10);
                 rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,1.7,1.0,3.);
-            elif label_tstring.Contains("WW900"):#because the M_ljv lower limit is 800GeV, so, just use right side 
+            elif label_tstring.Contains(self.signal_model+"900"):#because the M_ljv lower limit is 800GeV, so, just use right side 
                 rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,929,870,970);
                 rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 66.2,50,80);
                 rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 45)#.,0.01,45);
                 rrv_alpha1_CB = RooRealVar("rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,1.4,1.,3.);
                 rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,5.,1,10);
                 rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,1.8,1.,3.);
-            elif label_tstring.Contains("WW1000"):#because the M_ljv lower limit is 800GeV, so, just use right side 
+            elif label_tstring.Contains(self.signal_model+"1000"):#because the M_ljv lower limit is 800GeV, so, just use right side 
                 rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,1029,800,1270);
                 rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 71.6,60 ,80);
                 rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 45.,0.01,45);
@@ -556,7 +564,7 @@ class doFit_wj_and_wlvj:
                 rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,3.1,0.1,8);
                 rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2.15,0.5,5.);
 
-            elif label_tstring.Contains("WW1200"):#because the M_ljv lower limit is 800GeV, so, just use right side 
+            elif label_tstring.Contains(self.signal_model+"1200"):#because the M_ljv lower limit is 800GeV, so, just use right side 
                 rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,1229,970,2070);
                 rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 71.6,60 ,80);
                 rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 45.,0.01,45);
@@ -565,7 +573,7 @@ class doFit_wj_and_wlvj:
                 rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2.15,0.5,5.);
 
 
-            elif label_tstring.Contains("WW1400"):#because the M_ljv lower limit is 800GeV, so, just use right side 
+            elif label_tstring.Contains(self.signal_model+"1400"):#because the M_ljv lower limit is 800GeV, so, just use right side 
                 rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,1429,970,2070);
                 rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 71.6,60 ,80);
                 rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 45.,0.01,45);
@@ -574,7 +582,7 @@ class doFit_wj_and_wlvj:
                 rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2.15,0.5,5.);
 
 
-            elif label_tstring.Contains("WW1600"):#because the M_ljv lower limit is 800GeV, so, just use right side 
+            elif label_tstring.Contains(self.signal_model+"1600"):#because the M_ljv lower limit is 800GeV, so, just use right side 
                 rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,1629,970,2070);
                 rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 71.6,60 ,80);
                 rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 45.,0.01,45);
@@ -583,7 +591,7 @@ class doFit_wj_and_wlvj:
                 rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2.15,0.5,5.);
 
 
-            elif label_tstring.Contains("WW1800"):#because the M_ljv lower limit is 800GeV, so, just use right side 
+            elif label_tstring.Contains(self.signal_model+"1800"):#because the M_ljv lower limit is 800GeV, so, just use right side 
                 rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,1829,970,2070);
                 rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 71.6,60 ,80);
                 rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 45.,0.01,45);
@@ -591,7 +599,7 @@ class doFit_wj_and_wlvj:
                 rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,3.1,0.1,8);
                 rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2.15,0.5,5.);
 
-            elif label_tstring.Contains("WW2000"):#because the M_ljv lower limit is 800GeV, so, just use right side 
+            elif label_tstring.Contains(self.signal_model+"2000"):#because the M_ljv lower limit is 800GeV, so, just use right side 
                 rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2025,1500,3500);
                 rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 100,50 ,150);
                 rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 4.,0.01,45);
@@ -599,7 +607,7 @@ class doFit_wj_and_wlvj:
                 rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,4.,0.01,35);
                 rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,3.,0.5,6.);
 
-            elif label_tstring.Contains("WW2500"):#because the M_ljv lower limit is 800GeV, so, just use right side 
+            elif label_tstring.Contains(self.signal_model+"2500"):#because the M_ljv lower limit is 800GeV, so, just use right side 
                 rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2500,2000,3000);
                 rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,100,20 ,300);
                 rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 4.,0.01,45);
@@ -607,7 +615,7 @@ class doFit_wj_and_wlvj:
                 rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2.,0.01,35);
                 rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,3.,0.5,6.);
 
-            elif label_tstring.Contains("WW3000"):#because the M_ljv lower limit is 800GeV, so, just use right side 
+            elif label_tstring.Contains(self.signal_model+"3000"):#because the M_ljv lower limit is 800GeV, so, just use right side 
                 rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,3000,2500,3500);
                 rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,100,20 ,300);
                 rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 4.,0.01,45);
@@ -615,7 +623,7 @@ class doFit_wj_and_wlvj:
                 rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2.,0.01,35);
                 rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,3.,0.5,6.);
 
-            elif label_tstring.Contains("WW3500"):#because the M_ljv lower limit is 800GeV, so, just use right side 
+            elif label_tstring.Contains(self.signal_model+"3500"):#because the M_ljv lower limit is 800GeV, so, just use right side 
                 rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,3500,2500,4000);
                 rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 150,100 ,300);
                 rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 4.,0.01,45);
@@ -623,7 +631,7 @@ class doFit_wj_and_wlvj:
                 rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2.,0.01,35);
                 rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,3.,0.5,6.);
 
-            elif label_tstring.Contains("WW4000"):#because the M_ljv lower limit is 800GeV, so, just use right side 
+            elif label_tstring.Contains(self.signal_model+"4000"):#because the M_ljv lower limit is 800GeV, so, just use right side 
                 rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,4000,3500,4500);
                 rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 160,100 ,300);
                 rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 4.,0.01,45);
@@ -631,7 +639,7 @@ class doFit_wj_and_wlvj:
                 rrv_n2_CB     = RooRealVar("rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,2.,0.01,35);
                 rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,3.,0.5,6.);
 
-            elif label_tstring.Contains("WW4500"):#because the M_ljv lower limit is 800GeV, so, just use right side 
+            elif label_tstring.Contains(self.signal_model+"4500"):#because the M_ljv lower limit is 800GeV, so, just use right side 
                 rrv_mean_CB  = RooRealVar("rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_mean_CB"+label+"_"+self.channel+"_"+self.wtagger_category,4545,4000,5000);
                 rrv_sigma_CB = RooRealVar("rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_sigma_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 155,100 ,300);
                 rrv_n1_CB     = RooRealVar("rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_n1_CB"+label+"_"+self.channel+"_"+self.wtagger_category, 7.5,0.01,45);
@@ -649,7 +657,7 @@ class doFit_wj_and_wlvj:
                 #rrv_alpha2_CB = RooRealVar("rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,"rrv_alpha2_CB"+label+"_"+self.channel+"_"+self.wtagger_category,3.,0.5,6.);
 
             if options.closuretest>0:
-                rrv_mean_CB.setConstant(kTRUE)
+                #rrv_mean_CB.setConstant(kTRUE)
                 rrv_sigma_CB.setConstant(kTRUE)
                 rrv_n1_CB.setConstant(kTRUE)
                 rrv_n2_CB.setConstant(kTRUE)
@@ -1382,9 +1390,9 @@ class doFit_wj_and_wlvj:
         self.workspace4fit_.var("rrv_number"+label+"_"+self.channel+"_mj").setVal( self.workspace4fit_.var("rrv_number"+label+"_"+self.channel+"_mj").getVal()*self.workspace4fit_.var("rrv_scale_to_lumi"+label+"_"+self.channel).getVal() )
         self.workspace4fit_.var("rrv_number"+label+"_"+self.channel+"_mj").setError(self.workspace4fit_.var("rrv_number"+label+"_"+self.channel+"_mj").getError()*self.workspace4fit_.var("rrv_scale_to_lumi"+label+"_"+self.channel).getVal() )
 
-        if TString(label).Contains("ggH"):
-            self.workspace4fit_.var("rrv_number"+label+"_"+self.channel+"_mj").setVal( self.workspace4fit_.var("rrv_number"+label+"_"+self.channel+"_mj").getVal() )
-            self.workspace4fit_.var("rrv_number"+label+"_"+self.channel+"_mj").setError(self.workspace4fit_.var("rrv_number"+label+"_"+self.channel+"_mj").getError() )
+        ##if TString(label).Contains("ggH"):
+        ##    self.workspace4fit_.var("rrv_number"+label+"_"+self.channel+"_mj").setVal( self.workspace4fit_.var("rrv_number"+label+"_"+self.channel+"_mj").getVal() )
+        ##    self.workspace4fit_.var("rrv_number"+label+"_"+self.channel+"_mj").setError(self.workspace4fit_.var("rrv_number"+label+"_"+self.channel+"_mj").getError() )
         self.workspace4fit_.var("rrv_number"+label+"_"+self.channel+"_mj").Print();
 
         ##### apply the correction of the mean and sigma from the ttbar control sample to the STop, TTbar and VV 
@@ -3026,10 +3034,11 @@ class doFit_wj_and_wlvj:
         self.fix_Pdf(self.workspace4limit_.pdf("VV_xww_%s_%s"%(self.channel,self.wtagger_category)), RooArgSet(rrv_x));
         self.fix_Pdf(self.workspace4limit_.pdf("WJets_xww_%s_%s"%(self.channel,self.wtagger_category)), RooArgSet(rrv_x));
         
-        if TString(self.signal_sample).Contains("BulkG_WW"):            
-            self.fix_Pdf(self.workspace4limit_.pdf("BulkWW_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x));
-        else:    
-            self.fix_Pdf(self.workspace4limit_.pdf(self.signal_sample+"_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x));
+        ##if TString(self.signal_sample).Contains("BulkG_WW"):            
+        ##    self.fix_Pdf(self.workspace4limit_.pdf("BulkWW_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x));
+        ##else:    
+        ##    self.fix_Pdf(self.workspace4limit_.pdf(self.signal_sample+"_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x));
+        self.fix_Pdf(self.workspace4limit_.pdf(self.signal_sample+"_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x));
 
         print " ############## Workspace for limit ";
         parameters_workspace = self.workspace4limit_.allVars();
@@ -3504,14 +3513,15 @@ class doFit_wj_and_wlvj:
 
         rrv_x = workspace.var("rrv_mass_lvj")
         data_obs = workspace.data("data_obs_xww_%s_%s"%(self.channel,self.wtagger_category));
-        if TString(self.signal_sample).Contains("RS1G_WW"):
-            model_pdf_signal = workspace.pdf("RSWW_xww_%s_%s"%(self.channel,self.wtagger_category));
-        elif TString(self.signal_sample).Contains("BulkGraviton"):
-            model_pdf_signal = workspace.pdf("BulkWW_xww_%s_%s"%(self.channel,self.wtagger_category));
-        elif TString(self.signal_sample).Contains("Wprime_WZ"):
-            model_pdf_signal = workspace.pdf("WprimeWZ_xww_%s_%s"%(self.channel,self.wtagger_category));
-        else:
-            model_pdf_signal = workspace.pdf("%s_xww_%s_%s"%(self.signal_sample,self.channel,self.wtagger_category));
+        #if TString(self.signal_sample).Contains("RS1G_WW"):
+        #    model_pdf_signal = workspace.pdf("RSWW_xww_%s_%s"%(self.channel,self.wtagger_category));
+        #elif TString(self.signal_sample).Contains("BulkGraviton"):
+        #    model_pdf_signal = workspace.pdf("BulkWW_xww_%s_%s"%(self.channel,self.wtagger_category));
+        #elif TString(self.signal_sample).Contains("Wprime_WZ"):
+        #    model_pdf_signal = workspace.pdf("WprimeWZ_xww_%s_%s"%(self.channel,self.wtagger_category));
+        #else:
+        #    model_pdf_signal = workspace.pdf("%s_xww_%s_%s"%(self.signal_sample,self.channel,self.wtagger_category));
+        model_pdf_signal = workspace.pdf("%s_xww_%s_%s"%(self.signal_sample,self.channel,self.wtagger_category));
             
         model_pdf_WJets  = workspace.pdf("WJets_xww_%s_%s"%(self.channel,self.wtagger_category));
         model_pdf_VV     = workspace.pdf("VV_xww_%s_%s"%(self.channel,self.wtagger_category));
@@ -3524,14 +3534,15 @@ class doFit_wj_and_wlvj:
         model_pdf_TTbar.Print();
         model_pdf_STop.Print();
 
-        if TString(self.signal_sample).Contains("RS1G_WW"):
-            rrv_number_signal = workspace.var("rate_RSWW_xww_for_unbin");
-        elif TString(self.signal_sample).Contains("BulkGraviton"):
-            rrv_number_signal = workspace.var("rate_BulkWW_xww_for_unbin");
-        elif TString(self.signal_sample).Contains("Wprime_WZ"):
-            rrv_number_signal = workspace.var("rate_WprimeWZ_xww_for_unbin");
-        else:
-            rrv_number_signal = workspace.var("rate_%s_xww_for_unbin"%(self.signal_sample));
+        #if TString(self.signal_sample).Contains("RS1G_WW"):
+        #    rrv_number_signal = workspace.var("rate_RSWW_xww_for_unbin");
+        #elif TString(self.signal_sample).Contains("BulkGraviton"):
+        #    rrv_number_signal = workspace.var("rate_BulkWW_xww_for_unbin");
+        #elif TString(self.signal_sample).Contains("Wprime_WZ"):
+        #    rrv_number_signal = workspace.var("rate_WprimeWZ_xww_for_unbin");
+        #else:
+        #    rrv_number_signal = workspace.var("rate_%s_xww_for_unbin"%(self.signal_sample));
+        rrv_number_signal = workspace.var("rate_%s_xww_for_unbin"%(self.signal_sample));
             
          
         rrv_number_WJets  = workspace.var("rate_WJets_xww_for_unbin");
@@ -3791,14 +3802,15 @@ class doFit_wj_and_wlvj:
 
         rrv_x = workspace.var("rrv_mass_lvj")
         data_obs = workspace.data("data_obs_xww_%s_%s"%(self.channel,self.wtagger_category));
-        if TString(self.signal_sample).Contains("RS1G_WW"):
-            model_pdf_signal = workspace.pdf("RSWW_xww_%s_%s"%(self.channel,self.wtagger_category));
-        elif TString(self.signal_sample).Contains("BulkGraviton"):
-            model_pdf_signal = workspace.pdf("BulkWW_xww_%s_%s"%(self.channel,self.wtagger_category));
-        elif TString(self.signal_sample).Contains("Wprime_WZ"):
-            model_pdf_signal = workspace.pdf("WprimeWZ_xww_%s_%s"%(self.channel,self.wtagger_category));
-        else:
-            model_pdf_signal = workspace.pdf("%s_xww_%s_%s"%(self.signal_sample,self.channel,self.wtagger_category));
+        ##if TString(self.signal_sample).Contains("RS1G_WW"):
+        ##    model_pdf_signal = workspace.pdf("RSWW_xww_%s_%s"%(self.channel,self.wtagger_category));
+        ##elif TString(self.signal_sample).Contains("BulkGraviton"):
+        ##    model_pdf_signal = workspace.pdf("BulkWW_xww_%s_%s"%(self.channel,self.wtagger_category));
+        ##elif TString(self.signal_sample).Contains("Wprime_WZ"):
+        ##    model_pdf_signal = workspace.pdf("WprimeWZ_xww_%s_%s"%(self.channel,self.wtagger_category));
+        ##else:
+        ##    model_pdf_signal = workspace.pdf("%s_xww_%s_%s"%(self.signal_sample,self.channel,self.wtagger_category));
+        model_pdf_signal = workspace.pdf("%s_xww_%s_%s"%(self.signal_sample,self.channel,self.wtagger_category));
             
         model_pdf_WJets  = workspace.pdf("WJets_xww_%s_%s"%(self.channel,self.wtagger_category));
         model_pdf_VV     = workspace.pdf("VV_xww_%s_%s"%(self.channel,self.wtagger_category));
@@ -3811,14 +3823,15 @@ class doFit_wj_and_wlvj:
         model_pdf_TTbar.Print();
         model_pdf_STop.Print();
 
-        if TString(self.signal_sample).Contains("RS1G_WW"):
-            rrv_number_signal = workspace.var("rate_RSWW_xww_for_unbin");
-        elif TString(self.signal_sample).Contains("BulkGraviton"):
-            rrv_number_signal = workspace.var("rate_BulkWW_xww_for_unbin");
-        elif TString(self.signal_sample).Contains("Wprime_WZ"):
-            rrv_number_signal = workspace.var("rate_WprimeWZ_xww_for_unbin");
-        else:
-            rrv_number_signal = workspace.var("rate_%s_xww_for_unbin"%(self.signal_sample));
+        ##if TString(self.signal_sample).Contains("RS1G_WW"):
+        ##    rrv_number_signal = workspace.var("rate_RSWW_xww_for_unbin");
+        ##elif TString(self.signal_sample).Contains("BulkGraviton"):
+        ##    rrv_number_signal = workspace.var("rate_BulkWW_xww_for_unbin");
+        ##elif TString(self.signal_sample).Contains("Wprime_WZ"):
+        ##    rrv_number_signal = workspace.var("rate_WprimeWZ_xww_for_unbin");
+        ##else:
+        ##    rrv_number_signal = workspace.var("rate_%s_xww_for_unbin"%(self.signal_sample));
+        rrv_number_signal = workspace.var("rate_%s_xww_for_unbin"%(self.signal_sample));
             
          
         rrv_number_WJets  = workspace.var("rate_WJets_xww_for_unbin");
@@ -4792,90 +4805,18 @@ class doFit_wj_and_wlvj:
                     elif TString(objName).Data()=="WJets" : objName_before=objName; entryCnt = entryCnt+1; continue;
                     elif TString(objName).Contains("vbfH"): theLeg.AddEntry(theObj, (TString(objName).ReplaceAll("vbfH","qqH")).Data() ,"L");
                     elif TString(objName).Contains("Uncertainty"): theLeg.AddEntry(theObj, objTitle,drawoption);
-                    elif TString(objName).Contains("Wprime") and TString(objName).Contains("M2000"):
+                    elif TString(objName).Contains("Wprime"):
                         objName_signal_graviton = theObj ;
-                        objNameLeg_signal_graviton = "W' M_{W'}=2 TeV";
-                    elif TString(objName).Contains("RS1") or TString(objName).Contains("Bulk"):
-                        print "!!!! objName ",  objName
+                        tmp_mass=int( filter(str.isdigit, objName) ) /1000 #TeV
+                        objNameLeg_signal_graviton = "W' M_{W}=%s TeV (#times%s)"%(tmp_mass, self.signal_scale*20);
+                    elif TString(objName).Contains("RS") or TString(objName).Contains("Bulk"):
                         prefix = ""
-                        if TString(objName).Contains("RS1"): prefix = "RS"
+                        if TString(objName).Contains("RS"): prefix = "RS"
                         elif TString(objName).Contains("Bulk"): prefix = "Bulk"
+                        objName_signal_graviton = theObj ;
+                        tmp_mass=int( filter(str.isdigit, objName) ) /1000 #TeV
+                        objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=%s TeV (#times%s)"%(tmp_mass, self.signal_scale*20);
 
-                        if TString(objName).Contains("WW600"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=0.6 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW700"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=0.7 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW750"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=750 GeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW800"):
-                            objName_signal_graviton = theObj ; 
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=0.8 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW900"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=0.9 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW1000"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW1100"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.1 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW1200"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.2 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW1300"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.3 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW1400"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.4 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW1500"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.5 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW1600"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.6 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW1700"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.7 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW1800"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.8 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW1900"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=1.9 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW2000"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW2100"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.1 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW2200"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.2 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW2300"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.3 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW2400"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.4 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW2500"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=2.5 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW3000"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=3 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW3500"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=3.5 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW4000"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=4 TeV (#times%s)"%(self.signal_scale*20);
-                        if TString(objName).Contains("WW4500"):
-                            objName_signal_graviton = theObj ;
-                            objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=4.5 TeV (#times%s)"%(self.signal_scale*20);
                     else : theLeg.AddEntry(theObj, objTitle,drawoption);
                 entryCnt=entryCnt+1;
             objName_before=objName;
@@ -5541,11 +5482,12 @@ def control_single_sb_correction(method, channel, signal_sample="ggH600", in_mlv
 def pre_limit_simple(channel):
     print "######################### pre_limit_simple for %s sampel"%(channel)
 
-    pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW750",650, 850,40,150, 600,1500,"ExpN","ExpTail")
+    #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW750",650, 850,40,150, 600,1500,"ExpN","ExpTail")
     #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW750",650, 850,40,150, 600,1500,"ExpTail","ExpN")
     #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW4000",3900,4100,40,150, 800,5000,"ExpN","Exp")
     #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW4500",4400,4600,40,150, 800,5000,"ExpTail","ExpN")
     #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW4000",3900,4100,40,150, 800,5000,"ExpN","ExpTail")
+    pre_limit_sb_correction_without_systermatic(channel, "WprimeWZ1000",900,1100,40,150, 600,1500,"ExpN","ExpTail")
 
 def fit_signal(method, channel, signal_sample,  in_mlvj_min, in_mlvj_max): # the WJets M_lvj shape and normalization are from sb_correction
     boostedW_fitter=doFit_wj_and_wlvj(channel, signal_sample, in_mlvj_min, in_mlvj_max, 40, 150, in_mlvj_min, in_mlvj_max);
