@@ -142,13 +142,13 @@ xsDict_munubb =  {
 #        }
 
 signal_scaleup =  {
-         600: 0.02, 
-         700: 0.03,
-         750: 0.04,    
-         800: 0.05, 
-         900: 0.1, 
-        1000: 0.15,
-        1200: 0.4,  
+         600: 1, 
+         700: 1,
+         750: 1,    
+         800: 1, 
+         900: 1, 
+        1000: 1,
+        1200: 1,  
         1400: 1,  
         1600: 3,  
         1800: 5,  
@@ -404,7 +404,7 @@ def doULPlot( suffix ):
 
     leg2.Draw();
 
-    banner = TLatex(0.95, 0.96, "4.0 fb^{-1} (13 TeV)");
+    banner = TLatex(0.95, 0.96, "6.26 fb^{-1} (13 TeV)");
     banner.SetNDC(); banner.SetTextSize(0.038); banner.SetTextFont(42); banner.SetTextAlign(31); banner.SetLineWidth(2); banner.Draw();
     CMStext = TLatex(0.15,0.96,"CMS");
     CMStext.SetNDC(); CMStext.SetTextSize(0.041); CMStext.SetTextFont(61); CMStext.SetTextAlign(11); CMStext.SetLineWidth(2); CMStext.Draw();
