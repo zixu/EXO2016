@@ -313,24 +313,43 @@ class doFit_wj_and_wlvj:
             'Other_Backgrounds' : kBlue
         }
         ### signal scaled up to save to datacard, the signal will be scalue up by additional 20 in the plots
-        table_signalscale =  {
-             600: 1, 
-             700: 1, 
-             750: 1, 
-             800: 1, 
-             900: 1, 
-            1000: 1,
-            1200: 1,  
-            1400: 1,  
-            1600: 3,  
-            1800: 5,  
-            2000: 10,  
-            2500: 50,  
-            3000: 300,  
-            3500: 2000,  
-            4000: 5000,  
-            4500: 20000 }
-        self.signal_scale=table_signalscale[self.signal_mass];
+        if self.signal_model=="BulkGravWW":
+            table_signalscale =  {
+                 600: 1, 
+                 700: 1, 
+                 750: 1, 
+                 800: 1, 
+                 900: 1, 
+                1000: 1,
+                1200: 1,  
+                1400: 1,  
+                1600: 3,  
+                1800: 5,  
+                2000: 10,  
+                2500: 50,  
+                3000: 300,  
+                3500: 2000,  
+                4000: 5000,  
+                4500: 20000 }
+        elif self.signal_model=="WprimeWZ":
+            table_signalscale =  {
+                 800: 1, 
+                1000: 1,
+                1200: 1,  
+                1400: 1,  
+                1600: 1,  
+                1800: 1,  
+                2000: 1,  
+                2500: 1,  
+                3000: 3,  
+                3500: 20,  
+                4000: 50,  
+                4500: 200 }
+        self.signal_scale     =table_signalscale[self.signal_mass]; ## scale factor for datacard and plot
+        if self.signal_model=="BulkGravWW":
+            self.signal_scale_plot=20 ## one more scale factor for plot
+        elif self.signal_model=="WprimeWZ":
+            self.signal_scale_plot=10 ## one more scale factor for plot
 
         # parameters of data-driven method to get the WJets background event number.
         self.number_WJets_insideband=-1;
@@ -3601,7 +3620,7 @@ class doFit_wj_and_wlvj:
 
         model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("STop_line_invisible"), RooFit.Components("STop_xww_%s_%s"%(self.channel,self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines());
 
-        model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*self.signal_scale*20),RooFit.Name("%s #times %s"%(self.signal_sample, self.signal_scale*20)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
+        model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*self.signal_scale*self.signal_scale_plot),RooFit.Name("%s #times %s"%(self.signal_sample, self.signal_scale*self.signal_scale_plot)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
 
         #### plot the observed data using poissonian error bar
         self.getData_PoissonInterval(data_obs,mplot);
@@ -3890,7 +3909,7 @@ class doFit_wj_and_wlvj:
 
         model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Name("STop_line_invisible"), RooFit.Components("STop_xww_%s_%s"%(self.channel,self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines());
 
-        model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*self.signal_scale*20),RooFit.Name("%s #times %s"%(self.signal_sample, self.signal_scale*20)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
+        model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*self.signal_scale*self.signal_scale_plot),RooFit.Name("%s #times %s"%(self.signal_sample, self.signal_scale*self.signal_scale_plot)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
 
         #### plot the observed data using poissonian error bar
         self.getData_PoissonInterval(data_obs,mplot);
@@ -4201,7 +4220,7 @@ class doFit_wj_and_wlvj:
 
 
         model_pdf_signal = RooAddPdf("model_pdf_signal","model_pdf_signal",RooArgList(model_pdf_signal1, model_pdf_signal2),RooArgList(rrv_number_signal1,rrv_number_signal2));
-        model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*self.signal_scale),RooFit.Name("%s #times %s"%(self.signal_sample, self.signal_scale)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
+        model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*self.signal_scale*self.signal_scale_plot),RooFit.Name("%s #times %s"%(self.signal_sample, self.signal_scale*self.signal_scale_plot)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
 
         #### plot the observed data using poissonian error bar
         self.getData_PoissonInterval(data_obs,mplot);
@@ -4516,7 +4535,7 @@ class doFit_wj_and_wlvj:
 
 
         model_pdf_signal = RooAddPdf("model_pdf_signal","model_pdf_signal",RooArgList(model_pdf_signal1, model_pdf_signal2),RooArgList(rrv_number_signal1,rrv_number_signal2));
-        model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*self.signal_scale),RooFit.Name("%s #times %s"%(self.signal_sample, self.signal_scale)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
+        model_pdf_signal.plotOn(mplot,RooFit.Normalization(scale_number_signal*self.signal_scale*self.signal_scale_plot),RooFit.Name("%s #times %s"%(self.signal_sample, self.signal_scale*self.signal_scale_plot)),RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines());
 
         #### plot the observed data using poissonian error bar
         self.getData_PoissonInterval(data_obs,mplot);
@@ -4807,15 +4826,15 @@ class doFit_wj_and_wlvj:
                     elif TString(objName).Contains("Uncertainty"): theLeg.AddEntry(theObj, objTitle,drawoption);
                     elif TString(objName).Contains("Wprime"):
                         objName_signal_graviton = theObj ;
-                        tmp_mass=int( filter(str.isdigit, objName) ) /1000 #TeV
-                        objNameLeg_signal_graviton = "W' M_{W}=%s TeV (#times%s)"%(tmp_mass, self.signal_scale*20);
+                        tmp_mass=int(filter(str.isdigit, (objName.split())[0]))/1000.0 #TeV, for example: "WprimeWZ800 #times 20" -> 800/1000=0.8
+                        objNameLeg_signal_graviton = "W' M_{W}=%s TeV (#times%s)"%(tmp_mass, self.signal_scale*self.signal_scale_plot);
                     elif TString(objName).Contains("RS") or TString(objName).Contains("Bulk"):
                         prefix = ""
                         if TString(objName).Contains("RS"): prefix = "RS"
                         elif TString(objName).Contains("Bulk"): prefix = "Bulk"
                         objName_signal_graviton = theObj ;
-                        tmp_mass=int( filter(str.isdigit, objName) ) /1000 #TeV
-                        objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=%s TeV (#times%s)"%(tmp_mass, self.signal_scale*20);
+                        tmp_mass=int(filter(str.isdigit, (objName.split())[0]))/1000.0 #TeV, for example: "WprimeWZ800 #times 20" -> 800/1000=0.8
+                        objNameLeg_signal_graviton = "G_{"+prefix+"}"+" M_{G}=%s TeV (#times%s)"%(tmp_mass, self.signal_scale*self.signal_scale_plot);
 
                     else : theLeg.AddEntry(theObj, objTitle,drawoption);
                 entryCnt=entryCnt+1;
