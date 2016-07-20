@@ -329,7 +329,7 @@ def doULPlot( suffix ):
     ybins_th = array('d', [])
     
     for i in range(len(mass)):
-        curFile = "higgsCombine_lim_%03d%s.Asymptotic.mH%03d.root"%(mass[i],suffix,mass[i]);
+        curFile = "higgsCombine_lim_%s%03d%s.Asymptotic.mH%03d.root"%( options.signalmodel, mass[i], suffix, mass[i]);
         print "curFile: %s"%curFile;
         if options.lvjBR:
             sf = table_signalscale[mass[i]]*xsDict_lvj[mass[i]]; #*0.1057*0.577; # BR(W->munu)*BR(H->bb)
@@ -353,7 +353,7 @@ def doULPlot( suffix ):
             ybins_th.append(xsDict[mass[i]]);#/20.); #*0.25);
     
     for i in range( len(mass)-1, -1, -1 ):
-        curFile = "higgsCombine_lim_%03d%s.Asymptotic.mH%03d.root"%(mass[i],suffix,mass[i]);
+        curFile = "higgsCombine_lim_%s%03d%s.Asymptotic.mH%03d.root"%( options.signalmodel, mass[i], suffix, mass[i]);
         print "curFile: %s"%curFile;
         if options.lvjBR:
           sf = table_signalscale[mass[i]]*xsDict_lvj[mass[i]]; #*0.1057*0.577; # BR(W->munu)*BR(H->bb)
@@ -412,16 +412,28 @@ def doULPlot( suffix ):
     can_SM = ROOT.TCanvas("can_SM","can_SM",630,600);
     
     hrl_SM = can_SM.DrawFrame(mass[0]/1000.,1e-4, mass[nPoints-1]/1000., 1e2);
-    if options.lvjBR:
-        hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{Bulk} #rightarrow WW #rightarrow l#nuj) (pb)");
-    else:
-        hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{Bulk} #rightarrow WW) (pb)");
+
+    if options.signalmodel=="BulkGravWW":
+        if options.lvjBR:
+            hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{Bulk} #rightarrow WW #rightarrow l#nuj) (pb)");
+        else:
+            hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{Bulk} #rightarrow WW) (pb)");
+    elif options.signalmodel=="WprimeWZ":
+        if options.lvjBR:
+            hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow W' #rightarrow WZ #rightarrow l#nuj) (pb)");
+        else:
+            hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow W' #rightarrow WZ) (pb)");
 
     hrl_SM.GetYaxis().SetTitleOffset(1.35);
     hrl_SM.GetYaxis().SetTitleSize(0.045);
     hrl_SM.GetYaxis().SetTitleFont(42);
 
-    hrl_SM.GetXaxis().SetTitle("M_{G} (TeV)");
+    if options.signalmodel=="BulkGravWW":
+        hrl_SM.GetXaxis().SetTitle("M_{G} (TeV)");
+    elif options.signalmodel=="WprimeWZ":
+        hrl_SM.GetXaxis().SetTitle("M_{W'} (TeV)");
+
+
     hrl_SM.GetXaxis().SetTitleSize(0.045);
     hrl_SM.GetXaxis().SetTitleFont(42);
 
@@ -446,7 +458,10 @@ def doULPlot( suffix ):
     leg2.AddEntry(curGraph_obs,"Asympt. CL_{S} Observed","LP")
     leg2.AddEntry(curGraph_1s,"Asympt. CL_{S}  Expected #pm 1#sigma","LF")
     leg2.AddEntry(curGraph_2s,"Asympt. CL_{S}  Expected #pm 2#sigma","LF")
-    leg2.AddEntry(curGraph_th,"Bulk model","L");
+    if options.signalmodel=="BulkGravWW":
+        leg2.AddEntry(curGraph_th,"Graviton","L");
+    elif options.signalmodel=="WprimeWZ":
+        leg2.AddEntry(curGraph_th,"W'","L");
 
     #ROOT.gPad.SetLogx();
     ROOT.gPad.SetLogy();
@@ -473,12 +488,12 @@ def doULPlot( suffix ):
         Extratext.SetNDC(); Extratext.SetTextSize(0.032); Extratext.SetTextFont(52); Extratext.SetTextAlign(11); Extratext.SetLineWidth(2); Extratext.Draw();
         
     os.system("mkdir -p %s/LimitResult/"%(os.getcwd()));
-    os.system("mkdir -p %s/LimitResult/Limit_sys%s/"%(os.getcwd(), options.Sys));
+    os.system("mkdir -p %s/LimitResult/Limit_%s_sys%s/"%(os.getcwd(), options.signalmodel, options.Sys));
 
-    can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.png"%(options.Sys, suffix));
-    can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.pdf"%(options.Sys, suffix));
+    can_SM.SaveAs("./LimitResult/Limit_%s_sys%s/Lim%s.png"%(options.signalmodel, options.Sys, suffix));
+    can_SM.SaveAs("./LimitResult/Limit_%s_sys%s/Lim%s.pdf"%(options.signalmodel, options.Sys, suffix));
     #can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.root"%(options.Sys, suffix));
-    can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.C"%(options.Sys, suffix));
+    can_SM.SaveAs("./LimitResult/Limit_%s_sys%s/Lim%s.C"%(options.signalmodel, options.Sys, suffix));
 
 
 #################
@@ -542,10 +557,10 @@ if __name__ == '__main__':
                     os.system(cmd_comb)
 
                 #runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2 -S %d --run expected --rMax rMaxs[i]"%(mass[i],mass[i],options.channel ,mass[i],options.channel, options.Sys);
-                runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_%s%03d_%s_HP_unbin.txt -v 2 -S %d --run expected "%(mass[i],mass[i],options.channel ,options.signalmodel ,mass[i],options.channel, options.Sys);
+                runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%s%03d_%s_HP -d wwlvj_%s%03d_%s_HP_unbin.txt -v 2 -S %d --run expected "%(mass[i] ,options.signalmodel,mass[i],options.channel ,options.signalmodel ,mass[i],options.channel, options.Sys);
 
                 print runCmmd2;
-                os.system(runCmmd2);
+                #os.system(runCmmd2);
                 time.sleep(0.1);
 
 
