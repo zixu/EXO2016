@@ -9,20 +9,48 @@ python g1_exo_doFit_class.py --control -c mu -b
 
 Do Full Analysis:
 
-python runLimitsB2GWW.py --channel mu --makeCards -b 
+##for WprimeWZ
 
-python runLimitsB2GWW.py --channel el --makeCards -b 
+python runLimitsB2GWW.py --channel mu --makeCards -b --signalmodel WprimeWZ
+ 
+python runLimitsB2GWW.py --channel el --makeCards -b --signalmodel WprimeWZ
+ 
 
 
-python runLimitsB2GWW.py --channel mu --computeLimits
+python runLimitsB2GWW.py --channel mu --computeLimits --signalmodel WprimeWZ
+ 
+python runLimitsB2GWW.py --channel el --computeLimits --signalmodel WprimeWZ
+ 
+python runLimitsB2GWW.py --channel em --computeLimits --signalmodel WprimeWZ
 
-python runLimitsB2GWW.py --channel el --computeLimits
+ 
+python runLimitsB2GWW.py --channel mu --plotLimits -b --signalmodel WprimeWZ
+ 
+python runLimitsB2GWW.py --channel el --plotLimits -b --signalmodel WprimeWZ
+ 
+python runLimitsB2GWW.py --channel em --plotLimits -b --signalmodel WprimeWZ
+ 
 
-python runLimitsB2GWW.py --channel em --computeLimits
 
-python runLimitsB2GWW.py --channel mu --plotLimits -b
 
-python runLimitsB2GWW.py --channel el --plotLimits -b
+# for BulkGravWW
 
-python runLimitsB2GWW.py --channel em --plotLimits -b
+
+python runLimitsB2GWW.py --channel mu --makeCards -b --signalmodel BulkGravWW 
+
+python runLimitsB2GWW.py --channel el --makeCards -b --signalmodel BulkGravWW  
+
+
+python runLimitsB2GWW.py --channel mu --computeLimits --signalmodel BulkGravWW  
+
+python runLimitsB2GWW.py --channel el --computeLimits --signalmodel BulkGravWW  
+
+python runLimitsB2GWW.py --channel em --computeLimits --signalmodel BulkGravWW  
+
+
+python runLimitsB2GWW.py --channel mu --plotLimits -b --signalmodel BulkGravWW  
+
+python runLimitsB2GWW.py --channel el --plotLimits -b --signalmodel BulkGravWW  
+
+python runLimitsB2GWW.py --channel em --plotLimits -b --signalmodel BulkGravWW  
 
