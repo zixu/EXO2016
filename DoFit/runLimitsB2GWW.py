@@ -560,7 +560,7 @@ if __name__ == '__main__':
                 runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%s%03d_%s_HP -d wwlvj_%s%03d_%s_HP_unbin.txt -v 2 -S %d --run expected "%(mass[i] ,options.signalmodel,mass[i],options.channel ,options.signalmodel ,mass[i],options.channel, options.Sys);
 
                 print runCmmd2;
-                #os.system(runCmmd2);
+                os.system(runCmmd2);
                 time.sleep(0.1);
 
 
