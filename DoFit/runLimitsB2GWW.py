@@ -1,17 +1,17 @@
 #! /usr/bin/env python
 import os
-import glob
-import math
-import array
-import sys
+#import glob
+#import math
+#import array
+#import sys
 import time
 
 from array import array
 
 import ROOT
 from ROOT import gROOT, gStyle, gSystem, TLatex, TH1D, TString, TPaveText, TGaxis
-import subprocess
-from subprocess import Popen
+#import subprocess
+#from subprocess import Popen
 from optparse import OptionParser
 
 ############################################
@@ -36,8 +36,8 @@ parser.add_option('--lvjBR', action='store_true', dest='lvjBR', default=True, he
 parser.add_option('--fitSignal', action='store_true', dest='fitSignal', default=False, help='do signal lineshape fits')
 
 ### other options 
-parser.add_option('--signal',action="store",type="string",dest="signal",default="BulkGravWW")
-#parser.add_option('--signal',action="store",type="string",dest="signal",default="WprimeWZ")
+#parser.add_option('--signalmodel',action="store",type="string",dest="signalmodel",default="BulkGravWW")
+parser.add_option('--signalmodel',action="store",type="string",dest="signalmodel",default="WprimeWZ")
 parser.add_option('--channel',action="store",type="string",dest="channel",default="mu")
 parser.add_option('--massPoint',action="store",type="int",dest="massPoint",default=-1)
 #parser.add_option('--cPrime',action="store",type="int",dest="cPrime",default=-1)
@@ -58,7 +58,7 @@ parser.add_option('--Sys', action='store',type="int", dest='Sys', default=1, hel
 ### Global Variables for running jobs ###
 #########################################
 
-if options.signals= "BulkGravWW":
+if options.signalmodel=="BulkGravWW":
     ### mass point for signal to be fitted
     mass      = [600,700,750,800,900,1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
     binwidth  = [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1]
@@ -143,24 +143,24 @@ if options.signals= "BulkGravWW":
             }
 
 
-elif option.signal= "WprimeWZ":
+elif options.signalmodel=="WprimeWZ":
     ### mass point for signal to be fitted
-    mass      = [800,900,1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
-    binwidth  = [0,0,0,1,1,1,1,1,1,1,1,1,1]
+    mass      = [800,1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
+    binwidth  = [0,0,1,1,1,1,1,1,1,1,1,1]
     ### mass window for couting analysis
-    ccmlo     = [700, 800, 900,1100,1300,1500,1700,1900,2400,2900,3400,3900,4400 ] 
-    ccmhi     = [900,1000,1100,1300,1500,1700,1900,2100,2600,3100,3600,4100,4600 ]
+    ccmlo     = [700, 900,1100,1300,1500,1700,1900,2400,2900,3400,3900,4400 ] 
+    ccmhi     = [900,1100,1300,1500,1700,1900,2100,2600,3100,3600,4100,4600 ]
     ### jet mass range
-    mjlo      = [ 40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40]
-    mjhi      = [150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150]
+    mjlo      = [ 40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40]
+    mjhi      = [150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150]
     ### mlvj range min and max used when run with option --makeCards
     #fit range
-    mlo       = [ 600, 600, 600, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800]
-    #mlo       = [ 600, 600, 600,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000]
-    mhi       = [1500,1500,1500,5000,5000,5000,5000,5000,5000,5000,5000,5000,5000]
+    mlo       = [ 600, 600, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800]
+    #mlo       = [ 600, 600,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000]
+    mhi       = [1500,1500,5000,5000,5000,5000,5000,5000,5000,5000,5000,5000]
     ### shape to be used for bkg when --makeCards
-    shape    = ["ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN"]
-    shapeAlt = ["ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail"]
+    shape    = ["ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN"]
+    shapeAlt = ["ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail"]
     #shapeAlt = [ "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp"]
 
     ### shape to be used for bkg when --fitSignal
@@ -171,53 +171,48 @@ elif option.signal= "WprimeWZ":
     ##################################################
     #  cross-sections for HVT and LH model  #
     ##################################################
-    xsDict =  {
-            800:    76.0582930*1e-3, 
-            900:    38.2161000*1e-3, 
-            1000:   20.4996930*1e-3,
-            1200: 6.841404   *1e-3,  
-            1400: 2.625789675*1e-3,  
-            1600: 1.1031223*1e-3,  
-            1800: 0.49976082 *1e-3,  
-            2000: 0.239518815*1e-3,  
-            2500: 0.044885148*1e-3,  
-            3000: 0.009824256*1e-3,  
-            3500: 0.002409958*1e-3,  
-            4000: 0.000622786*1e-3,  
-            4500: 0.000168503*1e-3
+    xsDict =  { # Z->hadron 69.91%, W->lnu 10.8%, W-> hadron 67.67%
+             800: 153.25     *1e-3/0.2265, 
+            1000: 102.236    *1e-3/0.2265, 
+            1200: 56.357     *1e-3/0.2265, 
+            1400: 31.283     *1e-3/0.2265,   
+            1600: 17.844     *1e-3/0.2265, 
+            1800: 10.458     *1e-3/0.2265,   
+            2000: 6.273      *1e-3/0.2265,   
+            2500: 1.8842     *1e-3/0.2265,   
+            3000: 0.6039     *1e-3/0.2265,   
+            3500: 0.19991    *1e-3/0.2265,   
+            4000: 0.064901   *1e-3/0.2265,   
+            4500: 0.021981241*1e-3/0.2265  
             }
     xsDict_lvj =  {
-            800:    76.0582930*1e-3*0.44, 
-            900:    38.2161000*1e-3*0.44, 
-            1000:   20.4996930*1e-3*0.44,
-            1200: 6.841404   *1e-3*0.44,  
-            1400: 2.625789675*1e-3*0.44,  
-            1600: 1.1031223*1e-3*0.44,  
-            1800: 0.49976082 *1e-3*0.44,  
-            2000: 0.239518815*1e-3*0.44,  
-            2500: 0.044885148*1e-3*0.44,  
-            3000: 0.009824256*1e-3*0.44,  
-            3500: 0.002409958*1e-3*0.44,  
-            4000: 0.000622786*1e-3*0.44,  
-            4500: 0.000168503*1e-3*0.44
+             800: 153.25     *1e-3, 
+            1000: 102.236    *1e-3,
+            1200: 56.357     *1e-3,  
+            1400: 31.283     *1e-3,  
+            1600: 17.844     *1e-3,  
+            1800: 10.458     *1e-3,  
+            2000: 6.273      *1e-3,  
+            2500: 1.8842     *1e-3,  
+            3000: 0.6039     *1e-3,  
+            3500: 0.19991    *1e-3,  
+            4000: 0.064901   *1e-3,  
+            4500: 0.021981241*1e-3
             }
     
     table_signalscale =  {
-             800: 1, 
-             900: 1, 
-            1000: 1,
-            1200: 1,  
-            1400: 1,  
-            1600: 3,  
-            1800: 5,  
-            2000: 10,  
-            2500: 50,  
-            3000: 300,  
-            3500: 2000,  
-            4000: 5000,  
-            4500: 20000
-            }
-
+                 800: 1, 
+                1000: 1,
+                1200: 1,  
+                1400: 1,  
+                1600: 1,  
+                1800: 1,  
+                2000: 1,  
+                2500: 1,  
+                3000: 3,  
+                3500: 20,  
+                4000: 50,  
+                4500: 200 }
 
 
 ################################
@@ -526,9 +521,7 @@ if __name__ == '__main__':
             print "###################################################";
                 
             time.sleep(0.3);
-            #command_makeCards = "nohup python B2GWW_doFit_class.py %s BulkGravWW%03d %02d %02d %02d %02d %02d %02d %s %s -b -m %01d --inPath %s --category %s --closuretest %01d  -w %01d &"%(CHAN, mass[i], ccmlo[i], ccmhi[i], mjlo[i], mjhi[i], mlo[i], mhi[i], shape[i], shapeAlt[i], 1, os.getcwd(), options.category,options.closuretest, binwidth[i]);
-            #command_makeCards = "python B2GWW_doFit_class.py %s BulkGravWW%03d %02d %02d %02d %02d %02d %02d %s %s -b -m %01d --inPath %s --category %s --closuretest %01d  -w %01d "%(CHAN, mass[i], ccmlo[i], ccmhi[i], mjlo[i], mjhi[i], mlo[i], mhi[i], shape[i], shapeAlt[i], 1, os.getcwd(), options.category,options.closuretest, binwidth[i]);
-            command_makeCards = "python newstyle_B2GWW_doFit_class.py %s BulkGravWW%03d %02d %02d %02d %02d %02d %02d %s %s -b -m %01d --inPath %s --category %s --closuretest %01d  --realdata 1 -w %01d "%(CHAN, mass[i], ccmlo[i], ccmhi[i], mjlo[i], mjhi[i], mlo[i], mhi[i], shape[i], shapeAlt[i], 1, os.getcwd(), options.category,options.closuretest, binwidth[i]);
+            command_makeCards = "python newstyle_B2GWW_doFit_class.py %s %s%03d %02d %02d %02d %02d %02d %02d %s %s -b -m %01d --inPath %s --category %s --closuretest %01d  --realdata 1 -w %01d "%(CHAN,options.signalmodel, mass[i], ccmlo[i], ccmhi[i], mjlo[i], mjhi[i], mlo[i], mhi[i], shape[i], shapeAlt[i], 1, os.getcwd(), options.category,options.closuretest, binwidth[i]);
             print command_makeCards ;
             os.system(command_makeCards);
                  
@@ -542,14 +535,14 @@ if __name__ == '__main__':
             if options.limitMode==0:
                 if options.channel=="em":
                     cmd_comb= 'combineCards.py '
-                    cmd_comb += 'wwlvj_BulkGravWW%s_el_HP_unbin.txt ' %(mass[i]) 
-                    cmd_comb += 'wwlvj_BulkGravWW%s_mu_HP_unbin.txt ' %(mass[i])
-                    cmd_comb += '> wwlvj_BulkGravWW%s_em_HP_unbin.txt'%(mass[i])
+                    cmd_comb += 'wwlvj_%s%s_el_HP_unbin.txt ' %(options.signalmodel,mass[i]) 
+                    cmd_comb += 'wwlvj_%s%s_mu_HP_unbin.txt ' %(options.signalmodel,mass[i])
+                    cmd_comb += '> wwlvj_%s%s_em_HP_unbin.txt'%(options.signalmodel,mass[i])
                     print cmd_comb
                     os.system(cmd_comb)
 
                 #runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2 -S %d --run expected --rMax rMaxs[i]"%(mass[i],mass[i],options.channel ,mass[i],options.channel, options.Sys);
-                runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2 -S %d --run expected "%(mass[i],mass[i],options.channel ,mass[i],options.channel, options.Sys);
+                runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_%s%03d_%s_HP_unbin.txt -v 2 -S %d --run expected "%(mass[i],mass[i],options.channel ,options.signalmodel ,mass[i],options.channel, options.Sys);
 
                 print runCmmd2;
                 os.system(runCmmd2);
