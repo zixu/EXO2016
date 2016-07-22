@@ -44,12 +44,19 @@ parser.add_option('--massPoint',action="store",type="int",dest="massPoint",defau
 parser.add_option('--odir',action="store",type="string",dest="odir",default=".")
 parser.add_option('--category',action="store",type="string",dest="category",default="HP") #"HP")
 parser.add_option('--closuretest', action='store',type="int", dest='closuretest', default=0, help='closure test; 0: no test; 1: A1->A2; 2: A->B')
-#parser.add_option('--batchMode', action='store_true', dest='batchMode', default=False, help='no X11 windows')
 parser.add_option('--limitMode', action='store',type="int", dest='limitMode', default=0, help='limit Mode; 0: Asymptotic ; 1: ProfileLikelihood ; 2: FullCLs ; 3: MaxLikelihoodFit')
 #parser.add_option('--isReReco', action='store',type="int", dest='isReReco', default=1, help='limit Mode; 0: Old signal samples ; 1: New signal Samples')
 parser.add_option('--Sys', action='store',type="int", dest='Sys', default=1, help='run limit with or without systematic')
 #parser.add_option('--plotPvalue', action='store',type="int", default=0, dest='plotPvalue', help='plot p value')
 #parser.add_option('--signalWidth', action='store',type="int", default=0, dest='signalWidth', help='analysis on non-narrow signals')
+
+##### submit jobs to condor, lxbatch and hercules 
+parser.add_option('--batchMode',      action='store_true', dest='batchMode',      default=False, help='to run jobs on condor fnal')
+parser.add_option('--lxbatchCern',    action='store_true', dest='lxbatchCern',    default=False, help='run jobs on lxbatch system at cern, default is condor fnal')
+parser.add_option('--herculesMilano', action='store_true', dest='herculesMilano', default=False, help='run jobs on hercules system at Milano, default is condor fnal')
+parser.add_option('--queque',      action="store", type="string", dest="queque",      default="8nh")
+
+
 
 
 (options, args) = parser.parse_args()
@@ -75,7 +82,7 @@ if options.signalmodel=="BulkGravWW":
     mhi       = [ 1500,1500,1500,1500,1500,1500,5000,5000,5000,5000,5000,5000,5000,5000,5000,5000]
     ### shape to be used for bkg when --makeCards
     shape    = ["ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN"]
-    shapeAlt = [ "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail"]
+    shapeAlt = [ "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp"]
     #shapeAlt = [ "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp"]
 
     ### shape to be used for bkg when --fitSignal
@@ -160,7 +167,7 @@ elif options.signalmodel=="WprimeWZ":
     mhi       = [1500,1500,5000,5000,5000,5000,5000,5000,5000,5000,5000,5000]
     ### shape to be used for bkg when --makeCards
     shape    = ["ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN"]
-    shapeAlt = ["ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail", "ExpTail"]
+    shapeAlt = [ "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp"]
     #shapeAlt = [ "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp"]
 
     ### shape to be used for bkg when --fitSignal
@@ -213,6 +220,99 @@ elif options.signalmodel=="WprimeWZ":
                 3500: 20,  
                 4000: 50,  
                 4500: 200 }
+########################################
+###### Submit batch job for cards ######
+########################################
+
+def submitBatchJob( command, fn ):
+       
+    currentDir = os.getcwd();
+    CMSSWDir = currentDir+"/../";
+       
+    # create a dummy bash/csh
+    outScript = open(fn+".sh","w");
+    
+    if not options.lxbatchCern and not options.herculesMilano :
+        outScript.write('#!/bin/bash');
+        outScript.write("\n"+'date');
+        outScript.write("\n"+'source /uscmst1/prod/sw/cms/bashrc prod');
+        outScript.write("\n"+'echo "condor dir: " ${_CONDOR_SCRATCH_DIR}');    
+        outScript.write("\n"+'cd '+currentDir);
+        outScript.write("\n"+'eval `scram runtime -sh`');
+        outScript.write("\n"+'cd -');    
+        outScript.write("\n"+'export PATH=${PATH}:'+currentDir);
+        outScript.write("\n"+'echo ${PATH}');
+        outScript.write("\n"+'ls'); 
+        outScript.write("\n"+command);  
+        outScript.write("\n"+'tar -cvzf outputFrom_'+fn+'.tar.gz *');    
+        outScript.close();
+   
+        condorScript = open("condor_"+fn,"w");
+        condorScript.write('universe = vanilla')
+        condorScript.write("\n"+"Executable = "+fn+".sh")
+        condorScript.write("\n"+'Requirements = Memory >= 199 &&OpSys == "LINUX"&& (Arch != "DUMMY" )&& Disk > 1000000')
+        condorScript.write("\n"+'Should_Transfer_Files = YES')
+        #condorScript.write("\n"+'Transfer_Input_Files = doFit_class_higgs.py, BiasStudy/do_fitBias_higgs.py, AutoDict_std__map_std__string_std__string__cxx.so')    
+        condorScript.write("\n"+'Transfer_Input_Files = newstyle_B2GWW_doFit_class.py, CMS_lumi.py, tdrstyle.py, ./PDFs/PdfDiagonalizer_cc.so, ./PDFs/Util_cxx.so, ./PDFs/HWWLVJRooPdfs_cxx.so')    
+        condorScript.write("\n"+'WhenToTransferOutput  = ON_EXIT_OR_EVICT')
+        condorScript.write("\n"+'Output = out_$(Cluster).stdout')
+        condorScript.write("\n"+'Error  = out_$(Cluster).stderr')
+        condorScript.write("\n"+'Error  = out_$(Cluster).stderr')
+        condorScript.write("\n"+'Log    = out_$(Cluster).log')
+        condorScript.write("\n"+'Notification    = Error')
+        condorScript.write("\n"+'Queue 1')
+        condorScript.close();
+   
+        print ("condor_submit "+"condor_"+fn);
+        os.system("condor_submit "+"condor_"+fn);
+   
+    elif options.lxbatchCern and not options.herculesMilano:
+        outScript.write('#!/bin/bash');
+        outScript.write("\n"+'cd '+CMSSWDir);
+        outScript.write("\n"+'eval `scram runtime -sh`');
+        outScript.write("\n"+'cd -');
+        outScript.write("\necho $PWD");
+        outScript.write("\nls");
+        #outScript.write("\ncp -r "+currentDir+"/PDFs ./")
+        #outScript.write("\ncp -r "+currentDir+"/PKUTree_final_6p26fb_Jul18 ./")
+        outScript.write("\ncp -r "+currentDir+"/CMS_lumi.py ./")
+        outScript.write("\ncp -r "+currentDir+"/tdrstyle.py ./")
+        outScript.write("\ncp -r "+currentDir+"/newstyle_B2GWW_doFit_class.py ./")
+
+        outScript.write("\n"+command);
+        #outScript.write("\n"+'rm *.out');  
+        outScript.write("\ncp -r cards_B2GWW "+currentDir)
+        outScript.write("\ncp -r doFit_plots_B2GWW "+currentDir)
+
+        outScript.close();
+               
+        os.system("chmod 777 "+currentDir+"/"+fn+".sh");
+        if options.queque != "":
+            print ("bsub -q "+options.queque+" -cwd "+currentDir+" "+fn+".sh");
+            os.system("bsub -q "+options.queque+" -cwd "+currentDir+" "+fn+".sh");
+        else:
+            print ("bsub -q cmscaf1nd -cwd "+currentDir+" "+fn+".sh");
+            os.system("bsub -q cmscaf1nd -cwd "+currentDir+" "+fn+".sh");
+            
+    elif not options.lxbatchCern and options.herculesMilano:
+        outScript.write('#!/bin/bash');
+        outScript.write("\n"+'cd '+currentDir);
+        outScript.write("\n"+'eval `scram runtime -sh`');
+        outScript.write("\n"+'cd -');
+        outScript.write("\n"+'cp '+currentDir+'/BiasStudy/do_fitBias_higgs.py ./');
+        outScript.write("\n"+'cp '+currentDir+'/doFit_class_higgs.py ./');
+        outScript.write("\n"+'ls');  
+        outScript.write("\n"+"unbuffer "+command+" > /gwteray/users/brianza/output"+fn+".txt");
+        outScript.close();
+               
+        os.system("chmod 777 "+currentDir+"/"+fn+".sh");
+        
+        if options.queque != "":
+            os.system("qsub -V -d "+currentDir+" -q "+options.queque+" "+currentDir+"/"+fn+".sh");
+        else:
+            os.system("qsub -V -d "+currentDir+" -q longcms "+currentDir+"/"+fn+".sh");
+      
+
 
 
 ################################
@@ -538,7 +638,14 @@ if __name__ == '__main__':
             time.sleep(0.3);
             command_makeCards = "python newstyle_B2GWW_doFit_class.py %s %s%03d %02d %02d %02d %02d %02d %02d %s %s -b -m %01d --inPath %s --category %s --closuretest %01d  --realdata 1 -w %01d "%(CHAN,options.signalmodel, mass[i], ccmlo[i], ccmhi[i], mjlo[i], mjhi[i], mlo[i], mhi[i], shape[i], shapeAlt[i], 1, os.getcwd(), options.category,options.closuretest, binwidth[i]);
             print command_makeCards ;
-            os.system(command_makeCards);
+            #os.system(command_makeCards);
+
+            if options.batchMode :
+                fn = "fitScript_%s_%03d_HP_%s"%(options.channel,mass[i],shape[i]);
+                submitBatchJob( command_makeCards, fn );
+            if not options.batchMode: 
+                print command_makeCards ;
+                #os.system(command_makeCards);
                  
     ### Compute Limits
     if options.computeLimits:
