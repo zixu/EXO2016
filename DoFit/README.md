@@ -40,6 +40,10 @@ python runLimitsB2GWW.py --channel mu --makeCards -b --signalmodel BulkGravWW
 
 python runLimitsB2GWW.py --channel el --makeCards -b --signalmodel BulkGravWW  
 
+#batchMode at cern lxplus
+python runLimitsB2GWW.py --channel mu --makeCards -b --signalmodel BulkGravWW --batchMode --lxbatchCern
+python runLimitsB2GWW.py --channel el --makeCards -b --signalmodel BulkGravWW --batchMode --lxbatchCern
+
 
 python runLimitsB2GWW.py --channel mu --computeLimits --signalmodel BulkGravWW  
 
