@@ -14,7 +14,6 @@ import CMS_lumi, tdrstyle
 parser = OptionParser()
 
 parser.add_option('-a', '--additioninformation',action="store",type="string",dest="additioninformation",default="B2GWW")
-#parser.add_option('-a', '--additioninformation',action="store",type="string",dest="additioninformation",default="B2GWZ")
 parser.add_option('-b', action='store_true', dest='noX', default=True, help='no X11 windows')
 parser.add_option('-c', '--channel',action="store",type="string",dest="opt_channel",default="mu")
 #parser.add_option('-c', '--channel',action="store",type="string",dest="opt_channel",default="el")
@@ -118,16 +117,12 @@ class doFit_wj_and_wlvj:
         #prepare workspace for unbin-Limit -> just for the stuff on which running the limit 
         self.workspace4limit_ = RooWorkspace("workspace4limit_","workspace4limit_");
 
-
-
         self.signal_sample=in_signal_sample;
         self.signal_model=  filter(str.isalpha, in_signal_sample)  
         self.signal_mass=  int( filter(str.isdigit, in_signal_sample))  #GeV
         ##print self.signal_sample
         ##print self.signal_model
         ##print self.signal_mass
-        ##raw_input("zixu")
-
 
         ## different code operation mode -> just normal analysis
         if options.closuretest ==0:
@@ -269,8 +264,8 @@ class doFit_wj_and_wlvj:
             self.controlplot_WJets_scale=1.01
             self.controlplot_TTbar_scale=0.78
         if self.channel=="el": 
-            self.controlplot_WJets_scale=0.96
-            self.controlplot_TTbar_scale=0.80
+            self.controlplot_WJets_scale=1.00
+            self.controlplot_TTbar_scale=0.84
         self.controlplot_WJets_scale=1.0
         self.controlplot_TTbar_scale=1.0
         
@@ -357,7 +352,7 @@ class doFit_wj_and_wlvj:
         self.datadriven_alpha_WJets_counting=-1;
 
         ### uncertainty for datacard
-        self.lumi_uncertainty    = 0.05;
+        self.lumi_uncertainty    = 0.063;
 
         if self.signal_model=="BulkGravWW":
             table_signaluncertainty =  {
@@ -419,11 +414,11 @@ class doFit_wj_and_wlvj:
         if self.channel == "mu":
             self.signal_lepton_energy_scale_uncertainty = 0.007
             self.signal_lepton_energy_res_uncertainty   = 0.001
-            self.lep_eff_uncertainty     = 0.02
+            self.lep_eff_uncertainty     = 0.05
         elif self.channel == "el":
             self.signal_lepton_energy_scale_uncertainty = 0.002
             self.signal_lepton_energy_res_uncertainty   = 0.001
-            self.lep_eff_uncertainty     = 0.03
+            self.lep_eff_uncertainty     = 0.05
         else:
             raw_input("Fail to find correct channel. Please check your channel:%s"%(self.channel));
 
@@ -5501,12 +5496,12 @@ def control_single_sb_correction(method, channel, signal_sample="ggH600", in_mlv
 def pre_limit_simple(channel):
     print "######################### pre_limit_simple for %s sampel"%(channel)
 
-    #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW750",650, 850,40,150, 600,1500,"ExpN","ExpTail")
+    pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW750",650, 850,40,150, 600,1500,"ExpN","ExpTail")
     #pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW750",650, 850,40,150, 600,1500,"ExpTail","ExpN")
     #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW4000",3900,4100,40,150, 800,5000,"ExpN","Exp")
     #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW4500",4400,4600,40,150, 800,5000,"ExpTail","ExpN")
     #pre_limit_sb_correction_without_systermatic(channel,"BulkGravWW4000",3900,4100,40,150, 800,5000,"ExpN","ExpTail")
-    pre_limit_sb_correction_without_systermatic(channel, "WprimeWZ1000",900,1100,40,150, 600,1500,"ExpN","ExpTail")
+    #pre_limit_sb_correction_without_systermatic(channel, "WprimeWZ1000",900,1100,40,150, 600,1500,"ExpN","ExpTail")
 
 def fit_signal(method, channel, signal_sample,  in_mlvj_min, in_mlvj_max): # the WJets M_lvj shape and normalization are from sb_correction
     boostedW_fitter=doFit_wj_and_wlvj(channel, signal_sample, in_mlvj_min, in_mlvj_max, 40, 150, in_mlvj_min, in_mlvj_max);
