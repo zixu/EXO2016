@@ -46,6 +46,7 @@ parser.add_option('--category',action="store",type="string",dest="category",defa
 parser.add_option('--closuretest', action='store',type="int", dest='closuretest', default=0, help='closure test; 0: no test; 1: A1->A2; 2: A->B')
 parser.add_option('--limitMode', action='store',type="int", dest='limitMode', default=0, help='limit Mode; 0: Asymptotic ; 1: ProfileLikelihood ; 2: FullCLs ; 3: MaxLikelihoodFit')
 #parser.add_option('--isReReco', action='store',type="int", dest='isReReco', default=1, help='limit Mode; 0: Old signal samples ; 1: New signal Samples')
+parser.add_option('--keepblind', action='store',type="int", dest='keepblind', default=0, help='1: keepblind; 0: unblind')
 parser.add_option('--Sys', action='store',type="int", dest='Sys', default=1, help='run limit with or without systematic')
 #parser.add_option('--plotPvalue', action='store',type="int", default=0, dest='plotPvalue', help='plot p value')
 #parser.add_option('--signalWidth', action='store',type="int", default=0, dest='signalWidth', help='analysis on non-narrow signals')
@@ -281,8 +282,8 @@ def submitBatchJob( command, fn ):
 
         outScript.write("\n"+command);
         #outScript.write("\n"+'rm *.out');  
-        outScript.write("\ncp -r cards_B2GWW "+currentDir)
-        outScript.write("\ncp -r doFit_plots_B2GWW "+currentDir)
+        outScript.write("\ncp -r cards* "+currentDir)
+        outScript.write("\ncp -r doFit_plots* "+currentDir)
 
         outScript.close();
                
@@ -544,7 +545,8 @@ def doULPlot( suffix ):
 
     curGraph_2s.Draw("F");
     curGraph_1s.Draw("Fsame");
-    #curGraph_obs.Draw("PCsame");
+    if options.keepblind==0:
+        curGraph_obs.Draw("PCsame");
     curGraph_exp.Draw("Lsame");
     curGraph_th.Draw("Csame");
        
@@ -609,7 +611,7 @@ if __name__ == '__main__':
 
     ### Set the working directory
     if options.computeLimits or options.plotLimits:
-	os.chdir("cards_B2GWW/closuretest0_HP");    
+        os.chdir("cards_B2GWW_closuretest0_HP_"+shape[0]);    
 
     ### put in functionality to test just one mass point or just one cprime
 
@@ -636,7 +638,7 @@ if __name__ == '__main__':
             print "###################################################";
                 
             time.sleep(0.3);
-            command_makeCards = "python newstyle_B2GWW_doFit_class.py %s %s%03d %02d %02d %02d %02d %02d %02d %s %s -b -m %01d --inPath %s --category %s --closuretest %01d  --realdata 1 -w %01d "%(CHAN,options.signalmodel, mass[i], ccmlo[i], ccmhi[i], mjlo[i], mjhi[i], mlo[i], mhi[i], shape[i], shapeAlt[i], 1, os.getcwd(), options.category,options.closuretest, binwidth[i]);
+            command_makeCards = "python newstyle_B2GWW_doFit_class.py %s %s%03d %02d %02d %02d %02d %02d %02d %s %s -b -m %01d --inPath %s --category %s --closuretest %01d  --realdata 1  --keepblind %01d -w %01d "%(CHAN,options.signalmodel, mass[i], ccmlo[i], ccmhi[i], mjlo[i], mjhi[i], mlo[i], mhi[i], shape[i], shapeAlt[i], 1, os.getcwd(), options.category,options.closuretest, options.keepblind,  binwidth[i]);
             print command_makeCards ;
             #os.system(command_makeCards);
 
@@ -645,7 +647,7 @@ if __name__ == '__main__':
                 submitBatchJob( command_makeCards, fn );
             if not options.batchMode: 
                 print command_makeCards ;
-                #os.system(command_makeCards);
+                os.system(command_makeCards);
                  
     ### Compute Limits
     if options.computeLimits:
@@ -664,10 +666,11 @@ if __name__ == '__main__':
                     os.system(cmd_comb)
 
                 #runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%03d_%s_HP -d wwlvj_BulkGravWW%03d_%s_HP_unbin.txt -v 2 -S %d --run expected --rMax rMaxs[i]"%(mass[i],mass[i],options.channel ,mass[i],options.channel, options.Sys);
-                runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%s%03d_%s_HP -d wwlvj_%s%03d_%s_HP_unbin.txt -v 2 -S %d --run expected "%(mass[i] ,options.signalmodel,mass[i],options.channel ,options.signalmodel ,mass[i],options.channel, options.Sys);
+                #runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%s%03d_%s_HP -d wwlvj_%s%03d_%s_HP_unbin.txt -v 2 -S %d --run expected "%(mass[i] ,options.signalmodel,mass[i],options.channel ,options.signalmodel ,mass[i],options.channel, options.Sys);
+                runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%s%03d_%s_HP -d wwlvj_%s%03d_%s_HP_unbin.txt -v 2 -S %d "%(mass[i] ,options.signalmodel,mass[i],options.channel ,options.signalmodel ,mass[i],options.channel, options.Sys);
 
                 print runCmmd2;
-                os.system(runCmmd2);
+                #os.system(runCmmd2);
                 time.sleep(0.1);
 
 
