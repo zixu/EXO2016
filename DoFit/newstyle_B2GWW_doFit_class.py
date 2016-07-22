@@ -275,7 +275,7 @@ class doFit_wj_and_wlvj:
             os.system("mkdir -p %s"%(self.datacardsDir))
 
         #self.plotsDir = "plots_%s_%s_%s_closuretest%s"%(options.additioninformation,self.channel,self.wtagger_category, options.closuretest)
-        self.plotsDir = "doFit_plots_%s/closuretest%s_%s_%s"%(options.additioninformation, options.closuretest,self.channel,self.wtagger_category)
+        self.plotsDir = "doFit_plots_%s_%s/closuretest%s_%s_%s"%(options.additioninformation, fit_model, options.closuretest,self.channel,self.wtagger_category)
         if not os.path.isdir(self.plotsDir):
             os.system("mkdir -p %s"%(self.plotsDir))
 
@@ -4889,16 +4889,25 @@ class doFit_wj_and_wlvj:
         rlt_file.ReplaceAll(".png",".pdf");
         cMassFit.SaveAs(rlt_file.Data());
 
-        rlt_file.ReplaceAll(".pdf",".root");
-        cMassFit.SaveAs(rlt_file.Data());
+        ##rlt_file.ReplaceAll(".pdf",".root");
+        ##cMassFit.SaveAs(rlt_file.Data());
+
+        ##if logy:
+        ##    in_obj.GetYaxis().SetRangeUser(1e-3,in_obj.GetMaximum()*200);
+        ##    cMassFit.SetLogy() ;
+        ##    cMassFit.Update();
+        ##    rlt_file.ReplaceAll(".root","_log.root");
+        ##    cMassFit.SaveAs(rlt_file.Data());
+        ##    rlt_file.ReplaceAll(".root",".pdf");
+        ##    cMassFit.SaveAs(rlt_file.Data());
+        ##    rlt_file.ReplaceAll(".pdf",".png");
+        ##    cMassFit.SaveAs(rlt_file.Data());
 
         if logy:
             in_obj.GetYaxis().SetRangeUser(1e-3,in_obj.GetMaximum()*200);
             cMassFit.SetLogy() ;
             cMassFit.Update();
-            rlt_file.ReplaceAll(".root","_log.root");
-            cMassFit.SaveAs(rlt_file.Data());
-            rlt_file.ReplaceAll(".root",".pdf");
+            rlt_file.ReplaceAll(".pdf","_log.pdf");
             cMassFit.SaveAs(rlt_file.Data());
             rlt_file.ReplaceAll(".pdf",".png");
             cMassFit.SaveAs(rlt_file.Data());
@@ -5114,24 +5123,26 @@ class doFit_wj_and_wlvj:
         rlt_file.ReplaceAll(".png",".pdf");
         cMassFit.SaveAs(rlt_file.Data());
         
-        rlt_file.ReplaceAll(".pdf",".root");
-        cMassFit.SaveAs(rlt_file.Data());
+        ##rlt_file.ReplaceAll(".pdf",".root");
+        ##cMassFit.SaveAs(rlt_file.Data());
 
-        string_file_name = TString(in_file_name);
-        if string_file_name.EndsWith(".root"):
-            string_file_name.ReplaceAll(".root","_"+in_model_name);
-        else:
-            string_file_name.ReplaceAll(".root","");
-            string_file_name.Append("_"+in_model_name);
+        ##string_file_name = TString(in_file_name);
+        ##if string_file_name.EndsWith(".root"):
+        ##    string_file_name.ReplaceAll(".root","_"+in_model_name);
+        ##else:
+        ##    string_file_name.ReplaceAll(".root","");
+        ##    string_file_name.Append("_"+in_model_name);
 
         if logy:
             mplot.GetYaxis().SetRangeUser(0.002,mplot.GetMaximum()*200);
             pad2.SetLogy() ;
             pad2.Update();
             cMassFit.Update();
-            rlt_file.ReplaceAll(".root","_log.root");
-            cMassFit.SaveAs(rlt_file.Data());
-            rlt_file.ReplaceAll(".root",".pdf");
+            ##rlt_file.ReplaceAll(".root","_log.root");
+            ##cMassFit.SaveAs(rlt_file.Data());
+            ##rlt_file.ReplaceAll(".root",".pdf");
+            ##cMassFit.SaveAs(rlt_file.Data());
+            rlt_file.ReplaceAll(".pdf","_log.pdf");
             cMassFit.SaveAs(rlt_file.Data());
             rlt_file.ReplaceAll(".pdf",".png");
             cMassFit.SaveAs(rlt_file.Data());
@@ -5249,24 +5260,26 @@ class doFit_wj_and_wlvj:
         rlt_file.ReplaceAll(".png",".pdf");
         cMassFit.SaveAs(rlt_file.Data());
         
-        rlt_file.ReplaceAll(".pdf",".root");
-        cMassFit.SaveAs(rlt_file.Data());
+        #rlt_file.ReplaceAll(".pdf",".root");
+        #cMassFit.SaveAs(rlt_file.Data());
 
-        string_file_name = TString(in_file_name);
-        if string_file_name.EndsWith(".root"):
-            string_file_name.ReplaceAll(".root","_"+in_model_name);
-        else:
-            string_file_name.ReplaceAll(".root","");
-            string_file_name.Append("_"+in_model_name);
+        #string_file_name = TString(in_file_name);
+        #if string_file_name.EndsWith(".root"):
+        #    string_file_name.ReplaceAll(".root","_"+in_model_name);
+        #else:
+        #    string_file_name.ReplaceAll(".root","");
+        #    string_file_name.Append("_"+in_model_name);
 
         if logy:
             mplot.GetYaxis().SetRangeUser(0.002,mplot.GetMaximum()*200);
             pad2.SetLogy() ;
             pad2.Update();
             cMassFit.Update();
-            rlt_file.ReplaceAll(".root","_log.root");
-            cMassFit.SaveAs(rlt_file.Data());
-            rlt_file.ReplaceAll(".root",".pdf");
+            #rlt_file.ReplaceAll(".root","_log.root");
+            #cMassFit.SaveAs(rlt_file.Data());
+            #rlt_file.ReplaceAll(".root",".pdf");
+            #cMassFit.SaveAs(rlt_file.Data());
+            rlt_file.ReplaceAll(".pdf","_log.pdf");
             cMassFit.SaveAs(rlt_file.Data());
             rlt_file.ReplaceAll(".pdf",".png");
             cMassFit.SaveAs(rlt_file.Data());
