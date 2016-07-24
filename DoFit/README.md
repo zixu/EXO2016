@@ -11,9 +11,9 @@ Do Full Analysis:
 
 ##for WprimeWZ
 
-python runLimitsB2GWW.py --channel mu --makeCards -b --signalmodel WprimeWZ
+python runLimitsB2GWW.py --channel mu --makeCards -b --signalmodel WprimeWZ --batchMode --lxbatchCern
  
-python runLimitsB2GWW.py --channel el --makeCards -b --signalmodel WprimeWZ
+python runLimitsB2GWW.py --channel el --makeCards -b --signalmodel WprimeWZ --batchMode --lxbatchCern
  
 
 
