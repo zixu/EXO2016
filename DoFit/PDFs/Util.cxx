@@ -23,12 +23,16 @@
 #include "Math/Math.h"
 #include "Math/QuantFuncMathCore.h"
 
+#ifndef __CINT__
+#include "RooGlobalFunc.h"
+#endif
 #include "RooPlot.h"
 #include "TMath.h"
 #include "TROOT.h"
 #include "TFile.h"
 #include "TTree.h"
 #include "TH1F.h"
+#include "TH2.h"
 #include "TChain.h"
 #include "TString.h"
 #include "TRandom3.h"
@@ -50,6 +54,7 @@
 #include "RooDataSet.h"
 #include "RooDataHist.h"
 #include "RooGaussian.h"
+#include "RooMCStudy.h"
 #include "TCanvas.h"
 #include "RooPlot.h"
 #include "TTree.h"
@@ -58,9 +63,26 @@
 #include "TGraph.h"
 #include "TGraphAsymmErrors.h"
 #include <iostream>
-using namespace std;
 
-void Util(){}
+
+#include "RooFit.h"
+#include "RooRealVar.h"
+#include "RooDataSet.h"
+#include "RooGaussian.h"
+#include "RooConstVar.h"
+#include "RooChebychev.h"
+#include "RooAddPdf.h"
+#include "RooMCStudy.h"
+#include "RooPlot.h"
+#include "TCanvas.h"
+#include "TAxis.h"
+#include "TH2.h"
+#include "RooFitResult.h"
+#include "TStyle.h"
+#include "TDirectory.h"
+
+using namespace std;
+using namespace RooFit;
 
 /// function used to draw an error band around a RooAbsPdf -> used to draw the band after each fit
 void draw_error_band(RooAbsData &rdata, RooAbsPdf &rpdf, RooRealVar &rrv_number_events , RooFitResult *rfres, RooPlot *mplot, Int_t kcolor=6, std::string opt ="F", Int_t number_point=100, const Int_t number_errorband=2000){
@@ -739,3 +761,71 @@ double Calc_error( std::string rpdfname, std::string xaxis_name , RooArgList &pa
 }
 
 
+//void MCStudy(RooAbsPdf* model, RooRealVar x, RooRealVar para0, RooRealVar para1, TString picname){
+void MCStudy(RooAbsPdf* model, RooRealVar x, TString picname, Int_t nTop=400, Int_t nEvtPerSample=0){
+
+
+
+	RooArgSet* parameters_General= model->getParameters( RooArgSet(x));
+	parameters_General->Print("v");
+
+	RooRealVar *para0;
+	RooRealVar *para1;
+	TIterator* par=parameters_General->createIterator();
+	par->Reset();
+	RooRealVar* param=(RooRealVar*)par->Next();
+	for (Int_t i=0; param; i++ ){
+		param->Print();
+		if(i==0) para0=param;
+		if(i==1) para1=param;
+		param=(RooRealVar*)par->Next();
+	}
+	para0->Print("v");
+	para1->Print("v");
+	//Double_t tmpB; std::cin>>tmpB;
+	
+	RooMCStudy* mcstudy = new RooMCStudy(*model,x,Binned(kTRUE),Silence(),Extended(), FitOptions(Save(kTRUE),PrintEvalErrors(0))) ;
+	// G e n e r a t e   a n d   f i t   e v e n t s
+	// ---------------------------------------------
+
+	// Generate and fit 1000 samples of Poisson(nExpected) events
+	mcstudy->generateAndFit(nTop,nEvtPerSample);
+
+
+	// E x p l o r e   r e s u l t s   o f   s t u d y 
+	// ------------------------------------------------
+
+	// Make plots of the distributions of para0, the error on para0 and the pull of para0
+	RooPlot* frame1 = mcstudy->plotParam(*para0,Bins(40)) ;
+	RooPlot* frame2 = mcstudy->plotError(*para0,Bins(40)) ;
+	RooPlot* frame3 = mcstudy->plotPull(*para0,Bins(40),FitGauss(kTRUE)) ;
+
+	RooPlot* frame4 = mcstudy->plotParam(*para1,Bins(40)) ;
+	RooPlot* frame5 = mcstudy->plotError(*para1,Bins(40)) ;
+	RooPlot* frame6 = mcstudy->plotPull(*para1,Bins(40),FitGauss(kTRUE)) ;
+
+
+	// Plot distribution of minimized likelihood
+	RooPlot* frame7 = mcstudy->plotNLL(Bins(40)) ;
+
+	// Access some of the saved fit results from individual toys
+	TH2* corrHist000 = mcstudy->fitResult(0)->correlationHist("c000") ;
+	TH2* corrHist127 = mcstudy->fitResult(127)->correlationHist("c127") ;
+
+	// Draw all plots on a canvas
+	TStyle tmpstyle;
+	tmpstyle.SetPalette(1) ;
+	tmpstyle.SetOptStat(0) ;
+	TCanvas* c = new TCanvas("rf801_mcstudy","rf801_mcstudy",900,900) ;
+	c->Divide(3,3) ;
+	c->cd(1) ; gPad->SetLeftMargin(0.15) ; frame1->GetYaxis()->SetTitleOffset(1.4) ; frame1->Draw() ;
+	c->cd(2) ; gPad->SetLeftMargin(0.15) ; frame2->GetYaxis()->SetTitleOffset(1.4) ; frame2->Draw() ;
+	c->cd(3) ; gPad->SetLeftMargin(0.15) ; frame3->GetYaxis()->SetTitleOffset(1.4) ; frame3->Draw() ;
+	c->cd(4) ; gPad->SetLeftMargin(0.15) ; frame4->GetYaxis()->SetTitleOffset(1.4) ; frame4->Draw() ;
+	c->cd(5) ; gPad->SetLeftMargin(0.15) ; frame5->GetYaxis()->SetTitleOffset(1.4) ; frame5->Draw() ;
+	c->cd(6) ; gPad->SetLeftMargin(0.15) ; frame6->GetYaxis()->SetTitleOffset(1.4) ; frame6->Draw() ;
+	c->cd(7) ; gPad->SetLeftMargin(0.15) ; corrHist000->GetYaxis()->SetTitleOffset(1.4) ; corrHist000->Draw("colz") ;
+	c->cd(8) ; gPad->SetLeftMargin(0.15) ; corrHist127->GetYaxis()->SetTitleOffset(1.4) ; corrHist127->Draw("colz") ;
+
+	c->SaveAs(picname);
+}
