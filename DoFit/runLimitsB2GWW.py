@@ -525,7 +525,7 @@ def doULPlot( suffix ):
 
     can_SM = ROOT.TCanvas("can_SM","can_SM",630,600);
     
-    hrl_SM = can_SM.DrawFrame(mass[0]/1000.,1e-4, mass[nPoints-1]/1000., 1e2);
+    hrl_SM = can_SM.DrawFrame(mass[0]/1000.-0.01,1e-4, mass[nPoints-1]/1000.+0.01, 1e2);
 
     if options.signalmodel=="BulkGravWW":
         if options.lvjBR:
@@ -559,7 +559,7 @@ def doULPlot( suffix ):
     curGraph_2s.Draw("F");
     curGraph_1s.Draw("Fsame");
     if options.keepblind==0:
-        curGraph_obs.Draw("PCsame");
+        curGraph_obs.Draw("PLsame");
     curGraph_exp.Draw("Lsame");
     curGraph_th.Draw("Csame");
        
@@ -654,7 +654,6 @@ if __name__ == '__main__':
             time.sleep(0.3);
             command_makeCards = "python newstyle_B2GWW_doFit_class.py %s %s%03d %02d %02d %02d %02d %02d %02d %s %s -b -m %01d --inPath %s --category %s --closuretest %01d  --realdata 1  --keepblind %01d -w %01d "%(CHAN,options.signalmodel, mass[i], ccmlo[i], ccmhi[i], mjlo[i], mjhi[i], mlo[i], mhi[i], shape[i], shapeAlt[i], 1, os.getcwd(), options.category,options.closuretest, options.keepblind,  binwidth[i]);
             print command_makeCards ;
-            #os.system(command_makeCards);
 
             if options.batchMode :
                 fn = "fitScript_%s_%03d_HP_%s"%(options.channel,mass[i],shape[i]);
