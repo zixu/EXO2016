@@ -39,9 +39,12 @@ parser.add_option('--category', action="store",type="string",dest="opt_wtagger_c
 
 (options, args) = parser.parse_args()
 
-ROOT.gSystem.Load(options.inPath+"/PDFs/PdfDiagonalizer_cc.so")
-ROOT.gSystem.Load(options.inPath+"/PDFs/Util_cxx.so")
-ROOT.gSystem.Load(options.inPath+"/PDFs/HWWLVJRooPdfs_cxx.so")
+ROOT.gROOT.ProcessLine(".L %s/PDFs/PdfDiagonalizer.cc+"%(options.inPath));
+ROOT.gROOT.ProcessLine(".L %s/PDFs/HWWLVJRooPdfs.cxx+"%(options.inPath));
+ROOT.gROOT.ProcessLine(".L %s/PDFs/Util.cxx+"%(options.inPath));
+##ROOT.gSystem.Load(options.inPath+"/PDFs/PdfDiagonalizer_cc.so")
+##ROOT.gSystem.Load(options.inPath+"/PDFs/Util_cxx.so")
+##ROOT.gSystem.Load(options.inPath+"/PDFs/HWWLVJRooPdfs_cxx.so")
 
 from ROOT import gROOT, TPaveLabel, gStyle, gSystem, TGaxis, TStyle, TLatex, TString, TF1,TFile,TLine, TLegend, TH1D,TH2D,THStack, TGraph,TChain, TCanvas, TMatrixDSym, TMath, TText, TPad, RooFit, RooArgSet, RooArgList, RooAbsData, RooAbsPdf, RooAddPdf, RooWorkspace, RooExtendPdf,RooCBShape, RooFFTConvPdf, RooGaussian, RooBifurGauss, RooArgusBG,RooDataSet, RooExponential,RooBreitWigner, RooVoigtian, RooNovosibirsk, RooRealVar,RooFormulaVar, RooDataHist, RooHist,RooCategory, RooChebychev, RooSimultaneous, RooGenericPdf,RooConstVar, RooKeysPdf, RooHistPdf, RooEffProd, RooProdPdf, TIter, kTRUE, kFALSE, kGray, kRed, kDashed, kGreen, kOrange, kBlack, kBlue, kCyan, kMagenta, kWhite, draw_error_band, draw_error_band_extendPdf, draw_error_band_Decor, draw_error_band_shape_Decor, Calc_error_extendPdf, Calc_error, RooErfExpPdf, RooAlpha, RooAlpha4ErfPowPdf, RooAlpha4ErfPow2Pdf, RooAlpha4ErfPowExpPdf, PdfDiagonalizer, RooPowPdf, RooPow2Pdf, RooErfPowExpPdf, RooErfPowPdf, RooErfPow2Pdf, RooQCDPdf, RooUser1Pdf, RooBWRunPdf, RooAnaExpNPdf, RooExpNPdf,  RooExpTailPdf, RooAlpha4ExpTailPdf, Roo2ExpPdf, RooAlpha42ExpPdf, MCStudy
 
