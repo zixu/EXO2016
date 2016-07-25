@@ -83,8 +83,14 @@ if options.signalmodel=="BulkGravWW":
     mhi       = [ 1500,1500,1500,1500,1500,1500,5000,5000,5000,5000,5000,5000,5000,5000,5000,5000]
     ### shape to be used for bkg when --makeCards
     shape    = ["ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN"]
-    shapeAlt = [ "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp"]
     #shapeAlt = [ "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp"]
+    shapeAlt = [ "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow"]
+
+    #shape    = [ "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow"]
+    #shapeAlt = ["ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN"]
+
+    #shape    = [ "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp"]
+    #shapeAlt = ["ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN"]
 
     ### shape to be used for bkg when --fitSignal
     #shape_sig_width  = ["BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB"]
@@ -168,8 +174,15 @@ elif options.signalmodel=="WprimeWZ":
     mhi       = [1500,1500,5000,5000,5000,5000,5000,5000,5000,5000,5000,5000]
     ### shape to be used for bkg when --makeCards
     shape    = ["ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN"]
-    shapeAlt = [ "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp"]
+    shapeAlt = [ "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow"]
     #shapeAlt = [ "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp"]
+
+    #shape    = [ "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow"]
+    #shapeAlt = ["ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN"]
+
+
+    #shape    = [ "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp"]
+    #shapeAlt = ["ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN"]
 
     ### shape to be used for bkg when --fitSignal
     #shape_sig_width  = ["BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB"]
@@ -611,7 +624,8 @@ if __name__ == '__main__':
 
     ### Set the working directory
     if options.computeLimits or options.plotLimits:
-        os.chdir("cards_B2GWW_closuretest0_HP_"+shape[0]);    
+        #os.chdir("cards_B2GWW_closuretest0_HP_"+shape[0]);    
+        os.chdir("cards_B2GWW");    
 
     ### put in functionality to test just one mass point or just one cprime
 
@@ -670,7 +684,7 @@ if __name__ == '__main__':
                 runCmmd2 = "combine -M Asymptotic --minimizerAlgo Minuit2 --minosAlgo stepping -H ProfileLikelihood -m %03d -n _lim_%s%03d_%s_HP -d wwlvj_%s%03d_%s_HP_unbin.txt -v 2 -S %d "%(mass[i] ,options.signalmodel,mass[i],options.channel ,options.signalmodel ,mass[i],options.channel, options.Sys);
 
                 print runCmmd2;
-                #os.system(runCmmd2);
+                os.system(runCmmd2);
                 time.sleep(0.1);
 
 
