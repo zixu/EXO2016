@@ -16,6 +16,7 @@ python runLimitsB2GWW.py --channel mu --makeCards -b --signalmodel WprimeWZ --ba
 python runLimitsB2GWW.py --channel el --makeCards -b --signalmodel WprimeWZ --batchMode --lxbatchCern &
  
 
+rename datacards direcotory "cards_B2GWW_XXXX" to "cards_B2GWW", for example, ln -s cards_B2GWW_closuretest0_HP_ExpN cards_B2GWW
 
 python runLimitsB2GWW.py --channel mu --computeLimits --signalmodel WprimeWZ
  
@@ -44,6 +45,7 @@ python runLimitsB2GWW.py --channel el --makeCards -b --signalmodel BulkGravWW
 python runLimitsB2GWW.py --channel mu --makeCards -b --signalmodel BulkGravWW --batchMode --lxbatchCern &
 python runLimitsB2GWW.py --channel el --makeCards -b --signalmodel BulkGravWW --batchMode --lxbatchCern &
 
+rename datacards direcotory "cards_B2GWW_XXXX" to "cards_B2GWW", for example, ln -s cards_B2GWW_closuretest0_HP_ExpN cards_B2GWW
 
 python runLimitsB2GWW.py --channel mu --computeLimits --signalmodel BulkGravWW  
 
