@@ -30,6 +30,8 @@ parser.add_option('--realdata', action='store',type="int", dest='realdata', defa
 parser.add_option('--keepblind', action='store',type="int", dest='keepblind', default=1, help='keep blind for real data')
 parser.add_option('--fitsignal', action='store',type="int", dest='fitsignal', default=0, help='fit only signal lineshape with a chosen model')
 parser.add_option('--closuretest', action='store',type="int", dest='closuretest', default=0, help='closure test; 0: no test; 1: A1->A2; 2: A->B')
+parser.add_option('--MCStudy', action='store', dest='MCStudy', default=False, help='Do MCStudy for each fitTo')
+#parser.add_option('--MCStudy', action='store', dest='MCStudy', default=True, help='Do MCStudy for each fitTo')
 
 parser.add_option('--inPath', action="store",type="string",dest="inPath",default=".")
 parser.add_option('--category', action="store",type="string",dest="opt_wtagger_category",default="HP")#Wtagger Category: HP, LP, ALLP
@@ -41,7 +43,7 @@ ROOT.gSystem.Load(options.inPath+"/PDFs/PdfDiagonalizer_cc.so")
 ROOT.gSystem.Load(options.inPath+"/PDFs/Util_cxx.so")
 ROOT.gSystem.Load(options.inPath+"/PDFs/HWWLVJRooPdfs_cxx.so")
 
-from ROOT import gROOT, TPaveLabel, gStyle, gSystem, TGaxis, TStyle, TLatex, TString, TF1,TFile,TLine, TLegend, TH1D,TH2D,THStack, TGraph,TChain, TCanvas, TMatrixDSym, TMath, TText, TPad, RooFit, RooArgSet, RooArgList, RooAbsData, RooAbsPdf, RooAddPdf, RooWorkspace, RooExtendPdf,RooCBShape, RooFFTConvPdf, RooGaussian, RooBifurGauss, RooArgusBG,RooDataSet, RooExponential,RooBreitWigner, RooVoigtian, RooNovosibirsk, RooRealVar,RooFormulaVar, RooDataHist, RooHist,RooCategory, RooChebychev, RooSimultaneous, RooGenericPdf,RooConstVar, RooKeysPdf, RooHistPdf, RooEffProd, RooProdPdf, TIter, kTRUE, kFALSE, kGray, kRed, kDashed, kGreen, kOrange, kBlack, kBlue, kCyan, kMagenta, kWhite, draw_error_band, draw_error_band_extendPdf, draw_error_band_Decor, draw_error_band_shape_Decor, Calc_error_extendPdf, Calc_error, RooErfExpPdf, RooAlpha, RooAlpha4ErfPowPdf, RooAlpha4ErfPow2Pdf, RooAlpha4ErfPowExpPdf, PdfDiagonalizer, RooPowPdf, RooPow2Pdf, RooErfPowExpPdf, RooErfPowPdf, RooErfPow2Pdf, RooQCDPdf, RooUser1Pdf, RooBWRunPdf, RooAnaExpNPdf, RooExpNPdf,  RooExpTailPdf, RooAlpha4ExpTailPdf, Roo2ExpPdf, RooAlpha42ExpPdf
+from ROOT import gROOT, TPaveLabel, gStyle, gSystem, TGaxis, TStyle, TLatex, TString, TF1,TFile,TLine, TLegend, TH1D,TH2D,THStack, TGraph,TChain, TCanvas, TMatrixDSym, TMath, TText, TPad, RooFit, RooArgSet, RooArgList, RooAbsData, RooAbsPdf, RooAddPdf, RooWorkspace, RooExtendPdf,RooCBShape, RooFFTConvPdf, RooGaussian, RooBifurGauss, RooArgusBG,RooDataSet, RooExponential,RooBreitWigner, RooVoigtian, RooNovosibirsk, RooRealVar,RooFormulaVar, RooDataHist, RooHist,RooCategory, RooChebychev, RooSimultaneous, RooGenericPdf,RooConstVar, RooKeysPdf, RooHistPdf, RooEffProd, RooProdPdf, TIter, kTRUE, kFALSE, kGray, kRed, kDashed, kGreen, kOrange, kBlack, kBlue, kCyan, kMagenta, kWhite, draw_error_band, draw_error_band_extendPdf, draw_error_band_Decor, draw_error_band_shape_Decor, Calc_error_extendPdf, Calc_error, RooErfExpPdf, RooAlpha, RooAlpha4ErfPowPdf, RooAlpha4ErfPow2Pdf, RooAlpha4ErfPowExpPdf, PdfDiagonalizer, RooPowPdf, RooPow2Pdf, RooErfPowExpPdf, RooErfPowPdf, RooErfPow2Pdf, RooQCDPdf, RooUser1Pdf, RooBWRunPdf, RooAnaExpNPdf, RooExpNPdf,  RooExpTailPdf, RooAlpha4ExpTailPdf, Roo2ExpPdf, RooAlpha42ExpPdf, MCStudy
 
 ###############################
 ## doFit Class Implemetation ##
@@ -1374,6 +1376,7 @@ class doFit_wj_and_wlvj:
         rfresult = model.fitTo(rdataset_mj,RooFit.Save(1), RooFit.SumW2Error(kTRUE) ,RooFit.Extended(kTRUE), RooFit.Minimizer("Minuit2") );
         rfresult.Print();
 
+        if options.MCStudy: MCStudy(model, rrv_mass_j, "%s/other/%s/"%(self.plotsDir,self.signal_sample)+"try_"+model.GetName()+".png");
         ## Plot the result
         mplot = rrv_mass_j.frame(RooFit.Title(label+" fitted by "+in_model_name), RooFit.Bins(int(rrv_mass_j.getBins()/self.binwidth_narrow_factor)) );
         rdataset_mj.plotOn( mplot, RooFit.MarkerSize(1.5), RooFit.DataError(RooAbsData.SumW2), RooFit.XErrorSize(0) );
@@ -1651,6 +1654,7 @@ class doFit_wj_and_wlvj:
         rfresult = model.fitTo( rdataset, RooFit.Save(1), RooFit.SumW2Error(kTRUE) ,RooFit.Extended(kTRUE), RooFit.Minimizer("Minuit2") );
         rfresult.Print();
 
+        if options.MCStudy: MCStudy(model, rrv_mass_lvj, "%s/other/%s/"%(self.plotsDir,self.signal_sample)+"try_"+model.GetName()+".png");
         ## set the name of the result of the fit and put it in the workspace   
         rfresult.SetName("rfresult"+label+in_range+"_"+self.channel+"_mlvj")
         getattr(self.workspace4fit_,"import")(rfresult)
@@ -1687,6 +1691,7 @@ class doFit_wj_and_wlvj:
             rfresult_pdf = model_pdf.fitTo( rdataset, RooFit.Save(1), RooFit.SumW2Error(kTRUE), RooFit.Minimizer("Minuit"));
             rfresult_pdf = model_pdf.fitTo( rdataset, RooFit.Save(1), RooFit.SumW2Error(kTRUE), RooFit.Minimizer("Minuit2"));
             rfresult_pdf.Print();
+            if options.MCStudy: MCStudy(model, rrv_mass_lvj, "%s/other/%s/"%(self.plotsDir,self.signal_sample)+"try_"+model.GetName()+".png");
 
             ## temp workspace for the pdf diagonalizer
             wsfit_tmp = RooWorkspace("wsfit_tmp"+label+in_range+"_"+self.channel+"_mlvj");
@@ -1951,6 +1956,7 @@ class doFit_wj_and_wlvj:
         rfresult = model_data.fitTo( rdataset_data_mj, RooFit.Save(1) , RooFit.Range("sb_lo,sb_hi") ,RooFit.Extended(kTRUE), RooFit.NumCPU(2), RooFit.Minimizer("Minuit") );
         rfresult = model_data.fitTo( rdataset_data_mj, RooFit.Save(1) , RooFit.Range("sb_lo,sb_hi") ,RooFit.Extended(kTRUE), RooFit.NumCPU(2), RooFit.Minimizer("Minuit2") );
         rfresult.Print();
+        if options.MCStudy: MCStudy(model_data, rrv_mass_j, "%s/other/%s/"%(self.plotsDir,self.signal_sample)+"try_"+model_data.GetName()+".png");
         rfresult.covarianceMatrix().Print();
         getattr(self.workspace4fit_,"import")(model_data);
 
@@ -2179,6 +2185,7 @@ class doFit_wj_and_wlvj:
         rfresult = model_data.fitTo( rdataset_data_mlvj, RooFit.Save(1) ,RooFit.Extended(kTRUE), RooFit.Minimizer("Minuit"));
         rfresult = model_data.fitTo( rdataset_data_mlvj, RooFit.Save(1) ,RooFit.Extended(kTRUE), RooFit.Minimizer("Minuit2"));
         rfresult.Print();
+        if options.MCStudy: MCStudy(model_data, rrv_mass_lvj, "%s/other/%s/"%(self.plotsDir,self.signal_sample)+"try_"+model_data.GetName()+".png", 400, int(rdataset_data_mlvj.sumEntries()) );
         rfresult.covarianceMatrix().Print();
         getattr(self.workspace4fit_,"import")(model_data)
 
