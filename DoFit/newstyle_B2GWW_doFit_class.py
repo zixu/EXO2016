@@ -2188,7 +2188,7 @@ class doFit_wj_and_wlvj:
         rfresult = model_data.fitTo( rdataset_data_mlvj, RooFit.Save(1) ,RooFit.Extended(kTRUE), RooFit.Minimizer("Minuit"));
         rfresult = model_data.fitTo( rdataset_data_mlvj, RooFit.Save(1) ,RooFit.Extended(kTRUE), RooFit.Minimizer("Minuit2"));
         rfresult.Print();
-        if options.MCStudy: MCStudy(model_data, rrv_mass_lvj, "%s/other/%s/"%(self.plotsDir,self.signal_sample)+"try_"+model_data.GetName()+".png", 400, int(rdataset_data_mlvj.sumEntries()) );
+        if options.MCStudy: MCStudy(model_data, rrv_mass_lvj, "%s/other/%s/"%(self.plotsDir,self.signal_sample)+"MCStudy_"+model_data.GetName()+".png", 400, int(rdataset_data_mlvj.sumEntries()) );
         rfresult.covarianceMatrix().Print();
         getattr(self.workspace4fit_,"import")(model_data)
 
