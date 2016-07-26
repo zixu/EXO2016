@@ -52,10 +52,14 @@ from ROOT import gROOT, TPaveLabel, gStyle, gSystem, TGaxis, TStyle, TLatex, TSt
 ## doFit Class Implemetation ##
 ###############################
 
-class doFit_wj_and_wlvj:
+class DoFit:
     """Do WV->lvjet analysis"""
 
-    def __init__(self, in_channel, in_signal_sample, in_mlvj_signal_region_min=500, in_mlvj_signal_region_max=700, in_mj_min=40, in_mj_max=140, in_mlvj_min=400., in_mlvj_max=1400., fit_model = "ErfExp_v1", fit_model_alter = "ErfPow_v1", input_workspace=None):
+    def __init__(self, in_channel, in_signal_sample,
+            in_mlvj_signal_region_min=500, in_mlvj_signal_region_max=700, 
+            in_mj_min=40, in_mj_max=150, in_mlvj_min=600., in_mlvj_max=1500.,
+            fit_model = "ExpN", fit_model_alter = "Pow",
+            input_workspace=None):
 
         tdrstyle.setTDRStyle()
         TGaxis.SetMaxDigits(3)
@@ -513,7 +517,7 @@ class doFit_wj_and_wlvj:
             rrv_sigma_gaus = RooRealVar("rrv_sigma_gaus"+label+"_"+self.channel, "rrv_sigma_gaus"+label+"_"+self.channel, 7, 1, 15)
             model_pdf = RooGaussian("model_pdf"+label+"_"+self.channel+mass_spectrum, "model_pdf"+label+"_"+self.channel+mass_spectrum, rrv_x, rrv_mean_gaus, rrv_sigma_gaus)
 
-        ## Gaus for the higgs lineshape
+        ## Gaus for the signal lineshape
         if in_model_name == "Gaus_mlvj":
             print "########### Gaus for Higgs mlvj ############"
             rrv_mean_gaus  = RooRealVar("rrv_mean_gaus"+label+"_"+self.channel, "rrv_mean_gaus"+label+"_"+self.channel, 1000, 800, 1100)
@@ -529,7 +533,7 @@ class doFit_wj_and_wlvj:
             rrv_n_CB     = RooRealVar("rrv_n_CB"+label+"_"+self.channel, "rrv_n_CB"+label+"_"+self.channel, 2, 0., 4)
             model_pdf = RooCBShape("model_pdf"+label+"_"+self.channel+mass_spectrum, "model_pdf"+label+"_"+self.channel+mass_spectrum, rrv_x, rrv_mean_CB, rrv_sigma_CB, rrv_alpha_CB, rrv_n_CB)
 
-        ## Crystal  ball shape for Bulk GR samples and higgs
+        ## Crystal  ball shape for Bulk GR samples and signal
         if in_model_name == "CB_mlvj":
             print "########### Crystal Ball for Higgs and  Bulk GR  mlvj ############"
             label_tstring = TString(label)
@@ -540,7 +544,7 @@ class doFit_wj_and_wlvj:
             model_pdf = RooCBShape("model_pdf"+label+"_"+self.channel+mass_spectrum, "model_pdf"+label+"_"+self.channel+mass_spectrum, rrv_x, rrv_mean_CB, rrv_sigma_CB, rrv_alpha_CB, rrv_n_CB)
 
 
-        ## Crystal  ball shape for Bulk GR samples and higgs
+        ## Crystal  ball shape for Bulk GR samples and signal
         if in_model_name == "DoubleCB_mlvj":
             label_tstring = TString(label)
             print "########### Double CB for Bulk graviton mlvj ############"
@@ -1247,32 +1251,6 @@ class doFit_wj_and_wlvj:
             param.setConstant(kTRUE)
             param = par.Next()
 
-    ### fix a pdf in a different way --> for RooAbsPdf
-    def fix_Pdf(self, model_pdf, argset_notparameter):
-        print "########### Fixing a RooAbsPdf for mlvj or mj  ############"
-        parameters = model_pdf.getParameters(argset_notparameter)
-        par = parameters.createIterator()
-        par.Reset()
-        param = par.Next()
-        while (param):
-            param.setConstant(kTRUE)
-            param.Print()
-            param = par.Next()
-
-    ### print the parameters of a given pdf --> only non constant ones
-    def ShowParam_Pdf(self, model_pdf, argset_notparameter):
-        print "########### Show Parameters of a input model  ############"
-        model_pdf.Print()
-        parameters = model_pdf.getParameters(argset_notparameter)
-        par = parameters.createIterator()
-        par.Reset()
-        param = par.Next()
-        while (param):
-            if not param.isConstant():
-                param.Print()
-                if (param.getVal()-param.getMin())< param.getError()*1 or (param.getMax()- param.getVal())< param.getError()*1:
-                    param.Print()
-            param = par.Next()
 
 
     #### get a generic mlvj model from the workspace
@@ -1495,7 +1473,7 @@ class doFit_wj_and_wlvj:
         self.make_controlplot("nbtag", cut, tag, 5,-0.5, 4.5, "number of b-jets", "Events", 0 , TTBarControl)
 
     ######## ++++++++++++++
-    def make_controlplot(self, variable, cut, tag, nbin, min, max, xtitle = "", ytitle = "", logy=0 , TTBarControl=0):
+    def make_controlplot(self, variable, cut, tag, nbin, x_min, x_max, xtitle = "", ytitle = "", logy=0 , TTBarControl=0):
         tmp_lumi = self.GetLumi()
         tmp_signal_scale = 20
         weight_mc_forSignal = "weight*%s*%s"%(tmp_lumi, tmp_signal_scale)
@@ -1517,18 +1495,18 @@ class doFit_wj_and_wlvj:
         print "weightcut_mc_forG = "+weightcut_mc_forG
         print "weightcut_mc_forWJets = "+weightcut_mc_forWJets
         print "weightcut_mc_forTTBar = "+weightcut_mc_forTTBar
-        hist_data = TH1D("hist_data", "hist_data"+";%s;%s"%(xtitle, ytitle), nbin, min, max)
-        hist_Signal = TH1D("hist_Signal", "hist_Signal"+";%s;%s"%(xtitle, ytitle), nbin, min, max)
+        hist_data = TH1D("hist_data", "hist_data"+";%s;%s"%(xtitle, ytitle), nbin, x_min, x_max)
+        hist_Signal = TH1D("hist_Signal", "hist_Signal"+";%s;%s"%(xtitle, ytitle), nbin, x_min, x_max)
         hist_Signal.Sumw2()
-        hist_WJets = TH1D("hist_WJets", "hist_WJets"+";%s;%s"%(xtitle, ytitle), nbin, min, max)
+        hist_WJets = TH1D("hist_WJets", "hist_WJets"+";%s;%s"%(xtitle, ytitle), nbin, x_min, x_max)
         hist_WJets.Sumw2()
-        hist_TTbar = TH1D("hist_TTbar", "hist_TTbar"+";%s;%s"%(xtitle, ytitle), nbin, min, max)
+        hist_TTbar = TH1D("hist_TTbar", "hist_TTbar"+";%s;%s"%(xtitle, ytitle), nbin, x_min, x_max)
         hist_TTbar.Sumw2()
-        hist_STop = TH1D("hist_STop", "hist_STop"+";%s;%s"%(xtitle, ytitle), nbin, min, max)
+        hist_STop = TH1D("hist_STop", "hist_STop"+";%s;%s"%(xtitle, ytitle), nbin, x_min, x_max)
         hist_STop.Sumw2()
-        hist_VV   = TH1D("hist_VV", "hist_VV"+";%s;%s"%(xtitle, ytitle), nbin, min, max)
+        hist_VV   = TH1D("hist_VV", "hist_VV"+";%s;%s"%(xtitle, ytitle), nbin, x_min, x_max)
         hist_VV.Sumw2()
-        hist_TotalMC = TH1D("hist_TotalMC", "hist_TotalMC"+";%s;%s"%(xtitle, ytitle), nbin, min, max)
+        hist_TotalMC = TH1D("hist_TotalMC", "hist_TotalMC"+";%s;%s"%(xtitle, ytitle), nbin, x_min, x_max)
         hist_TotalMC.Sumw2()
 
 
@@ -2992,16 +2970,16 @@ class doFit_wj_and_wlvj:
         ### Fix all the Pdf parameters
         rrv_x = self.workspace4limit_.var("rrv_mass_lvj")
 
-        self.fix_Pdf(self.workspace4limit_.pdf("TTbar_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x))
-        self.fix_Pdf(self.workspace4limit_.pdf("STop_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x))
-        self.fix_Pdf(self.workspace4limit_.pdf("VV_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x))
-        self.fix_Pdf(self.workspace4limit_.pdf("WJets_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x))
+        fix_Pdf(self.workspace4limit_.pdf("TTbar_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x))
+        fix_Pdf(self.workspace4limit_.pdf("STop_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x))
+        fix_Pdf(self.workspace4limit_.pdf("VV_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x))
+        fix_Pdf(self.workspace4limit_.pdf("WJets_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x))
 
         ##if TString(self.signal_sample).Contains("BulkG_WW"):
-        ##    self.fix_Pdf(self.workspace4limit_.pdf("BulkWW_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x))
+        ##    fix_Pdf(self.workspace4limit_.pdf("BulkWW_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x))
         ##else:
-        ##    self.fix_Pdf(self.workspace4limit_.pdf(self.signal_sample+"_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x))
-        self.fix_Pdf(self.workspace4limit_.pdf(self.signal_sample+"_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x))
+        ##    fix_Pdf(self.workspace4limit_.pdf(self.signal_sample+"_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x))
+        fix_Pdf(self.workspace4limit_.pdf(self.signal_sample+"_xww_%s_%s"%(self.channel, self.wtagger_category)), RooArgSet(rrv_x))
 
         print " ############## Workspace for limit "
         parameters_workspace = self.workspace4limit_.allVars()
@@ -3902,7 +3880,7 @@ class doFit_wj_and_wlvj:
 
 
 
-    def read_2workspaces(self, logy = 0):
+    def combine_2workspaces(self, logy = 0):
 
         ### Taket the workspace for limits
         file1 = TFile(self.file_rlt_root) #mu
@@ -4118,7 +4096,7 @@ class doFit_wj_and_wlvj:
         #self.leg.SetTextSize(0.036)
         mplot.addObject(self.leg)
 
-        mplot.GetYaxis().SetRangeUser(1e-2, mplot.GetMaximum()*1.8)
+        mplot.GetYaxis().SetRangeUser(1e-2, mplot.GetMaximum()*1.2)
 
 
         parameters_list = RooArgList()
@@ -4432,7 +4410,7 @@ class doFit_wj_and_wlvj:
         #self.leg.SetTextSize(0.036)
         mplot.addObject(self.leg)
 
-        mplot.GetYaxis().SetRangeUser(1e-2, mplot.GetMaximum()*1.8)
+        mplot.GetYaxis().SetRangeUser(1e-2, mplot.GetMaximum()*1.2)
 
 
         parameters_list = RooArgList()
@@ -5063,7 +5041,7 @@ class doFit_wj_and_wlvj:
         # mplot + pull
 
         print "############### draw the canvas with pull ########################"
-        chi2_ = self.calculate_chi2(datahist, rrv_x, mplot, ndof, ismj)
+        chi2_ = calculate_chi2(datahist, rrv_x, mplot, ndof, ismj)
         mplot.GetXaxis().SetTitle("")
         mplot.GetYaxis().SetTitleSize(0.07)
         mplot.GetYaxis().SetTitleOffset(0.9)
@@ -5199,38 +5177,6 @@ class doFit_wj_and_wlvj:
             cMassFit.SaveAs(rlt_file.Data())
 
         #self.draw_canvas(mplot, in_directory, string_file_name.Data(), 0, logy, 1)
-
-    def calculate_chi2(self, hist, rrv_x, mplot_orig, ndof, ismj):
-        pulls = array('d',[])
-        print "############### calculate chi2 (new) ########################"
-        hpull = mplot_orig.pullHist()
-        #bins = 0
-        bins_ = 0
-        x = ROOT.Double(0.)
-        y = ROOT.Double(0)
-        for ipoint in range(0, hpull.GetN()):
-            hpull.GetPoint(ipoint, x, y)
-        hist.get(bins_)
-        hist.weightError(RooAbsData.SumW2)
-        print x, y, bins_, hist.get(bins_).getRealValue(rrv_x.GetName()), hist.weight(), hist.weightError(RooAbsData.SumW2)
-        if hist.weight() != 0:
-            pulls.append(y)
-        #print x, y, hist.GetBinCenter(bins_), hist.GetBinContent(bins_)
-            #if not(ismj) and y != 0 and TMath.Abs(y) < 4: pulls.append(y)
-        #elif ismj and y != 0 and (x < 65 or x > 135):
-        # pulls.append(y)
-            # bins+=1
-        #else: print "Bin %f is empty!" %x
-        bins_+=1
-        chi2 = 0
-        for p in pulls:
-            chi2+=(p*p)
-
-        #if ismj:
-        # ndof = ndof - (hpull.GetN()-bins)
-        # print hpull.GetN(), bins, ndof
-        print "Chi2/ndof = %f/%f = %f" %(chi2, ndof, chi2/ndof)
-        return chi2, ndof
 
 
     ##### Get Lumi for banner title
@@ -5398,35 +5344,93 @@ class doFit_wj_and_wlvj:
         #### fit signal MC samples
         self.fit_AllSamples_Mj_and_Mlvj()
 
+def calculate_chi2(hist, rrv_x, mplot_orig, ndof, ismj):
+    pulls = array('d',[])
+    print "############### calculate chi2 (new) ########################"
+    hpull = mplot_orig.pullHist()
+    #bins = 0
+    bins_ = 0
+    x = ROOT.Double(0.)
+    y = ROOT.Double(0)
+    for ipoint in range(0, hpull.GetN()):
+        hpull.GetPoint(ipoint, x, y)
+    hist.get(bins_)
+    hist.weightError(RooAbsData.SumW2)
+    print x, y, bins_, hist.get(bins_).getRealValue(rrv_x.GetName()), hist.weight(), hist.weightError(RooAbsData.SumW2)
+    if hist.weight() != 0:
+        pulls.append(y)
+    #print x, y, hist.GetBinCenter(bins_), hist.GetBinContent(bins_)
+        #if not(ismj) and y != 0 and TMath.Abs(y) < 4: pulls.append(y)
+    #elif ismj and y != 0 and (x < 65 or x > 135):
+    # pulls.append(y)
+        # bins+=1
+    #else: print "Bin %f is empty!" %x
+    bins_+=1
+    chi2 = 0
+    for p in pulls:
+        chi2+=(p*p)
 
-### funtion to run the analysis without systematics
-def pre_limit_sb_correction_without_systermatic(channel, signal_sample, in_mlvj_signal_region_min = 500, in_mlvj_signal_region_max = 700,
-                                                 in_mj_min=30, in_mj_max=140, in_mlvj_min=700, in_mlvj_max=5000, fit_model = "ErfExp_v1", fit_model_alter = "ErfPow_v1"):
-                                                 #in_mj_min=30, in_mj_max=140, in_mlvj_min=400, in_mlvj_max=1400, fit_model = "ErfExp_v1", fit_model_alter = "ErfPow_v1"):
+    #if ismj:
+    # ndof = ndof - (hpull.GetN()-bins)
+    # print hpull.GetN(), bins, ndof
+    print "Chi2/ndof = %f/%f = %f" %(chi2, ndof, chi2/ndof)
+    return chi2, ndof
+
+### print the parameters of a given pdf --> only non constant ones
+def ShowParam_Pdf(model_pdf, argset_notparameter):
+    print "########### Show Parameters of a input model  ############"
+    model_pdf.Print()
+    parameters = model_pdf.getParameters(argset_notparameter)
+    par = parameters.createIterator()
+    par.Reset()
+    param = par.Next()
+    while (param):
+        if not param.isConstant():
+            param.Print()
+            if (param.getVal()-param.getMin())< param.getError()*1 or (param.getMax()- param.getVal())< param.getError()*1:
+                param.Print()
+        param = par.Next()
+
+### fix a pdf in a different way --> for RooAbsPdf
+def fix_Pdf(model_pdf, argset_notparameter):
+    print "########### Fixing a RooAbsPdf for mlvj or mj  ############"
+    parameters = model_pdf.getParameters(argset_notparameter)
+    par = parameters.createIterator()
+    par.Reset()
+    param = par.Next()
+    while (param):
+        param.setConstant(kTRUE)
+        param.Print()
+        param = par.Next()
+
+
+
+def pre_limit_sb_correction_without_systermatic(channel, signal_sample,
+        in_mlvj_signal_region_min = 500, in_mlvj_signal_region_max = 700,
+        in_mj_min=30, in_mj_max=140, in_mlvj_min=700, in_mlvj_max=5000,
+        fit_model = "ErfExp_v1", fit_model_alter = "ErfPow_v1"):
+    """funtion to run the analysis with less systematics"""
 
     print "#################### pre_limit_sb_correction_without_systermatic: channel %s, signal %s, max and min signal region %f-%f, max and min mJ %f-%f, max and min mlvj %f-%f, fit model %s and alternate %s ######################"%(channel, signal_sample, in_mlvj_signal_region_min, in_mlvj_signal_region_max, in_mj_min, in_mj_max, in_mlvj_min, in_mlvj_max, fit_model, fit_model_alter)
-    boostedW_fitter = doFit_wj_and_wlvj(channel, signal_sample, in_mlvj_signal_region_min, in_mlvj_signal_region_max, in_mj_min, in_mj_max, in_mlvj_min, in_mlvj_max, fit_model, fit_model_alter)
+    boostedW_fitter = DoFit(channel, signal_sample, in_mlvj_signal_region_min, in_mlvj_signal_region_max, in_mj_min, in_mj_max, in_mlvj_min, in_mlvj_max, fit_model, fit_model_alter)
     boostedW_fitter.analysis_sideband_correction_method1_without_shape_and_psmodel_systermatic()
 
 
-### funtion to run the complete alpha analysis
 
-def pre_limit_sb_correction(method, channel, signal_sample = "BulkG_c0p2_M1000", in_mlvj_signal_region_min=500, in_mlvj_signal_region_max=700,
-                            in_mj_min=30, in_mj_max=140, in_mlvj_min=700, in_mlvj_max=5000, fit_model = "ErfExp_v1", fit_model_alter = "ErfPow_v1"):
-                            #in_mj_min=30, in_mj_max=140, in_mlvj_min=400, in_mlvj_max=1400, fit_model = "ErfExp_v1", fit_model_alter = "ErfPow_v1"):
+def pre_limit_sb_correction(method, channel, signal_sample = "BulkG_c0p2_M1000",
+        in_mlvj_signal_region_min=500, in_mlvj_signal_region_max=700,
+        in_mj_min=30, in_mj_max=140, in_mlvj_min=700, in_mlvj_max=5000,
+        fit_model = "ErfExp_v1", fit_model_alter = "ErfPow_v1"):
+    """funtion to run the analysis with full systematics"""
 
     print "#################### pre_limit_sb_correction: channel %s, signal %s, max and min signal region %f-%f, max and min mJ %f-%f, max and min mlvj %f-%f, fit model %s and alternate %s ######################"%(channel, signal_sample, in_mlvj_signal_region_min, in_mlvj_signal_region_max, in_mj_min, in_mj_max, in_mlvj_min, in_mlvj_max, fit_model, fit_model_alter)
 
-    boostedW_fitter = doFit_wj_and_wlvj(channel, signal_sample, in_mlvj_signal_region_min, in_mlvj_signal_region_max, in_mj_min, in_mj_max, in_mlvj_min, in_mlvj_max, fit_model, fit_model_alter)
+    boostedW_fitter = DoFit(channel, signal_sample, in_mlvj_signal_region_min, in_mlvj_signal_region_max, in_mj_min, in_mj_max, in_mlvj_min, in_mlvj_max, fit_model, fit_model_alter)
     getattr(boostedW_fitter, "analysis_sideband_correction_%s"%(method))()
-
-def control_single_sb_correction(method, channel, signal_sample = "ggH600", in_mlvj_signal_region_min=500, in_mlvj_signal_region_max=700, in_mj_min=30, in_mj_max=140, in_mlvj_min=400, in_mlvj_max=1400, fit_model = "ErfExp_v1", fit_model_alter = "ErfPow_v1"): # the WJets M_lvj shape and normalization are from sb_correction
-    print "pre_limit_sb_correction with %s for %s sample"%(method, channel)
-    boostedW_fitter = doFit_wj_and_wlvj(channel, signal_sample, in_mlvj_signal_region_min, in_mlvj_signal_region_max, in_mj_min, in_mj_max, in_mlvj_min, in_mlvj_max, fit_model, fit_model_alter)
-    boostedW_fitter.ControlPlots()
 
 ### funtion to run the analysis without systematic
 def pre_limit_simple(channel):
+    """quickly do limit for one signal point"""
     print "######################### pre_limit_simple for %s sampel"%(channel)
 
     pre_limit_sb_correction_without_systermatic(channel, "BulkGravWW750", 650, 850, 40, 150, 600, 1500, "ExpN", "ExpTail")
@@ -5437,22 +5441,29 @@ def pre_limit_simple(channel):
     #pre_limit_sb_correction_without_systermatic(channel, "WprimeWZ1000", 900, 1100, 40, 150, 600, 1500, "ExpN", "ExpTail")
 
 def fit_signal(method, channel, signal_sample,  in_mlvj_min, in_mlvj_max): # the WJets M_lvj shape and normalization are from sb_correction
-    boostedW_fitter = doFit_wj_and_wlvj(channel, signal_sample, in_mlvj_min, in_mlvj_max, 40, 150, in_mlvj_min, in_mlvj_max)
+    """only fit Signal"""
+    boostedW_fitter = DoFit(channel, signal_sample, in_mlvj_min, in_mlvj_max, 40, 150, in_mlvj_min, in_mlvj_max)
     boostedW_fitter.fit_Signal()
 
 def control_single(channel):
+    """quickly draw control plots"""
     print "control_single for %s sampel"%(channel)
-    control_single_sb_correction("method1", channel, "BulkGravWW750", 500, 1300, 40, 150, 400, 1000, "ErfExp_v1")
+    boostedW_fitter = DoFit(channel, "BulkGravWW750")
+    boostedW_fitter.ControlPlots()
+
 
 ### function to check the workspace once it has already created
-def check_workspace(channel, higgs):
-    boostedW_fitter = doFit_wj_and_wlvj(channel, higgs, 500, 700, 40, 140, 400, 1400, "ExpN", "ExpTail")#all the param is useless. only the pre-fit will be included in the picture name
+def check_workspace(channel, signal):
+    """read workspace of el or mu channel, and draw the M_lvj plot"""
+    boostedW_fitter = DoFit(channel, signal, 500, 700, 40, 140, 400, 1400, "ExpN", "ExpTail")#all the param is useless. only the pre-fit will be included in the picture name
     boostedW_fitter.read_workspace()
     #boostedW_fitter.read_postfit_workspace()
 
-def combine_workspace(channel, higgs):
-    boostedW_fitter = doFit_wj_and_wlvj("mu", higgs)
-    boostedW_fitter.read_2workspaces()
+def combine_el_mu(channel):
+    """read workspaces of el and mu channel, and draw the combined M_lvj plot"""
+    #boostedW_fitter = DoFit("mu", "BulkGravWW750", 650, 850, 40, 150, 600, 1500, "ExpN", "Pow")
+    boostedW_fitter = DoFit("mu", "BulkGravWW4500", 4400, 4600, 40, 150, 800, 5000, "ExpN", "Pow")
+    boostedW_fitter.combine_2workspaces(1)
     #boostedW_fitter.read_postfit_workspaces()
 
 #### Main Code
@@ -5495,7 +5506,7 @@ if __name__ == '__main__':
 
     if options.combine:
         print '################# check workspace for %s sample'%(options.opt_channel)
-        combine_workspace(options.opt_channel, "BulkGravWW750")
+        combine_el_mu(options.opt_channel)
 
     if options.simple and (not options.fitwtagger) and (not options.fitwtaggersim) and (not options.multi) and (not options.control) and (not options.check) and (not options.combine) and (not options.fitsignal):
         print '################# simple mode for %s sample'%(options.opt_channel)
