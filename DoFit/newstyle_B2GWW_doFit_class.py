@@ -171,25 +171,15 @@ class doFit_wj_and_wlvj:
         rrv_mass_lvj.setRange("signal_region",self.mlvj_signal_min,self.mlvj_signal_max);
         rrv_mass_lvj.setRange("high_mass",2500,in_mlvj_max);
 
-
-        #if self.channel=="el":   self.Lumi= 2.6;
-        #elif self.channel=="mu": self.Lumi= 2.6;
-        #elif self.channel=="em": self.Lumi= 2.6;
-        ##prepare the data and mc files --> set the working directory and the files name
-        #self.file_Directory="PKUTree_final_2p6fb_Jun30/";
-
-
         if self.channel=="el":   self.Lumi= 6.26
         elif self.channel=="mu": self.Lumi= 6.26
         elif self.channel=="em": self.Lumi= 6.26
         self.file_Directory="PKUTree_final_6p26fb_Jul18/";
 
-
         if options.realdata==1:
             self.file_data = (self.channel+"_PKUTree_16B.root");#keep blind!!!!
         else:
             self.file_data = (self.channel+"_PKUTree_pdata_SF.root");#keep blind!!!!
-        #raw_input(self.file_data)
 
         self.file_signal     = (self.channel+"_PKUTree_%s.root"%(self.signal_sample));
         self.file_WJets0_mc  = (self.channel+"_PKUTree_WJetsPt180_xww.root");
@@ -1206,10 +1196,10 @@ class doFit_wj_and_wlvj:
         while (param):
             paraName=TString(param.GetName());
             if ( paraName.Contains("rrv_width_ErfExp_WJets") or paraName.Contains("rrv_offset_ErfExp_WJets") or paraName.Contains("rrv_p1_User1_WJets")):
-             param.setConstant(kTRUE);
-             param.Print();
+                param.setConstant(kTRUE);
+                param.Print();
             else:
-             param.setConstant(0);
+                param.setConstant(0);
             param=par.Next()
         return self.workspace4fit_.pdf("model%s_%s_mj"%(label,self.channel))
 
@@ -1340,29 +1330,29 @@ class doFit_wj_and_wlvj:
     ### Define the Extended Pdf for and mJ fit giving: label, fit model name, list constraint and ismc
     def make_Model(self, label, in_model_name, mass_spectrum="_mj", ConstraintsList=[], ismc_wjet=0, area_init_value=500):
 
-      ##### define an extended pdf from a standard Roofit One
-      print " "
-      print "###############################################"
-      print "## Make model : ",label," ",in_model_name,"##";
-      print "###############################################"
-      print " "
-
-      rrv_number = RooRealVar("rrv_number"+label+"_"+self.channel+mass_spectrum,"rrv_number"+label+"_"+self.channel+mass_spectrum,area_init_value,0.,1e7);
-      ## call the make RooAbsPdf method
-      model_pdf = self.make_Pdf(label,in_model_name,mass_spectrum,ConstraintsList,ismc_wjet)
-      print "######## Model Pdf ########"        
-      model_pdf.Print();
-      
-      ## create the extended pdf
-      model = RooExtendPdf("model"+label+"_"+self.channel+mass_spectrum,"model"+label+"_"+self.channel+mass_spectrum, model_pdf, rrv_number );
-      print "######## Model Extended Pdf ########"        
-
-      #### put all the parameters and the shape in the workspace
-      getattr(self.workspace4fit_,"import")(rrv_number)
-      getattr(self.workspace4fit_,"import")(model) 
-      self.workspace4fit_.pdf("model"+label+"_"+self.channel+mass_spectrum).Print();
-      ## return the total extended pdf
-      return self.workspace4fit_.pdf("model"+label+"_"+self.channel+mass_spectrum);
+        ##### define an extended pdf from a standard Roofit One
+        print " "
+        print "###############################################"
+        print "## Make model : ",label," ",in_model_name,"##";
+        print "###############################################"
+        print " "
+  
+        rrv_number = RooRealVar("rrv_number"+label+"_"+self.channel+mass_spectrum,"rrv_number"+label+"_"+self.channel+mass_spectrum,area_init_value,0.,1e7);
+        ## call the make RooAbsPdf method
+        model_pdf = self.make_Pdf(label,in_model_name,mass_spectrum,ConstraintsList,ismc_wjet)
+        print "######## Model Pdf ########"        
+        model_pdf.Print();
+        
+        ## create the extended pdf
+        model = RooExtendPdf("model"+label+"_"+self.channel+mass_spectrum,"model"+label+"_"+self.channel+mass_spectrum, model_pdf, rrv_number );
+        print "######## Model Extended Pdf ########"        
+  
+        #### put all the parameters and the shape in the workspace
+        getattr(self.workspace4fit_,"import")(rrv_number)
+        getattr(self.workspace4fit_,"import")(model) 
+        self.workspace4fit_.pdf("model"+label+"_"+self.channel+mass_spectrum).Print();
+        ## return the total extended pdf
+        return self.workspace4fit_.pdf("model"+label+"_"+self.channel+mass_spectrum);
 
     ### Method for a single MC fit of the mj spectra giving: file name, label, model name
     def fit_mj_single_MC(self,in_file_name, label, in_model_name, additioninformation=""):
@@ -1786,28 +1776,28 @@ class doFit_wj_and_wlvj:
 
         ##jet mass uncertainty on WJets normalization and the other bkg component
         if self.workspace4fit_.var("rrv_number_WJets0_xww_massup_in_mj_signal_region_from_fitting_%s"%(self.channel)) and self.workspace4fit_.var("rrv_number_WJets0_xww_massdn_in_mj_signal_region_from_fitting_%s"%(self.channel)):            
-          rrv_WJets0massup = self.workspace4fit_.var("rrv_number_WJets0_xww_massup_in_mj_signal_region_from_fitting_%s"%(self.channel));
-          rrv_WJets0massdn = self.workspace4fit_.var("rrv_number_WJets0_xww_massdn_in_mj_signal_region_from_fitting_%s"%(self.channel));
-          self.WJets_normlization_uncertainty_from_jet_mass= ( TMath.Abs(rrv_WJets0massup.getVal()-rrv_WJets0.getVal())+TMath.Abs(rrv_WJets0massdn.getVal()-rrv_WJets0.getVal() ) )/2./rrv_WJets0.getVal();
+            rrv_WJets0massup = self.workspace4fit_.var("rrv_number_WJets0_xww_massup_in_mj_signal_region_from_fitting_%s"%(self.channel));
+            rrv_WJets0massdn = self.workspace4fit_.var("rrv_number_WJets0_xww_massdn_in_mj_signal_region_from_fitting_%s"%(self.channel));
+            self.WJets_normlization_uncertainty_from_jet_mass= ( TMath.Abs(rrv_WJets0massup.getVal()-rrv_WJets0.getVal())+TMath.Abs(rrv_WJets0massdn.getVal()-rrv_WJets0.getVal() ) )/2./rrv_WJets0.getVal();
 
         rrv_STop  = self.workspace4fit_.var("rrv_number_dataset_signal_region_STop_xww__%s_mj"%(self.channel));
 
         if self.workspace4fit_.var("rrv_number_dataset_signal_region_STop_xww_massup_%s_mj"%(self.channel)) and self.workspace4fit_.var("rrv_number_dataset_signal_region_STop_xww_massdn_%s_mj"%(self.channel)) :
-         rrv_STopmassup = self.workspace4fit_.var("rrv_number_dataset_signal_region_STop_xww_massup_%s_mj"%(self.channel));
-         rrv_STopmassdn = self.workspace4fit_.var("rrv_number_dataset_signal_region_STop_xww_massdn_%s_mj"%(self.channel));
-         self.STop_normlization_uncertainty_from_jet_mass=( TMath.Abs(rrv_STopmassup.getVal()-rrv_STop.getVal())+TMath.Abs(rrv_STopmassdn.getVal()-rrv_STop.getVal() ) )/2./rrv_STop.getVal();
+            rrv_STopmassup = self.workspace4fit_.var("rrv_number_dataset_signal_region_STop_xww_massup_%s_mj"%(self.channel));
+            rrv_STopmassdn = self.workspace4fit_.var("rrv_number_dataset_signal_region_STop_xww_massdn_%s_mj"%(self.channel));
+            self.STop_normlization_uncertainty_from_jet_mass=( TMath.Abs(rrv_STopmassup.getVal()-rrv_STop.getVal())+TMath.Abs(rrv_STopmassdn.getVal()-rrv_STop.getVal() ) )/2./rrv_STop.getVal();
 
         rrv_TTbar = self.workspace4fit_.var("rrv_number_dataset_signal_region_TTbar_xww__%s_mj"%(self.channel));
         if self.workspace4fit_.var("rrv_number_dataset_signal_region_TTbar_xww_massup_%s_mj"%(self.channel)) and self.workspace4fit_.var("rrv_number_dataset_signal_region_TTbar_xww_massdn_%s_mj"%(self.channel)):
-         rrv_TTbarmassup = self.workspace4fit_.var("rrv_number_dataset_signal_region_TTbar_xww_massup_%s_mj"%(self.channel));
-         rrv_TTbarmassdn = self.workspace4fit_.var("rrv_number_dataset_signal_region_TTbar_xww_massdn_%s_mj"%(self.channel));
-         self.TTbar_normlization_uncertainty_from_jet_mass=( TMath.Abs(rrv_TTbarmassup.getVal()-rrv_TTbar.getVal())+TMath.Abs(rrv_TTbarmassdn.getVal()-rrv_TTbar.getVal() ) )/2./rrv_TTbar.getVal();
+            rrv_TTbarmassup = self.workspace4fit_.var("rrv_number_dataset_signal_region_TTbar_xww_massup_%s_mj"%(self.channel));
+            rrv_TTbarmassdn = self.workspace4fit_.var("rrv_number_dataset_signal_region_TTbar_xww_massdn_%s_mj"%(self.channel));
+            self.TTbar_normlization_uncertainty_from_jet_mass=( TMath.Abs(rrv_TTbarmassup.getVal()-rrv_TTbar.getVal())+TMath.Abs(rrv_TTbarmassdn.getVal()-rrv_TTbar.getVal() ) )/2./rrv_TTbar.getVal();
 
         rrv_VV = self.workspace4fit_.var("rrv_number_dataset_signal_region_VV_xww_%s_mj"%(self.channel));
         if self.workspace4fit_.var("rrv_number_dataset_signal_region_VV_xww_massup_%s_mj"%(self.channel)) and self.workspace4fit_.var("rrv_number_dataset_signal_region_VV_xww_massdn_%s_mj"%(self.channel)):
-         rrv_VVmassup = self.workspace4fit_.var("rrv_number_dataset_signal_region_VV_xww_massup_%s_mj"%(self.channel));
-         rrv_VVmassdn = self.workspace4fit_.var("rrv_number_dataset_signal_region_VV_xww_massdn_%s_mj"%(self.channel));
-         self.VV_normlization_uncertainty_from_jet_mass=( TMath.Abs(rrv_VVmassup.getVal()-rrv_VV.getVal())+TMath.Abs(rrv_VVmassdn.getVal()-rrv_VV.getVal() ) )/2./rrv_VV.getVal();
+            rrv_VVmassup = self.workspace4fit_.var("rrv_number_dataset_signal_region_VV_xww_massup_%s_mj"%(self.channel));
+            rrv_VVmassdn = self.workspace4fit_.var("rrv_number_dataset_signal_region_VV_xww_massdn_%s_mj"%(self.channel));
+            self.VV_normlization_uncertainty_from_jet_mass=( TMath.Abs(rrv_VVmassup.getVal()-rrv_VV.getVal())+TMath.Abs(rrv_VVmassdn.getVal()-rrv_VV.getVal() ) )/2./rrv_VV.getVal();
 
     #### make the mj sideband fit on data ti get the Wjets normaliztion 
 ##    def fit_WJetsNormalization_in_Mj_signal_region(self,label,massscale=""): 
@@ -2032,44 +2022,44 @@ class doFit_wj_and_wlvj:
             #mplot.addObject(middleLine);
             mplot.addObject(upperLine);
 
-#	    pt = ROOT.TPaveText(0.3592965,0.02847153,0.5728643,0.1008991,"NDC")
-#	    pt = ROOT.TPaveText(0.3592965,0.02847153,0.52,0.1008991,"NDC")
-	    pt = ROOT.TPaveText(0.3592965,0.02847153,0.50,0.1008991,"NDC")
-	    pt.SetTextFont(42)
-	    pt.SetTextSize(0.04995005)
-	    #pt.SetTextAlign(12)
-	    pt.SetFillColor(0)
-	    pt.SetBorderSize(0)
-	    text = pt.AddText("#leftarrow signal region #rightarrow")
-	    text.SetTextFont(62)
-	    #mplot.addObject(pt);
 
-	    pt1 = ROOT.TPaveText(0.3555276,0.1183816,0.4535176,0.1908092,"NDC")
-	    pt1.SetTextFont(42)
-	    pt1.SetTextSize(0.037)
-	    #pt.SetTextAlign(12)
-	    pt1.SetFillColor(0)
-	    pt1.SetFillStyle(0)
-	    pt1.SetBorderSize(0)
-	    text = pt1.AddText("WW")
-	    text.SetTextFont(62)
-	    text = pt1.AddText("category")
-	    text.SetTextFont(62)
-#	    mplot.addObject(pt1);
 
-	    pt2 = ROOT.TPaveText(0.4723618,0.1183816,0.5678392,0.1908092,"NDC")
-	    pt2.SetTextFont(42)
-	    pt2.SetTextSize(0.037)
-	    #pt.SetTextAlign(12)
-	    pt2.SetFillColor(0)
-	    pt2.SetBorderSize(0)
-	    pt2.SetFillStyle(0)
-	    text = pt2.AddText("WZ")
-	    text.SetTextFont(62)
-	    text = pt2.AddText("category")
-	    text.SetTextFont(62)
-#	    mplot.addObject(pt2);
-	    	    
+            pt = ROOT.TPaveText(0.3592965,0.02847153,0.50,0.1008991,"NDC")
+            pt.SetTextFont(42)
+            pt.SetTextSize(0.04995005)
+            #pt.SetTextAlign(12)
+            pt.SetFillColor(0)
+            pt.SetBorderSize(0)
+            text = pt.AddText("#leftarrow signal region #rightarrow")
+            text.SetTextFont(62)
+            #mplot.addObject(pt);
+
+            pt1 = ROOT.TPaveText(0.3555276,0.1183816,0.4535176,0.1908092,"NDC")
+            pt1.SetTextFont(42)
+            pt1.SetTextSize(0.037)
+            #pt.SetTextAlign(12)
+            pt1.SetFillColor(0)
+            pt1.SetFillStyle(0)
+            pt1.SetBorderSize(0)
+            text = pt1.AddText("WW")
+            text.SetTextFont(62)
+            text = pt1.AddText("category")
+            text.SetTextFont(62)
+            #mplot.addObject(pt1);
+
+            pt2 = ROOT.TPaveText(0.4723618,0.1183816,0.5678392,0.1908092,"NDC")
+            pt2.SetTextFont(42)
+            pt2.SetTextSize(0.037)
+            #pt.SetTextAlign(12)
+            pt2.SetFillColor(0)
+            pt2.SetBorderSize(0)
+            pt2.SetFillStyle(0)
+            text = pt2.AddText("WZ")
+            text.SetTextFont(62)
+            text = pt2.AddText("category")
+            text.SetTextFont(62)
+            #mplot.addObject(pt2);
+                
             ### legend of the plot
             self.leg = self.legend4Plot(mplot,0,1,0.,0.,0.13,0.02,1,0,1);
             #self.leg = self.legend4Plot(mplot,0,1,-0.10,-0.01,0.10,0.01);
@@ -3500,7 +3490,7 @@ class doFit_wj_and_wlvj:
                 else:
                     datacard_out.write( "\n%s param %0.1f %0.1f "%( ipar.GetName(), ipar.getVal(), ipar.getError() ) )
         if mode == "counting":
-           datacard_out.write( "\nShape_%s_%s lnN - - %0.3f - - -"%(self.channel, self.wtagger_category, 1+self.rrv_counting_uncertainty_from_shape_uncertainty.getError()))
+            datacard_out.write( "\nShape_%s_%s lnN - - %0.3f - - -"%(self.channel, self.wtagger_category, 1+self.rrv_counting_uncertainty_from_shape_uncertainty.getError()))
 
                                                                                                    
     #### Read the final workspace and produce the latest plots 
@@ -3658,7 +3648,7 @@ class doFit_wj_and_wlvj:
         #elif options.category.find('W') != -1: text = pt1.AddText("WW category")
         #text.SetTextFont(62)
         #mplot.addObject(pt1)
-	            
+                
         mplot.GetYaxis().SetRangeUser(1e-2,mplot.GetMaximum()*1.2);
             
         if workspace.var("rrv_num_floatparameter_in_last_fitting"):
@@ -3946,7 +3936,7 @@ class doFit_wj_and_wlvj:
         #elif options.category.find('W') != -1: text = pt1.AddText("WW category")
         #text.SetTextFont(62)
         #mplot.addObject(pt1)
-	            
+                
         mplot.GetYaxis().SetRangeUser(1e-2,mplot.GetMaximum()*1.2);
             
         if workspace.var("rrv_num_floatparameter_in_last_fitting"):
@@ -4620,26 +4610,26 @@ class doFit_wj_and_wlvj:
 
     #### in order to make the banner on the plots
     def banner4Plot(self, iswithpull=0):
-      #print "############### draw the banner ########################"
-
-      if iswithpull:
-          if self.channel=="el":
-              banner = TLatex(0.3,0.96,("CMS Preliminary, %.1f fb^{-1} at #sqrt{s} = 13TeV, W#rightarrow e #nu "%(self.GetLumi())));
-          elif self.channel=="mu":
-              banner = TLatex(0.3,0.96,("CMS Preliminary, %.1f fb^{-1} at #sqrt{s} = 13TeV, W#rightarrow #mu #nu "%(self.GetLumi())));
-          elif self.channel=="em":
-              banner = TLatex(0.3,0.96,("CMS Preliminary, %.1f fb^{-1} at #sqrt{s} = 13TeV, W#rightarrow #mu,e #nu "%(self.GetLumi())));
-          banner.SetNDC(); banner.SetTextSize(0.041);
-      else:
-          if self.channel=="el":
-              banner = TLatex(0.22,0.96,("CMS Preliminary, %.1f fb^{-1} at #sqrt{s} = 13TeV, W#rightarrow e #nu "%(self.GetLumi())));
-          if self.channel=="mu":
-              banner = TLatex(0.22,0.96,("CMS Preliminary, %.1f fb^{-1} at #sqrt{s} = 13TeV, W#rightarrow #mu #nu "%(self.GetLumi())));
-          if self.channel=="em":
-              banner = TLatex(0.22,0.96,("CMS Preliminary, %.1f fb^{-1} at #sqrt{s} = 13TeV, W#rightarrow #mu,e #nu "%(self.GetLumi())));
-          banner.SetNDC(); banner.SetTextSize(0.033)
-
-      return banner;
+        #print "############### draw the banner ########################"
+  
+        if iswithpull:
+            if self.channel=="el":
+                banner = TLatex(0.3,0.96,("CMS Preliminary, %.1f fb^{-1} at #sqrt{s} = 13TeV, W#rightarrow e #nu "%(self.GetLumi())));
+            elif self.channel=="mu":
+                banner = TLatex(0.3,0.96,("CMS Preliminary, %.1f fb^{-1} at #sqrt{s} = 13TeV, W#rightarrow #mu #nu "%(self.GetLumi())));
+            elif self.channel=="em":
+                banner = TLatex(0.3,0.96,("CMS Preliminary, %.1f fb^{-1} at #sqrt{s} = 13TeV, W#rightarrow #mu,e #nu "%(self.GetLumi())));
+            banner.SetNDC(); banner.SetTextSize(0.041);
+        else:
+            if self.channel=="el":
+                banner = TLatex(0.22,0.96,("CMS Preliminary, %.1f fb^{-1} at #sqrt{s} = 13TeV, W#rightarrow e #nu "%(self.GetLumi())));
+            if self.channel=="mu":
+                banner = TLatex(0.22,0.96,("CMS Preliminary, %.1f fb^{-1} at #sqrt{s} = 13TeV, W#rightarrow #mu #nu "%(self.GetLumi())));
+            if self.channel=="em":
+                banner = TLatex(0.22,0.96,("CMS Preliminary, %.1f fb^{-1} at #sqrt{s} = 13TeV, W#rightarrow #mu,e #nu "%(self.GetLumi())));
+            banner.SetNDC(); banner.SetTextSize(0.033)
+  
+        return banner;
 
     ### in order to make the legend
     def legend4Plot(self, plot, left=1, isFill=1, x_offset_low=0., y_offset_low=0., x_offset_high =0., y_offset_high =0., TwoCoulum =1., isalpha=False, ismj=False):
@@ -4718,7 +4708,7 @@ class doFit_wj_and_wlvj:
 
         for obj in range(int(plot.numItems()) ):
             objName = plot.nameOf(obj);
-	    if objName.find("TPave") != -1: continue
+            if objName.find("TPave") != -1: continue
             if objName == "errorband" : objName = "Uncertainty";
             print objName;
             if not ( ( (plot.getInvisible(objName)) and (not TString(objName).Contains("Uncertainty")) ) or TString(objName).Contains("invisi") or TString(objName).Contains("TLine") or objName ==objName_before ):
@@ -4754,7 +4744,7 @@ class doFit_wj_and_wlvj:
                 entryCnt=entryCnt+1;
             objName_before=objName;
         if objName_signal_graviton !="" :
-           theLeg.AddEntry(objName_signal_graviton, TString(objNameLeg_signal_graviton).Data() ,"L");
+            theLeg.AddEntry(objName_signal_graviton, TString(objNameLeg_signal_graviton).Data() ,"L");
         return theLeg;
 
     #### jusr drawing canvas with no pull
@@ -4954,7 +4944,7 @@ class doFit_wj_and_wlvj:
         mplot.GetYaxis().SetTitleOffset(0.9)
         mplot.GetYaxis().SetLabelSize(0.06)
         mplot.GetXaxis().SetLabelSize(0);
-	
+    
         cMassFit = self.get_canvas("cMassFit")#TCanvas("cMassFit","cMassFit", 600,600);
         # if parameters_list is empty, don't draw pad3
         par_first=parameters_list.createIterator();
@@ -4972,12 +4962,12 @@ class doFit_wj_and_wlvj:
             pad1=TPad("pad1","pad1",0.,0. ,1,0.30); #pad1 - pull
             pad2=TPad("pad2","pad2",0.,0.3,1.,1. ); #pad0
 
-   	    pad2.SetRightMargin(0.1);
-   	    pad2.SetTopMargin(0.1);
-   	    pad2.SetBottomMargin(0.0001);
-   	    pad1.SetRightMargin(0.1)
-   	    pad1.SetTopMargin(0)
-   	    pad1.SetBottomMargin(0.4)   
+            pad2.SetRightMargin(0.1);
+            pad2.SetTopMargin(0.1);
+            pad2.SetBottomMargin(0.0001);
+            pad1.SetRightMargin(0.1)
+            pad1.SetTopMargin(0)
+            pad1.SetBottomMargin(0.4)   
         pad1.Draw();
         pad2.Draw();
         pad2.cd();
@@ -5013,7 +5003,7 @@ class doFit_wj_and_wlvj:
                 param=par.Next();
         cMassFit.Update()
         pad2.cd()
-        CMS_lumi.CMS_lumi(pad2, 4, 11)	
+        CMS_lumi.CMS_lumi(pad2, 4, 11)    
         pad2.cd()
         pad2.Update()
         pad2.RedrawAxis()
@@ -5026,7 +5016,7 @@ class doFit_wj_and_wlvj:
         Directory = TString(in_directory+self.signal_sample);
         if not Directory.EndsWith("/"):Directory = Directory.Append("/");
         if not os.path.isdir(Directory.Data()):
-              os.system("mkdir -p "+Directory.Data());
+            os.system("mkdir -p "+Directory.Data());
 
         rlt_file = TString(Directory.Data()+in_file_name);
         if rlt_file.EndsWith(".root"):
@@ -5069,7 +5059,9 @@ class doFit_wj_and_wlvj:
         #self.draw_canvas(mplot,in_directory,string_file_name.Data(),0,logy,1);
 
     #### draw canvas with plots with pull
-    def draw_canvas_with_pull2(self, rrv_x, datahist, mplot, mplotP, mplot_pull,ndof,parameters_list,in_directory, in_file_name, in_model_name="", show_constant_parameter=0, logy=0,ismj=0,isPull=0):# mplot + pull
+    def draw_canvas_with_pull2(self, rrv_x, datahist, mplot, mplotP, mplot_pull,
+            ndof,parameters_list,in_directory, in_file_name, in_model_name="",
+            show_constant_parameter=0, logy=0,ismj=0,isPull=0):
 
         print "############### draw the canvas with pull ########################" 
         chi2_ = self.calculate_chi2(datahist,rrv_x,mplot,ndof,ismj)
@@ -5078,7 +5070,7 @@ class doFit_wj_and_wlvj:
         mplot.GetYaxis().SetTitleOffset(0.9)
         mplot.GetYaxis().SetLabelSize(0.06)
         mplot.GetXaxis().SetLabelSize(0);
-	
+    
         cMassFit = self.get_canvas("cMassFit")#TCanvas("cMassFit","cMassFit", 600,600);
         # if parameters_list is empty, don't draw pad3
         par_first=parameters_list.createIterator();
@@ -5112,7 +5104,7 @@ class doFit_wj_and_wlvj:
             pt = ROOT.TPaveText(0.5175879,0.7152847,0.8027638,0.8551449,"NDC")
             pt.SetTextSize(0.054)
          
-        pt.SetTextFont(62)	
+        pt.SetTextFont(62)    
         pt.SetTextAlign(12)
         pt.SetFillColor(0)
         pt.SetBorderSize(0)
@@ -5130,7 +5122,7 @@ class doFit_wj_and_wlvj:
         medianLine = TLine(mplot.GetXaxis().GetXmin(),0.,mplot.GetXaxis().GetXmax(),0); medianLine.SetLineWidth(2); medianLine.SetLineColor(kRed);
         medianLine.Draw()
         mplot_pull.Draw("Psame");
-	
+    
         if param_first and doParameterPlot != 0:
             pad3.cd();
             latex=TLatex();
@@ -5151,7 +5143,7 @@ class doFit_wj_and_wlvj:
 
         cMassFit.Update()
         pad2.cd()
-        CMS_lumi.CMS_lumi(pad2, 4, 11)	
+        CMS_lumi.CMS_lumi(pad2, 4, 11)    
         pad2.cd()
         pad2.Update()
         pad2.RedrawAxis()
