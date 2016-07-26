@@ -1776,8 +1776,8 @@ class doFit_wj_and_wlvj:
         if scaleJetMass :
             rrv_WJets1 = self.workspace4fit_.var("rrv_number_WJets1_xww_in_mj_signal_region_from_fitting_%s"%(self.channel));
             rrv_WJets1.Print();
-            rrv_WJets0massup.Print();
-            rrv_WJets0massdn.Print();
+            #rrv_WJets0massup.Print();
+            #rrv_WJets0massdn.Print();
 
         ### total uncertainty combining the result with two different shapes
         total_uncertainty = TMath.Sqrt( TMath.Power(rrv_WJets0.getError(),2) + TMath.Power(rrv_WJets01.getVal()-rrv_WJets0.getVal(),2) );
@@ -4005,7 +4005,7 @@ class doFit_wj_and_wlvj:
                 if isSTopFloating!=0:
                     self.FloatingParams.add(workspace.var("Deco_STop_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel,self.wtagger_category)));
             else:
-                raw_input("this mode:%s is not support!"%(mode))
+                raw_input("this self.MODEL_4_mlvj:%s is not support!"%(self.MODEL_4_mlvj))
             if workspace.var("rrv_mean_CB_%s_xww_signal_region_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category)):
                 if self.channel == "mu":
                     self.FloatingParams.add(workspace.var("CMS_sig_p1_scale_m"));
@@ -4623,32 +4623,32 @@ class doFit_wj_and_wlvj:
         for ipoint in range(0,hpull.GetN()):
             hpull.GetPoint(ipoint,x,y);
             if(y == 0):
-                hpull.SetPoint(ipoint,x,10)
-   	    gt = ROOT.TH1F("gt","gt",int(rrv_x.getBins()/self.binwidth_narrow_factor),rrv_x.getMin(),rrv_x.getMax());
-   	    gt.SetMinimum(-3.999);
-   	    gt.SetMaximum(3.999);
-   	    gt.SetDirectory(0);
-   	    gt.SetStats(0);
-   	    gt.SetLineStyle(0);
-   	    gt.SetMarkerStyle(20);
-   	    gt.GetXaxis().SetTitle(rrv_x.GetTitle());
-   	    gt.GetXaxis().SetLabelFont(42);
-   	    gt.GetXaxis().SetLabelOffset(0.02);
-   	    gt.GetXaxis().SetLabelSize(0.15);
-   	    gt.GetXaxis().SetTitleSize(0.15);
-   	    gt.GetXaxis().SetTitleOffset(1.2);
-   	    gt.GetXaxis().SetTitleFont(42);
-   	    gt.GetYaxis().SetTitle("#frac{Data-Fit}{#sigma_{data}}");
-   	    gt.GetYaxis().CenterTitle(True);
-   	    gt.GetYaxis().SetNdivisions(205);
-   	    gt.GetYaxis().SetLabelFont(42);
-   	    gt.GetYaxis().SetLabelOffset(0.007);
-   	    gt.GetYaxis().SetLabelSize(0.15);
-   	    gt.GetYaxis().SetTitleSize(0.15);
-   	    gt.GetYaxis().SetTitleOffset(0.35);
-   	    gt.GetYaxis().SetTitleFont(42);
-	    hpull.SetHistogram(gt)
-	    return hpull
+                hpull.SetPoint(ipoint,x,-10)#remove from PULL plots
+        gt = ROOT.TH1F("gt","gt",int(rrv_x.getBins()/self.binwidth_narrow_factor),rrv_x.getMin(),rrv_x.getMax());
+        gt.SetMinimum(-3.999);
+        gt.SetMaximum(3.999);
+        gt.SetDirectory(0);
+        gt.SetStats(0);
+        gt.SetLineStyle(0);
+        gt.SetMarkerStyle(20);
+        gt.GetXaxis().SetTitle(rrv_x.GetTitle());
+        gt.GetXaxis().SetLabelFont(42);
+        gt.GetXaxis().SetLabelOffset(0.02);
+        gt.GetXaxis().SetLabelSize(0.15);
+        gt.GetXaxis().SetTitleSize(0.15);
+        gt.GetXaxis().SetTitleOffset(1.2);
+        gt.GetXaxis().SetTitleFont(42);
+        gt.GetYaxis().SetTitle("#frac{Data-Fit}{#sigma_{data}}");
+        gt.GetYaxis().CenterTitle(True);
+        gt.GetYaxis().SetNdivisions(205);
+        gt.GetYaxis().SetLabelFont(42);
+        gt.GetYaxis().SetLabelOffset(0.007);
+        gt.GetYaxis().SetLabelSize(0.15);
+        gt.GetYaxis().SetTitleSize(0.15);
+        gt.GetYaxis().SetTitleOffset(0.35);
+        gt.GetYaxis().SetTitleFont(42);
+        hpull.SetHistogram(gt)
+        return hpull
 
     def getData_PoissonInterval(self,data_obs,mplot):
         rrv_x = self.workspace4fit_.var("rrv_mass_lvj");
@@ -4663,9 +4663,12 @@ class doFit_wj_and_wlvj:
         alpha = 1 - 0.6827;
         for iPoint  in range(data_plot.GetN()):
             N = data_plot.GetY()[iPoint];
-            if N==0 : L = 0;
-            else : L = (ROOT.Math.gamma_quantile(alpha/2,N,1.));
-            U =  ROOT.Math.gamma_quantile_c(alpha/2,N+1,1);
+            if N==0 : #not show mark for event=0 bins
+                L = 0;
+                U = 0;
+            else:
+                L = (ROOT.Math.gamma_quantile(alpha/2,N,1.));
+                U =  ROOT.Math.gamma_quantile_c(alpha/2,N+1,1);
             data_plot.SetPointEYlow(iPoint, N-L);
             data_plot.SetPointEYhigh(iPoint,U-N);
             data_plot.SetPointEXlow(iPoint,0);        
@@ -5300,7 +5303,7 @@ class doFit_wj_and_wlvj:
         pulls = array('d',[])
         print "############### calculate chi2 (new) ########################"
         hpull = mplot_orig.pullHist();
-        bins = 0
+        #bins = 0
         bins_ = 0
         x = ROOT.Double(0.); y = ROOT.Double(0) ;
         for ipoint in range(0,hpull.GetN()):
@@ -5581,7 +5584,8 @@ if __name__ == '__main__':
  
     if options.check:
         print '################# check workspace for %s sample'%(channel);
-        check_workspace(channel,"BulkGravWW750");
+        #check_workspace(channel,"BulkGravWW750");
+        check_workspace(channel,"BulkGravWW4500");
 
     if options.combine:
         print '################# check workspace for %s sample'%(channel);
