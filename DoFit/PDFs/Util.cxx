@@ -336,7 +336,7 @@ void draw_error_band( RooAbsPdf &rpdf, std::string xaxis_name, RooRealVar &rrv_n
 				else { L = ROOT::Math::gamma_quantile(alpha/2,N,1.);}
 
 				U =  ROOT::Math::gamma_quantile_c(alpha/2,N+1,1);
-				cout<<"N="<<N<<", L="<<L<<", U="<<U<<endl;
+				//cout<<"N="<<N<<", L="<<L<<", U="<<U<<endl;
 				dataEYlow = N-L;
 				dataEYhigh= U-N;
 				if ( hdata->GetBinContent(k) - bkgpred->GetY()[i] >0 ) {
@@ -344,13 +344,13 @@ void draw_error_band( RooAbsPdf &rpdf, std::string xaxis_name, RooRealVar &rrv_n
 				} else {
 					hdata_err = dataEYhigh;
 				}
-				cout<<"hdata_err="<<hdata_err<<endl;
-				std::cout<< "Hello World "<<i<<"   "<< x_tmp<<"\t"<<hdata->GetBinError(k)<<"  "<<hdata_err<<std::endl;
+				//cout<<"hdata_err="<<hdata_err<<endl;
+				//std::cout<< "Hello World "<<i<<"   "<< x_tmp<<"\t"<<hdata->GetBinError(k)<<"  "<<hdata_err<<std::endl;
 				errorbandP->SetPoint(i, x_tmp,0.); 
 				if(hdata_err>0 ) {
 					errorbandP->SetPointError(i, 0. , 0., (bkgpred->GetY()[i]-val[Int_t(0.84*number_errorband)])/ hdata_err ,(val[Int_t(0.16*number_errorband)]-bkgpred->GetY()[i])/ hdata_err); 
-					cout<<i<<" "<<(bkgpred->GetY()[i]-val[Int_t(0.84*number_errorband)])/ hdata_err<<", "<<(val[Int_t(0.16*number_errorband)]-bkgpred->GetY()[i])/ hdata_err<<endl; 
-					cout<<i<<" "<<bkgpred->GetY()[i]<<", "<<val[Int_t(0.84*number_errorband)]<<", "<<val[Int_t(0.16*number_errorband)]<<", "<<hdata_err<<endl; 
+					//cout<<i<<" "<<(bkgpred->GetY()[i]-val[Int_t(0.84*number_errorband)])/ hdata_err<<", "<<(val[Int_t(0.16*number_errorband)]-bkgpred->GetY()[i])/ hdata_err<<endl; 
+					//cout<<i<<" "<<bkgpred->GetY()[i]<<", "<<val[Int_t(0.84*number_errorband)]<<", "<<val[Int_t(0.16*number_errorband)]<<", "<<hdata_err<<endl; 
 				}else{
 					errorbandP->SetPointError(i, 0. , 0., bkgpred->GetY()[i]-val[Int_t(0.84*number_errorband)] ,val[Int_t(0.16*number_errorband)]-bkgpred->GetY()[i]); 
 				}                      
@@ -375,7 +375,7 @@ void draw_error_band( RooAbsPdf &rpdf, std::string xaxis_name, RooRealVar &rrv_n
 void draw_error_band( RooAbsPdf &rpdf, std::string xaxis_name, RooRealVar &rrv_number_events , RooArgList &paras, RooWorkspace &ws, RooPlot *mplot, RooPlot *mplotP, RooDataHist *datahist, Int_t kcolor=6, std::string opt="F", Int_t number_point=100, const Int_t number_errorband=2000){
 
 	Int_t hpoints = datahist->numEntries();
-	std::cout << hpoints<<endl;
+	//std::cout << hpoints<<endl;
 	TH1 *hdata=datahist->createHistogram("rrv_mass_lvj",hpoints);
 	
 	draw_error_band( rpdf, xaxis_name, rrv_number_events, paras, ws, mplot, mplotP, hdata, kcolor, opt, number_point, number_errorband);
@@ -666,7 +666,7 @@ void draw_error_band_shape_Decor( std::string pdf_name, std::string xaxis_name, 
 		am->SetPoint(i, x_min+delta_x*i,val[Int_t(0.84*number_errorband)]);
 		errorband->SetPoint(i, x_min+delta_x*i,bkgpred->GetY()[i] );
 		errorband->SetPointError(i, 0.,0., bkgpred->GetY()[i]-val[Int_t(0.84*number_errorband)],val[Int_t(0.16*number_errorband)]-bkgpred->GetY()[i]);
-		if (i==55)cout<<val[Int_t(0.16*number_errorband)]<<"  "<<bkgpred->GetY()[i] <<"  "<<val[Int_t(0.84*number_errorband)] <<endl;
+		//if (i==55)cout<<val[Int_t(0.16*number_errorband)]<<"  "<<bkgpred->GetY()[i] <<"  "<<val[Int_t(0.84*number_errorband)] <<endl;
 	}
 	ap->SetLineWidth(2);
 	ap->SetLineColor(kcolor);
@@ -761,10 +761,7 @@ double Calc_error( std::string rpdfname, std::string xaxis_name , RooArgList &pa
 }
 
 
-//void MCStudy(RooAbsPdf* model, RooRealVar x, RooRealVar para0, RooRealVar para1, TString picname){
 void MCStudy(RooAbsPdf* model, RooRealVar x, TString picname, Int_t nTop=400, Int_t nEvtPerSample=0){
-
-
 
 	RooArgSet* parameters_General= model->getParameters( RooArgSet(x));
 	parameters_General->Print("v");
@@ -782,7 +779,6 @@ void MCStudy(RooAbsPdf* model, RooRealVar x, TString picname, Int_t nTop=400, In
 	}
 	para0->Print("v");
 	para1->Print("v");
-	//Double_t tmpB; std::cin>>tmpB;
 	
 	RooMCStudy* mcstudy = new RooMCStudy(*model,x,Binned(kTRUE),Silence(),Extended(), FitOptions(Save(kTRUE),PrintEvalErrors(0))) ;
 	// G e n e r a t e   a n d   f i t   e v e n t s
