@@ -185,12 +185,13 @@ class DoFit:
 
 
         if self.channel == "el":
-            self.Lumi = 6.26
+            self.Lumi = 12.9 
         elif self.channel == "mu":
-            self.Lumi = 6.26
+            self.Lumi = 12.9
         elif self.channel == "em":
-            self.Lumi = 6.26
-        self.file_Directory = "PKUTree_final_6p26fb_Jul18/"
+            self.Lumi = 12.9
+        #self.file_Directory = "PKUTree_final_6p26fb_Jul18/"
+        self.file_Directory = "data_12p9_63mb/"
 
 
         if options.realdata == 1:
@@ -240,15 +241,15 @@ class DoFit:
         elif self.wtagger_category == "HP":
 
             if self.tau21_cut == 0.6:
-                self.rrv_wtagger_eff_reweight_forT = RooRealVar("rrv_wtagger_eff_reweight_forT", "rrv_wtagger_eff_reweight_forT", 0.805)
-                self.rrv_wtagger_eff_reweight_forT.setError(0.017)
-                self.rrv_wtagger_eff_reweight_forV = RooRealVar("rrv_wtagger_eff_reweight_forV", "rrv_wtagger_eff_reweight_forV", 0.988)
-                self.rrv_wtagger_eff_reweight_forV.setError(0.022)
+                self.rrv_wtagger_eff_reweight_forT = RooRealVar("rrv_wtagger_eff_reweight_forT", "rrv_wtagger_eff_reweight_forT", 0.775)
+                self.rrv_wtagger_eff_reweight_forT.setError(0.012)
+                self.rrv_wtagger_eff_reweight_forV = RooRealVar("rrv_wtagger_eff_reweight_forV", "rrv_wtagger_eff_reweight_forV", 1.002)
+                self.rrv_wtagger_eff_reweight_forV.setError(0.019)
             elif self.tau21_cut == 0.45:
-                self.rrv_wtagger_eff_reweight_forT = RooRealVar("rrv_wtagger_eff_reweight_forT", "rrv_wtagger_eff_reweight_forT", 0.787)
-                self.rrv_wtagger_eff_reweight_forT.setError(0.020)
-                self.rrv_wtagger_eff_reweight_forV = RooRealVar("rrv_wtagger_eff_reweight_forV", "rrv_wtagger_eff_reweight_forV", 0.993)
-                self.rrv_wtagger_eff_reweight_forV.setError(0.066)
+                self.rrv_wtagger_eff_reweight_forT = RooRealVar("rrv_wtagger_eff_reweight_forT", "rrv_wtagger_eff_reweight_forT", 0.753)
+                self.rrv_wtagger_eff_reweight_forT.setError(0.014)
+                self.rrv_wtagger_eff_reweight_forV = RooRealVar("rrv_wtagger_eff_reweight_forV", "rrv_wtagger_eff_reweight_forV", 0.977)
+                self.rrv_wtagger_eff_reweight_forV.setError(0.047)
             else:
                 print "self.tau21_cut = %s"%(self.tau21_cut)
                 raw_input("wrong tau21 cut value")
@@ -270,8 +271,12 @@ class DoFit:
             self.mean_shift = 0.0# 0.0 means no correction
             self.sigma_scale = 1.0# 1.0 means no correction
         else:
-            self.mean_shift = 84.8-83.8# 0.0 means no correction
-            self.sigma_scale = 8.0/7.5# 1.0 means no correction
+            if self.tau21_cut == 0.6:
+                self.mean_shift = 84.4-83.4
+                self.sigma_scale = 8.6/7.91
+            elif self.tau21_cut == 0.45:
+                self.mean_shift = 84.9-83.8
+                self.sigma_scale = 7.92/7.52
         print " mean correction for the W peak : ", self.mean_shift, " Resolution correction : ", self.sigma_scale
 
         #SF of WJets and TTBar for ControlPlots, and these SF also passed to the final limit calculation
@@ -5338,8 +5343,8 @@ def check_workspace(channel, signal):
 
 def combine_el_mu(channel):
     """read workspaces of el and mu channel, and draw the combined M_lvj plot"""
-    #boostedW_fitter = DoFit("em", "BulkGravWW750", 650, 850, 40, 150, 600, 1500, "ExpN", "Pow")
-    boostedW_fitter = DoFit("em", "BulkGravWW4500", 4400, 4600, 40, 150, 800, 5000, "ExpN", "Pow")
+    boostedW_fitter = DoFit("em", "BulkGravWW750", 650, 850, 40, 150, 600, 1500, "ExpN", "Pow")
+    #boostedW_fitter = DoFit("em", "BulkGravWW4500", 4400, 4600, 40, 150, 800, 5000, "ExpN", "Pow")
     boostedW_fitter.combine_2workspaces(1)
     #boostedW_fitter.read_postfit_workspaces()
 
