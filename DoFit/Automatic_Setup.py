@@ -30,13 +30,13 @@ if __name__ == "__main__":
 
   if options.vclean : os.system("rm PdfDiagonalizer_cc.so ; rm HWWLVJRooPdfs_cxx.so ; rm MakePdf_cxx.so; rm Util_cxx.so ");
 
-  ROOT.gROOT.ProcessLine(".L PdfDiagonalizer.cc+");
+  ROOT.gROOT.ProcessLine(".L PdfDiagonalizer.cc++");
   ROOT.gSystem.Load("PdfDiagonalizer_cc.so");
 
-  ROOT.gROOT.ProcessLine(".L HWWLVJRooPdfs.cxx+");
+  ROOT.gROOT.ProcessLine(".L HWWLVJRooPdfs.cxx++");
   ROOT.gSystem.Load("HWWLVJRooPdfs_cxx.so");
 
-  ROOT.gROOT.ProcessLine(".L Util.cxx+");
+  ROOT.gROOT.ProcessLine(".L Util.cxx++");
   ROOT.gSystem.Load("Util_cxx.so");
 
   ##os.chdir(inPath+"/BiasStudy");
