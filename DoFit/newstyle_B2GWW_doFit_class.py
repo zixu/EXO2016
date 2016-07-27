@@ -1404,8 +1404,6 @@ class DoFit:
 
         datahist = rdataset_mj.binnedClone(rdataset_mj.GetName()+"_binnedClone", rdataset_mj.GetName()+"_binnedClone")
         parameters_list = model.getParameters(rdataset_mj)
-        #self.draw_canvas_with_pull(mplot, mplot_pull, parameters_list, "plots_%s_%s_%s/m_j_fitting%s_wtaggercut%s/"%(options.additioninformation, self.channel, self.wtagger_category, additioninformation, self.wtagger_category), label+in_file_name, in_model_name)
-        #self.draw_canvas_with_pull(mplot, mplot_pull, parameters_list, self.plotsDir+"/m_j_fitting%s/"%(additioninformation), label+in_file_name, in_model_name)
         self.draw_canvas_with_pull1(rrv_mass_j, datahist, mplot, mplot_pull, ndof, parameters_list, "%s/m_j_fitting%s/"%(self.plotsDir, additioninformation), label+in_file_name, in_model_name)
 
         #normalize the number of total events to lumi --> correct the number to scale to the lumi
@@ -1711,8 +1709,6 @@ class DoFit:
         parameters_list = model.getParameters(rdataset)
         mplot.GetYaxis().SetRangeUser(1e-2, mplot.GetMaximum()*1.5)
 
-        #self.draw_canvas_with_pull(mplot, mplot_pull, parameters_list, "plots_%s_%s_%s/m_lvj_fitting/"%(options.additioninformation, self.channel, self.wtagger_category), in_file_name, "m_lvj"+in_range+mlvj_model, show_constant_parameter, logy)
-        #self.draw_canvas_with_pull(mplot, mplot_pull, parameters_list, self.plotsDir+"/m_lvj_fitting/", in_file_name, "m_lvj"+in_range+mlvj_model, show_constant_parameter, logy)
         self.draw_canvas_with_pull1(rrv_mass_lvj, datahist, mplot, mplot_pull, ndof, parameters_list, "%s/m_lvj_fitting/"%(self.plotsDir), in_file_name, "m_lvj"+in_range+mlvj_model, show_constant_parameter, logy)
 
 
@@ -2149,7 +2145,7 @@ class DoFit:
             draw_error_band(rdataset_data_mlvj, model_data, self.workspace4fit_.var("rrv_number_data_xww_sb_lo_%s_mlvj"%(self.channel)) , rfresult, mplot, self.color_palet["Uncertainty"], "F")
             model_data.plotOn(mplot , RooFit.VLines(), RooFit.Invisible())
             model_data.plotOn(mplot , RooFit.Invisible())
-            self.getData_PoissonInterval(rrv_mass_lvj, rdataset_data_mlvj, mplot)
+            self.plot_data_with_poissoninterval(rrv_mass_lvj, rdataset_data_mlvj, mplot)
 
             mplot.GetYaxis().SetRangeUser(1e-2, mplot.GetMaximum()*1.5)
 
@@ -2171,8 +2167,6 @@ class DoFit:
             parameters_list = model_data.getParameters(rdataset_data_mlvj)
             datahist = rdataset_data_mlvj.binnedClone(rdataset_data_mlvj.GetName()+"_binnedClone", rdataset_data_mlvj.GetName()+"_binnedClone")
 
-            #self.draw_canvas_with_pull(mplot, mplot_pull, parameters_list, "plots_%s_%s_%s/m_lvj_fitting/"%(options.additioninformation, self.channel, self.wtagger_category), "m_lvj_sb_lo%s"%(label), "", 1, 1)
-            #self.draw_canvas_with_pull(mplot, mplot_pull, parameters_list, self.plotsDir+"/m_lvj_fitting/", "m_lvj_sb_lo%s"%(label), "", 1, 1)
             self.draw_canvas_with_pull1(rrv_mass_lvj, datahist, mplot, mplot_pull, ndof, parameters_list, "%s/m_lvj_fitting/"%(self.plotsDir), "m_lvj_sb_lo%s"%(label), mlvj_model, 1, 1)
 
         #### Decorrelate the parameters in order to have a proper shape in the workspace
@@ -2562,8 +2556,6 @@ class DoFit:
             datahist = rdataset_WJets_sb_lo_mlvj.binnedClone(rdataset_WJets_sb_lo_mlvj.GetName()+"_binnedClone", rdataset_WJets_sb_lo_mlvj.GetName()+"_binnedClone")
 
             self.draw_canvas_with_pull1(rrv_x, datahist, mplot_sb_lo, mplot_pull_sideband, ndof, parameters_list, "%s/other/"%(self.plotsDir), "m_lvj%s_sb_lo_sim"%(label), "", 1, 1)
-            #self.draw_canvas_with_pull(mplot_sb_lo, mplot_pull_sideband, parameters_list, "plots_%s_%s_%s/other/"%(options.additioninformation, self.channel, self.wtagger_category), "m_lvj%s_sb_lo_sim"%(label), "", 1, 1)
-            #self.draw_canvas_with_pull(mplot_sb_lo, mplot_pull_sideband, parameters_list, self.plotsDir+"/other/", "m_lvj%s_sb_lo_sim"%(label), "", 1, 1)
 
             ### only mc plots in the SR region
             mplot_signal_region = rrv_x.frame(RooFit.Title("WJets sr"), RooFit.Bins(int(rrv_x.getBins()/self.binwidth_narrow_factor)))
@@ -2584,8 +2576,6 @@ class DoFit:
             print "#################### JENchi2 nPar = %s, chiSquare = %s/%s"%(self.nPar_float_in_fitTo , mplot_signal_region.chiSquare(self.nPar_float_in_fitTo)*ndof, ndof)
 
             self.draw_canvas_with_pull1(rrv_x, datahist, mplot_signal_region, mplot_pull_signal_region, ndof, parameters_list, "%s/other/"%(self.plotsDir), "m_lvj%s_signal_region_sim"%(label), "", 1, 1)
-            #self.draw_canvas_with_pull(mplot_signal_region, mplot_pull_signal_region, parameters_list, "plots_%s_%s_%s/other/"%(options.additioninformation, self.channel, self.wtagger_category), "m_lvj%s_signal_region_sim"%(label), "", 1, 1)
-            #self.draw_canvas_with_pull(mplot_signal_region, mplot_pull_signal_region, parameters_list, self.plotsDir+"/other/", "m_lvj%s_signal_region_sim"%(label), "", 1, 1)
 
         ### Total plot shape in sb_lo, sr and alpha
         model_pdf_sb_lo_WJets.plotOn(mplot, RooFit.Name("Sideband"), RooFit.LineStyle(10))
@@ -3546,7 +3536,7 @@ class DoFit:
         model_pdf_signal.plotOn(mplot, RooFit.Normalization(scale_number_signal*self.signal_scale*self.signal_scale_plot), RooFit.Name("%s #times %s"%(self.signal_sample, self.signal_scale*self.signal_scale_plot)), RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines())
 
         #### plot the observed data using poissonian error bar
-        self.getData_PoissonInterval(rrv_x, data_obs, mplot)
+        self.plot_data_with_poissoninterval(rrv_x, data_obs, mplot)
 
         model_Total_background_MC.plotOn(mplot, RooFit.Normalization(scale_number_Total_background_MC), RooFit.Invisible())
 
@@ -3556,10 +3546,12 @@ class DoFit:
         ### Plot the list of floating parameters and the uncertainty band is draw taking into account this floating list defined in the prepare_limit
         if self.FloatingParams.getSize() == 0:
             self.setFloatingParams(workspace, self.FloatingParams, mode, isTTbarFloating, isVVFloating, isSTopFloating)
-            self.FloatingParams.Print()
+        self.FloatingParams.Print("v")
+        #raw_input("zixu")
 
         hdata = datahist.createHistogram(rrv_x.GetName(), int(rrv_x.getBins()/self.binwidth_narrow_factor))
-        draw_error_band(model_Total_background_MC, rrv_x.GetName(), rrv_number_Total_background_MC, self.FloatingParams, workspace , mplot, mplotP, hdata, self.color_palet["Uncertainty"], "F")
+        draw_error_band(model_Total_background_MC, rrv_x.GetName(), rrv_number_Total_background_MC, self.FloatingParams,
+                workspace, mplot, mplotP, hdata, self.color_palet["Uncertainty"], "F")
 
         mplot.Print()
         self.leg = self.legend4Plot(mplot, 0, 1,-0.01,-0.05, 0.11, 0.)
@@ -3741,7 +3733,7 @@ class DoFit:
         model_pdf_signal.plotOn(mplot, RooFit.Normalization(scale_number_signal*self.signal_scale*self.signal_scale_plot), RooFit.Name("%s #times %s"%(self.signal_sample, self.signal_scale*self.signal_scale_plot)), RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines())
 
         #### plot the observed data using poissonian error bar
-        self.getData_PoissonInterval(rrv_x, data_obs, mplot)
+        self.plot_data_with_poissoninterval(rrv_x, data_obs, mplot)
 
         model_Total_background_MC.plotOn(mplot, RooFit.Normalization(scale_number_Total_background_MC), RooFit.Invisible())
 
@@ -3883,8 +3875,8 @@ class DoFit:
     def combine_2workspaces(self, logy = 0):
 
         ### Taket the workspace for limits
-        file1 = TFile(self.file_rlt_root) #mu
-        file2 = TFile(self.file_rlt_root.replace("_mu_", "_el_")) #el
+        file1 = TFile(self.file_rlt_root.replace("_em_", "_mu_")) #mu
+        file2 = TFile(self.file_rlt_root.replace("_em_", "_el_")) #el
         workspace1 = file1.Get("workspace4limit_")
         workspace2 = file2.Get("workspace4limit_")
         workspace1.Print()
@@ -3958,15 +3950,8 @@ class DoFit:
         model_pdf_TTbar2.Print()
         model_pdf_STop2.Print()
 
-        ##if TString(self.signal_sample).Contains("Bulk"):
-        ##    rrv_number_signal1 = workspace1.var("rate_BulkWW_xww_for_unbin")
-        ##    rrv_number_signal2 = workspace2.var("rate_BulkWW_xww_for_unbin")
-        ##else:
-        ##    rrv_number_signal1 = workspace1.var("rate_%s_xww_for_unbin"%(self.signal_sample))
-        ##    rrv_number_signal2 = workspace2.var("rate_%s_xww_for_unbin"%(self.signal_sample))
         rrv_number_signal1 = workspace1.var("rate_%s_xww_for_unbin"%(self.signal_sample))
         rrv_number_signal2 = workspace2.var("rate_%s_xww_for_unbin"%(self.signal_sample))
-
 
         rrv_number_WJets1  = workspace1.var("rate_WJets_xww_for_unbin")
         rrv_number_VV1     = workspace1.var("rate_VV_xww_for_unbin")
@@ -4018,10 +4003,8 @@ class DoFit:
         model_Total_background_MC = RooAddPdf("model_Total_background_MC_xww", "model_Total_background_MC_xww", RooArgList(model_pdf_WJets1, model_pdf_WJets2, model_pdf_VV1, model_pdf_VV2, model_pdf_TTbar1, model_pdf_TTbar2, model_pdf_STop1, model_pdf_STop2), RooArgList(rrv_number_WJets1, rrv_number_WJets2, rrv_number_VV1, rrv_number_VV2, rrv_number_TTbar1, rrv_number_TTbar2, rrv_number_STop1, rrv_number_STop2))
 
         scale_number_signal = (rrv_number_signal1.getVal() + rrv_number_signal2.getVal())/data_obs.sumEntries()
-        #### scale factor in order to scale MC to data in the final plot -> in order to avoid the normalization to data which is done by default in rooFit
+        #### scale factor in order to scale MC to data in the final plot -> in order to avoid the normalization to data which is done by default in RooFit
         scale_number_Total_background_MC = rrv_number_Total_background_MC.getVal()/data_obs.sumEntries()
-
-
 
         #### create the frame
         mplot = rrv_x.frame(RooFit.Title("check_workspace"), RooFit.Bins(int(rrv_x.getBins()/self.binwidth_narrow_factor)))
@@ -4050,8 +4033,8 @@ class DoFit:
         model_pdf_signal = RooAddPdf("model_pdf_signal", "model_pdf_signal", RooArgList(model_pdf_signal1, model_pdf_signal2), RooArgList(rrv_number_signal1, rrv_number_signal2))
         model_pdf_signal.plotOn(mplot, RooFit.Normalization(scale_number_signal*self.signal_scale*self.signal_scale_plot), RooFit.Name("%s #times %s"%(self.signal_sample, self.signal_scale*self.signal_scale_plot)), RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines())
 
-        #### plot the observed data using poissonian error bar
-        self.getData_PoissonInterval(rrv_x, data_obs, mplot)
+        #### plot the observed data with poissonian error bar
+        self.plot_data_with_poissoninterval(rrv_x, data_obs, mplot)
 
         model_Total_background_MC.plotOn(mplot, RooFit.Normalization(scale_number_Total_background_MC), RooFit.Invisible())
 
@@ -4061,29 +4044,33 @@ class DoFit:
         ##workspace_comb = RooWorkspace("workspace_comb", "workspace_comb")
         ##getattr(workspace_comb, "import")(model_Total_background_MC)
 
-
+        #for ExpN
         floatingparams = RooArgList("floatpara_list")
-        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sb_lo_from_fitting_el_%s_mlvj_13TeV_eig0"%(self.wtagger_category)))
-        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sb_lo_from_fitting_el_%s_mlvj_13TeV_eig1"%(self.wtagger_category)))
-        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sb_lo_from_fitting_el_%s_mlvj_13TeV_eig2"%(self.wtagger_category)))
-        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sim_el_%s_mlvj_13TeV_eig0"%(self.wtagger_category)))
-        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sim_el_%s_mlvj_13TeV_eig1"%(self.wtagger_category)))
-        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sim_el_%s_mlvj_13TeV_eig2"%(self.wtagger_category)))
-        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sim_el_%s_mlvj_13TeV_eig3"%(self.wtagger_category)))
-        floatingparams.add(workspace_comb.var("Deco_TTbar_xww_signal_region_el_%s_mlvj_13TeV_eig0"%(self.wtagger_category)))
+        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sb_lo_from_fitting_el_%s_mlvj_eig0"%(self.wtagger_category)))
+        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sb_lo_from_fitting_el_%s_mlvj_eig1"%(self.wtagger_category)))
+        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sb_lo_from_fitting_el_%s_mlvj_eig2"%(self.wtagger_category)))
+        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sim_el_%s_mlvj_eig0"%(self.wtagger_category)))
+        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sim_el_%s_mlvj_eig1"%(self.wtagger_category)))
+        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sim_el_%s_mlvj_eig2"%(self.wtagger_category)))
+        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sim_el_%s_mlvj_eig3"%(self.wtagger_category)))
+        floatingparams.add(workspace_comb.var("Deco_TTbar_xww_signal_region_el_%s_mlvj_eig0"%(self.wtagger_category)))
 
-        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sb_lo_from_fitting_mu_%s_mlvj_13TeV_eig0"%(self.wtagger_category)))
-        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sb_lo_from_fitting_mu_%s_mlvj_13TeV_eig1"%(self.wtagger_category)))
-        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sb_lo_from_fitting_mu_%s_mlvj_13TeV_eig2"%(self.wtagger_category)))
-        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sim_mu_%s_mlvj_13TeV_eig0"%(self.wtagger_category)))
-        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sim_mu_%s_mlvj_13TeV_eig1"%(self.wtagger_category)))
-        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sim_mu_%s_mlvj_13TeV_eig2"%(self.wtagger_category)))
-        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sim_mu_%s_mlvj_13TeV_eig3"%(self.wtagger_category)))
-        floatingparams.add(workspace_comb.var("Deco_TTbar_xww_signal_region_mu_%s_mlvj_13TeV_eig0"%(self.wtagger_category)))
+        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sb_lo_from_fitting_mu_%s_mlvj_eig0"%(self.wtagger_category)))
+        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sb_lo_from_fitting_mu_%s_mlvj_eig1"%(self.wtagger_category)))
+        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sb_lo_from_fitting_mu_%s_mlvj_eig2"%(self.wtagger_category)))
+        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sim_mu_%s_mlvj_eig0"%(self.wtagger_category)))
+        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sim_mu_%s_mlvj_eig1"%(self.wtagger_category)))
+        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sim_mu_%s_mlvj_eig2"%(self.wtagger_category)))
+        floatingparams.add(workspace_comb.var("Deco_WJets0_xww_sim_mu_%s_mlvj_eig3"%(self.wtagger_category)))
+        floatingparams.add(workspace_comb.var("Deco_TTbar_xww_signal_region_mu_%s_mlvj_eig0"%(self.wtagger_category)))
 
         floatingparams.Print("v")
-        #raw_input("zixu")
-        draw_error_band(model_Total_background_MC, rrv_x.GetName(), rrv_number_Total_background_MC, floatingparams, workspace_comb , mplot, mplotP, datahist, self.color_palet["Uncertainty"], "F")
+        if floatingparams.getSize() == 0:
+            raw_input("zixu")
+
+        hdata = datahist.createHistogram(rrv_x.GetName(), int(rrv_x.getBins()/self.binwidth_narrow_factor))
+        draw_error_band(model_Total_background_MC, rrv_x.GetName(), rrv_number_Total_background_MC, floatingparams,
+                workspace_comb , mplot, mplotP, hdata, self.color_palet["Uncertainty"], "F")
 
 
         mplot_pull = self.get_pull(rrv_x, mplot)
@@ -4100,7 +4087,6 @@ class DoFit:
 
 
         parameters_list = RooArgList()
-        #self.draw_canvas_with_pull(mplot, mplot_pull, parameters_list, "plots_%s_%s_g1/m_lvj_fitting/"%("em", self.wtagger_category), "check_workspace_for_limit", "", 0, 1)
 
         self.nPar_float_in_fitTo = self.FloatingParams.getSize()
         #if workspace.var("rrv_num_floatparameter_in_last_fitting"):
@@ -4365,7 +4351,7 @@ class DoFit:
         model_pdf_signal.plotOn(mplot, RooFit.Normalization(scale_number_signal*self.signal_scale*self.signal_scale_plot), RooFit.Name("%s #times %s"%(self.signal_sample, self.signal_scale*self.signal_scale_plot)), RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines())
 
         #### plot the observed data using poissonian error bar
-        self.getData_PoissonInterval(rrv_x, data_obs, mplot)
+        self.plot_data_with_poissoninterval(rrv_x, data_obs, mplot)
 
         model_Total_background_MC.plotOn(mplot, RooFit.Normalization(scale_number_Total_background_MC), RooFit.Invisible())
 
@@ -4414,7 +4400,6 @@ class DoFit:
 
 
         parameters_list = RooArgList()
-        #self.draw_canvas_with_pull(mplot, mplot_pull, parameters_list, "plots_%s_%s_g1/m_lvj_fitting/"%("em", self.wtagger_category), "check_workspace_for_limit", "", 0, 1)
 
         self.nPar_float_in_fitTo = self.FloatingParams.getSize()
         #if workspace.var("rrv_num_floatparameter_in_last_fitting"):
@@ -4473,31 +4458,32 @@ class DoFit:
         hpull.SetHistogram(gt)
         return hpull
 
-    def getData_PoissonInterval(self, rrv_x, data_obs, mplot):
-        #rrv_x = self.workspace4fit_.var("rrv_mass_lvj")
-        datahist   = data_obs.binnedClone(data_obs.GetName()+"_binnedClone", data_obs.GetName()+"_binnedClone")
-        #data_histo = datahist.createHistogram("histo_data", rrv_x)
+    def plot_data_with_poissoninterval(self, rrv_x, data_obs, mplot):
+        """ adding obs data to the mplots, and poisson error"""
+        datahist = data_obs.binnedClone(data_obs.GetName()+"_binnedClone", data_obs.GetName()+"_binnedClone")
         data_histo = datahist.createHistogram(rrv_x.GetName(), int(rrv_x.getBins()/self.binwidth_narrow_factor))
         data_histo.SetName("data")
-        data_plot  = RooHist(data_histo)
-        data_plot.SetMarkerStyle(20)
-        data_plot.SetMarkerSize(1.5)
+        data4plot = RooHist(data_histo)
+        data4plot.SetMarkerStyle(20)
+        data4plot.SetMarkerSize(1.5)
 
-        alpha = 1 - 0.6827
-        for iPoint  in range(data_plot.GetN()):
-            N = data_plot.GetY()[iPoint]
+        alpha = 0.3173 #1 - 0.6827
+        for iPoint  in range(data4plot.GetN()):
+            N = data4plot.GetY()[iPoint]
             if N == 0 : #not show mark for event=0 bins
                 L = 0
                 U = 0
             else:
-                L = (ROOT.Math.gamma_quantile(alpha/2,N, 1.))
-                U =  ROOT.Math.gamma_quantile_c(alpha/2,N+1, 1)
-            data_plot.SetPointEYlow(iPoint, N-L)
-            data_plot.SetPointEYhigh(iPoint,U-N)
-            data_plot.SetPointEXlow(iPoint, 0)
-            data_plot.SetPointEXhigh(iPoint, 0)
+                L = (ROOT.Math.gamma_quantile(alpha/2, N, 1.))
+                U =  ROOT.Math.gamma_quantile_c(alpha/2, N+1, 1)
+            data4plot.SetPointEYlow(iPoint, N-L)
+            data4plot.SetPointEYhigh(iPoint, U-N)
+            data4plot.SetPointEXlow(iPoint, 0)
+            data4plot.SetPointEXhigh(iPoint, 0)
+            #print L, N, U
+        #raw_input("zixu")
 
-        mplot.addPlotable(data_plot, "PE")
+        mplot.addPlotable(data4plot, "PE")
 
     def get_canvas(self, cname, isalpha = False):
         #tdrstyle.setTDRStyle()
@@ -4605,7 +4591,7 @@ class DoFit:
             objName = plot.nameOf(obj)
             if objName == "errorband" :
                 objName = "Uncertainty"
-            print objName
+            #print objName
             if not (((plot.getInvisible(objName)) and (not TString(objName).Contains("Uncertainty"))) or TString(objName).Contains("invisi") or TString(objName).Contains("TLine") or objName == objName_before):
                 theObj = plot.getObject(obj)
                 objTitle = objName
@@ -4634,7 +4620,7 @@ class DoFit:
             objName = plot.nameOf(obj)
             if objName == "errorband" :
                 objName = "Uncertainty"
-            print objName
+            #print objName
             if not (((plot.getInvisible(objName)) and (not TString(objName).Contains("Uncertainty"))) or TString(objName).Contains("invisi") or TString(objName).Contains("TLine") or objName == objName_before):
                 theObj = plot.getObject(obj)
                 objTitle = objName
@@ -4666,7 +4652,7 @@ class DoFit:
                 continue
             if objName == "errorband" :
                 objName = "Uncertainty"
-            print objName
+            #print objName
             if not (((plot.getInvisible(objName)) and (not TString(objName).Contains("Uncertainty"))) or TString(objName).Contains("invisi") or TString(objName).Contains("TLine") or objName == objName_before):
                 theObj = plot.getObject(obj)
                 objTitle = objName
@@ -4792,122 +4778,6 @@ class DoFit:
             cMassFit.SaveAs(rlt_file.Data())
             rlt_file.ReplaceAll(".pdf", ".png")
             cMassFit.SaveAs(rlt_file.Data())
-
-    #### draw canvas with plots with pull
-    def draw_canvas_with_pull(self, mplot, mplot_pull, parameters_list, in_directory, in_file_name, in_model_name = "", show_constant_parameter=0, logy=0):
-        #print "############### draw the canvas with pull ########################"
-        mplot.GetXaxis().SetTitleOffset(1.1)
-        mplot.GetYaxis().SetTitleOffset(1.3)
-        mplot.GetXaxis().SetTitleSize(0.055)
-        mplot.GetYaxis().SetTitleSize(0.055)
-        mplot.GetXaxis().SetLabelSize(0.045)
-        mplot.GetYaxis().SetLabelSize(0.045)
-        mplot_pull.GetXaxis().SetLabelSize(0.14)
-        mplot_pull.GetYaxis().SetLabelSize(0.14)
-        mplot_pull.GetYaxis().SetTitleSize(0.15)
-        mplot_pull.GetYaxis().SetNdivisions(205)
-
-
-        #cMassFit = TCanvas("cMassFit", "cMassFit", 600, 600)
-        cMassFit = self.get_canvas("cMassFit")
-        # if parameters_list is empty, don't draw pad3
-        par_first = parameters_list.createIterator()
-        par_first.Reset()
-        param_first = par_first.Next()
-        doParameterPlot = 0
-        if param_first and doParameterPlot != 0:
-            pad1 = TPad("pad1", "pad1", 0., 0. , 0.8, 0.24)
-            pad2 = TPad("pad2", "pad2", 0., 0.24, 0.8, 1.)
-            pad3 = TPad("pad3", "pad3", 0.8, 0., 1, 1)
-            pad1.Draw()
-            pad2.Draw()
-            pad3.Draw()
-        else:
-            pad1 = TPad("pad1", "pad1", 0., 0. , 0.99, 0.24)
-            pad2 = TPad("pad2", "pad2", 0., 0.24, 0.99, 1.)
-            pad1.Draw()
-            pad2.Draw()
-
-        pad2.cd()
-        mplot.Draw()
-        banner = self.banner4Plot(1)
-        banner.Draw()
-
-        pad1.cd()
-        mplot_pull.Draw()
-
-        if param_first and doParameterPlot != 0:
-
-            pad3.cd()
-            latex = TLatex()
-            latex.SetTextSize(0.1)
-            par = parameters_list.createIterator()
-            par.Reset()
-            param = par.Next()
-            i = 0
-            while param:
-                if (not param.isConstant()) or show_constant_parameter:
-                    param.Print()
-                    icolor = 1#if a paramenter is constant, color is 2
-                    if param.isConstant():
-                        icolor = 2
-                    latex.DrawLatex(0, 0.9-i*0.04, "#color[%s]{%s}"%(icolor, param.GetName()))
-                    latex.DrawLatex(0, 0.9-i*0.04-0.02, " #color[%s]{%4.3e +/- %2.1e}"%(icolor, param.getVal(), param.getError()))
-                    i = i+1
-                param = par.Next()
-
-        ## create the directory where store the plots
-        Directory = TString(in_directory+self.signal_sample+"/")
-        if not Directory.EndsWith("/"):
-            Directory = Directory.Append("/")
-        if not os.path.isdir(Directory.Data()):
-            os.system("mkdir -p "+Directory.Data())
-
-        rlt_file = TString(Directory.Data()+in_file_name)
-        if rlt_file.EndsWith(".root"):
-            TString(in_model_name).ReplaceAll(".root", "")
-            rlt_file.ReplaceAll(".root", "_"+in_model_name+"_with_pull.png")
-        else:
-            TString(in_model_name).ReplaceAll(".root", "")
-            rlt_file.ReplaceAll(".root", "")
-            rlt_file = rlt_file.Append("_"+in_model_name+"_with_pull.png")
-
-        cMassFit.SaveAs(rlt_file.Data())
-        if logy:
-            mplot.GetYaxis().SetRangeUser(1e-3, mplot.GetMaximum()*200)
-            pad2.SetLogy()
-            pad2.Update()
-            cMassFit.Update()
-            rlt_file.ReplaceAll(".png", "_log.png")
-            cMassFit.SaveAs(rlt_file.Data())
-
-
-        #rlt_file.ReplaceAll(".png", ".pdf")
-        #cMassFit.SaveAs(rlt_file.Data())
-        #
-        #rlt_file.ReplaceAll(".pdf", ".root")
-        #cMassFit.SaveAs(rlt_file.Data())
-
-        #string_file_name = TString(in_file_name)
-        #if string_file_name.EndsWith(".root"):
-        #    string_file_name.ReplaceAll(".root", "_"+in_model_name)
-        #else:
-        #    string_file_name.ReplaceAll(".root", "")
-        #    string_file_name.Append("_"+in_model_name)
-
-        #if logy:
-        #    mplot.GetYaxis().SetRangeUser(1e-3, mplot.GetMaximum()*200)
-        #    pad2.SetLogy()
-        #    pad2.Update()
-        #    cMassFit.Update()
-        #    rlt_file.ReplaceAll(".root", "_log.root")
-        #    cMassFit.SaveAs(rlt_file.Data())
-        #    rlt_file.ReplaceAll(".root", ".pdf")
-        #    cMassFit.SaveAs(rlt_file.Data())
-        #    rlt_file.ReplaceAll(".pdf", ".png")
-        #    cMassFit.SaveAs(rlt_file.Data())
-
-        ##self.draw_canvas(mplot, in_directory, string_file_name.Data(), 0, logy, 1)
 
     #### draw canvas with plots with pull
     def draw_canvas_with_pull1(self, rrv_x, datahist, mplot, mplot_pull, ndof, parameters_list, in_directory, in_file_name, in_model_name = "", show_constant_parameter=0, logy=0, ismj=0, isPull=0):
@@ -5048,7 +4918,7 @@ class DoFit:
         mplot.GetYaxis().SetLabelSize(0.06)
         mplot.GetXaxis().SetLabelSize(0)
 
-        cMassFit = self.get_canvas("cMassFit")#TCanvas("cMassFit", "cMassFit", 600, 600)
+        cMassFit = self.get_canvas("cMassFit")
         # if parameters_list is empty, don't draw pad3
         par_first = parameters_list.createIterator()
         par_first.Reset()
@@ -5072,6 +4942,8 @@ class DoFit:
             pad1.SetBottomMargin(0.4)
             pad1.Draw()
             pad2.Draw()
+
+        #draw the main plot
         pad2.cd()
 
         if ismj:
@@ -5093,6 +4965,7 @@ class DoFit:
         #banner = self.banner4Plot(1)
         #banner.Draw()
 
+        #Draw the PULL plot
         pad1.cd()
         mplot_pull.Draw("AP")
         mplotP.Draw("same")
@@ -5461,8 +5334,8 @@ def check_workspace(channel, signal):
 
 def combine_el_mu(channel):
     """read workspaces of el and mu channel, and draw the combined M_lvj plot"""
-    #boostedW_fitter = DoFit("mu", "BulkGravWW750", 650, 850, 40, 150, 600, 1500, "ExpN", "Pow")
-    boostedW_fitter = DoFit("mu", "BulkGravWW4500", 4400, 4600, 40, 150, 800, 5000, "ExpN", "Pow")
+    boostedW_fitter = DoFit("em", "BulkGravWW750", 650, 850, 40, 150, 600, 1500, "ExpN", "Pow")
+    #boostedW_fitter = DoFit("em", "BulkGravWW4500", 4400, 4600, 40, 150, 800, 5000, "ExpN", "Pow")
     boostedW_fitter.combine_2workspaces(1)
     #boostedW_fitter.read_postfit_workspaces()
 
@@ -5501,12 +5374,12 @@ if __name__ == '__main__':
 
     if options.check:
         print '################# check workspace for %s sample'%(options.opt_channel)
-        #check_workspace(options.opt_channel, "BulkGravWW750")
-        check_workspace(options.opt_channel, "BulkGravWW4500")
+        check_workspace(options.opt_channel, "BulkGravWW750")
+        #check_workspace(options.opt_channel, "BulkGravWW4500")
 
     if options.combine:
         print '################# check workspace for %s sample'%(options.opt_channel)
-        combine_el_mu(options.opt_channel)
+        combine_el_mu("em")
 
     if options.simple and (not options.fitwtagger) and (not options.fitwtaggersim) and (not options.multi) and (not options.control) and (not options.check) and (not options.combine) and (not options.fitsignal):
         print '################# simple mode for %s sample'%(options.opt_channel)
