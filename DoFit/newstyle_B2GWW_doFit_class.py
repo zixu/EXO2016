@@ -221,6 +221,8 @@ class DoFit:
             self.categoryID = -1
         elif self.wtagger_category == "HP"   and self.channel == "mu":
             self.categoryID = 1
+        elif self.channel == "em" and options.combine:
+            print "for combine"
         else:
             raw_input("Fail to find correct categoryID. Please check your wtaggerI:%s and channel:%s"%(self.wtagger_category, self.channel))
 
@@ -432,6 +434,8 @@ class DoFit:
             self.signal_lepton_energy_scale_uncertainty = 0.002
             self.signal_lepton_energy_res_uncertainty   = 0.001
             self.lep_eff_uncertainty     = 0.05
+        elif self.channel == "em" and options.combine:
+            print "for combine"
         else:
             raw_input("Fail to find correct channel. Please check your channel:%s"%(self.channel))
 
@@ -5334,8 +5338,8 @@ def check_workspace(channel, signal):
 
 def combine_el_mu(channel):
     """read workspaces of el and mu channel, and draw the combined M_lvj plot"""
-    boostedW_fitter = DoFit("em", "BulkGravWW750", 650, 850, 40, 150, 600, 1500, "ExpN", "Pow")
-    #boostedW_fitter = DoFit("em", "BulkGravWW4500", 4400, 4600, 40, 150, 800, 5000, "ExpN", "Pow")
+    #boostedW_fitter = DoFit("em", "BulkGravWW750", 650, 850, 40, 150, 600, 1500, "ExpN", "Pow")
+    boostedW_fitter = DoFit("em", "BulkGravWW4500", 4400, 4600, 40, 150, 800, 5000, "ExpN", "Pow")
     boostedW_fitter.combine_2workspaces(1)
     #boostedW_fitter.read_postfit_workspaces()
 
@@ -5374,8 +5378,8 @@ if __name__ == '__main__':
 
     if options.check:
         print '################# check workspace for %s sample'%(options.opt_channel)
-        check_workspace(options.opt_channel, "BulkGravWW750")
-        #check_workspace(options.opt_channel, "BulkGravWW4500")
+        #check_workspace(options.opt_channel, "BulkGravWW750")
+        check_workspace(options.opt_channel, "BulkGravWW4500")
 
     if options.combine:
         print '################# check workspace for %s sample'%(options.opt_channel)
