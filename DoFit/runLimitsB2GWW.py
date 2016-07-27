@@ -579,6 +579,8 @@ def doULPlot( suffix ):
     leg2.AddEntry(curGraph_obs,"Asympt. CL_{S} Observed","LP")
 
     #ROOT.gPad.SetLogx();
+    #hrl_SM.GetXaxis().SetMoreLogLabels()
+    #hrl_SM.GetXaxis().SetNoExponent()
     ROOT.gPad.SetLogy();
 
     can_SM.Update();
@@ -588,7 +590,7 @@ def doULPlot( suffix ):
 
     leg2.Draw();
 
-    banner = TLatex(0.95, 0.96, "6.26 fb^{-1} (13 TeV)");
+    banner = TLatex(0.95, 0.96, "12.9 fb^{-1} (13 TeV)");
     banner.SetNDC(); banner.SetTextSize(0.038); banner.SetTextFont(42); banner.SetTextAlign(31); banner.SetLineWidth(2); banner.Draw();
     CMStext = TLatex(0.15,0.96,"CMS");
     CMStext.SetNDC(); CMStext.SetTextSize(0.041); CMStext.SetTextFont(61); CMStext.SetTextAlign(11); CMStext.SetLineWidth(2); CMStext.Draw();
@@ -609,6 +611,25 @@ def doULPlot( suffix ):
     can_SM.SaveAs("./LimitResult/Limit_%s_sys%s/Lim%s.pdf"%(options.signalmodel, options.Sys, suffix));
     #can_SM.SaveAs("./LimitResult/Limit_sys%s/Lim%s.root"%(options.Sys, suffix));
     can_SM.SaveAs("./LimitResult/Limit_%s_sys%s/Lim%s.C"%(options.signalmodel, options.Sys, suffix));
+
+
+
+
+    ROOT.gPad.SetLogx();
+    hrl_SM.GetXaxis().SetMoreLogLabels()
+    hrl_SM.GetXaxis().SetNoExponent()
+
+    can_SM.Update();
+    can_SM.RedrawAxis();
+    can_SM.RedrawAxis("g");
+    can_SM.Update();
+
+    can_SM.SaveAs("./LimitResult/Limit_%s_sys%s/Lim%s_Logx.png"%(options.signalmodel, options.Sys, suffix));
+    can_SM.SaveAs("./LimitResult/Limit_%s_sys%s/Lim%s_Logx.pdf"%(options.signalmodel, options.Sys, suffix));
+    can_SM.SaveAs("./LimitResult/Limit_%s_sys%s/Lim%s_Logx.C"%(options.signalmodel, options.Sys, suffix));
+
+
+
 
 
 #################
