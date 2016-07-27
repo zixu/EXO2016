@@ -336,7 +336,7 @@ void draw_error_band( RooAbsPdf &rpdf, std::string xaxis_name, RooRealVar &rrv_n
 				else { L = ROOT::Math::gamma_quantile(alpha/2,N,1.);}
 
 				U =  ROOT::Math::gamma_quantile_c(alpha/2,N+1,1);
-				//cout<<"N="<<N<<", L="<<L<<", U="<<U<<endl;
+				cout<<"N="<<N<<", L="<<L<<", U="<<U<<endl;
 				dataEYlow = N-L;
 				dataEYhigh= U-N;
 				if ( hdata->GetBinContent(k) - bkgpred->GetY()[i] >0 ) {
@@ -344,12 +344,14 @@ void draw_error_band( RooAbsPdf &rpdf, std::string xaxis_name, RooRealVar &rrv_n
 				} else {
 					hdata_err = dataEYhigh;
 				}
+				cout<<"i="<<i<<" x_tmp="<<x_tmp<<" dataEYlow="<<dataEYlow<<" dataEYhigh="<<dataEYhigh<<endl;
 				//cout<<"hdata_err="<<hdata_err<<endl;
 				//std::cout<< "Hello World "<<i<<"   "<< x_tmp<<"\t"<<hdata->GetBinError(k)<<"  "<<hdata_err<<std::endl;
 				errorbandP->SetPoint(i, x_tmp,0.); 
 				if(hdata_err>0 ) {
 					errorbandP->SetPointError(i, 0. , 0., (bkgpred->GetY()[i]-val[Int_t(0.84*number_errorband)])/ hdata_err ,(val[Int_t(0.16*number_errorband)]-bkgpred->GetY()[i])/ hdata_err); 
-					//cout<<i<<" "<<(bkgpred->GetY()[i]-val[Int_t(0.84*number_errorband)])/ hdata_err<<", "<<(val[Int_t(0.16*number_errorband)]-bkgpred->GetY()[i])/ hdata_err<<endl; 
+					//cout<<i<<" x_tmp= "<<x_tmp<<" error= "<<(bkgpred->GetY()[i]-val[Int_t(0.84*number_errorband)])/ hdata_err<<", "<<(val[Int_t(0.16*number_errorband)]-bkgpred->GetY()[i])/ hdata_err<<endl; 
+					cout<<i<<" x_tmp= "<<x_tmp<<" error= "<<(bkgpred->GetY()[i]-val[Int_t(0.84*number_errorband)])<<", "<<(val[Int_t(0.16*number_errorband)]-bkgpred->GetY()[i])<<" hdata= "<< hdata_err<<endl; 
 					//cout<<i<<" "<<bkgpred->GetY()[i]<<", "<<val[Int_t(0.84*number_errorband)]<<", "<<val[Int_t(0.16*number_errorband)]<<", "<<hdata_err<<endl; 
 				}else{
 					errorbandP->SetPointError(i, 0. , 0., bkgpred->GetY()[i]-val[Int_t(0.84*number_errorband)] ,val[Int_t(0.16*number_errorband)]-bkgpred->GetY()[i]); 
@@ -372,14 +374,14 @@ void draw_error_band( RooAbsPdf &rpdf, std::string xaxis_name, RooRealVar &rrv_n
 	if( TString(opt).Contains("L") ){ am->SetMarkerStyle(1); ap->SetMarkerStyle(1);  mplot->addObject(am); mplot->addObject(ap); }
 }
 
-void draw_error_band( RooAbsPdf &rpdf, std::string xaxis_name, RooRealVar &rrv_number_events , RooArgList &paras, RooWorkspace &ws, RooPlot *mplot, RooPlot *mplotP, RooDataHist *datahist, Int_t kcolor=6, std::string opt="F", Int_t number_point=100, const Int_t number_errorband=2000){
-
-	Int_t hpoints = datahist->numEntries();
-	//std::cout << hpoints<<endl;
-	TH1 *hdata=datahist->createHistogram("rrv_mass_lvj",hpoints);
-	
-	draw_error_band( rpdf, xaxis_name, rrv_number_events, paras, ws, mplot, mplotP, hdata, kcolor, opt, number_point, number_errorband);
-}
+//void draw_error_band( RooAbsPdf &rpdf, std::string xaxis_name, RooRealVar &rrv_number_events , RooArgList &paras, RooWorkspace &ws, RooPlot *mplot, RooPlot *mplotP, RooDataHist *datahist, Int_t kcolor=6, std::string opt="F", Int_t number_point=100, const Int_t number_errorband=2000){
+//
+//	Int_t hpoints = datahist->numEntries();
+//	//std::cout << hpoints<<endl;
+//	TH1 *hdata=datahist->createHistogram("rrv_mass_lvj",hpoints);
+//	
+//	draw_error_band( rpdf, xaxis_name, rrv_number_events, paras, ws, mplot, mplotP, hdata, kcolor, opt, number_point, number_errorband);
+//}
 
 /// Draw error band giving directly the extended Pdf
 void draw_error_band_extendPdf(RooAbsData &rdata, RooExtendPdf &rpdf, RooFitResult *rfres, RooPlot *mplot, Int_t kcolor=6, std::string opt="F", Int_t number_point=100, const Int_t number_errorband=2000){
