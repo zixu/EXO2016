@@ -529,12 +529,12 @@ def doULPlot( suffix ):
 
     if options.signalmodel=="BulkGravWW":
         if options.lvjBR:
-            hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{Bulk} #rightarrow WW #rightarrow l#nuj) (pb)");
+            hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{Bulk} #rightarrow WW #rightarrow l#nuqq') (pb)");
         else:
             hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{Bulk} #rightarrow WW) (pb)");
     elif options.signalmodel=="WprimeWZ":
         if options.lvjBR:
-            hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow W' #rightarrow WZ #rightarrow l#nuj) (pb)");
+            hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow W' #rightarrow WZ #rightarrow l#nuqq') (pb)");
         else:
             hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow W' #rightarrow WZ) (pb)");
 
@@ -543,7 +543,7 @@ def doULPlot( suffix ):
     hrl_SM.GetYaxis().SetTitleFont(42);
 
     if options.signalmodel=="BulkGravWW":
-        hrl_SM.GetXaxis().SetTitle("M_{G} (TeV)");
+        hrl_SM.GetXaxis().SetTitle("M_{G_{Bulk}} (TeV)");
     elif options.signalmodel=="WprimeWZ":
         hrl_SM.GetXaxis().SetTitle("M_{W'} (TeV)");
 
@@ -563,20 +563,20 @@ def doULPlot( suffix ):
     curGraph_exp.Draw("Lsame");
     curGraph_th.Draw("Csame");
        
-    leg2 = ROOT.TLegend(0.36,0.78,0.8,0.92);
+    leg2 = ROOT.TLegend(0.3,0.65,0.9,0.9);
 
     leg2.SetFillColor(0);
     leg2.SetShadowColor(0);
     leg2.SetTextFont(42);
-    leg2.SetTextSize(0.027);
+    leg2.SetTextSize(0.035);
 
-    leg2.AddEntry(curGraph_obs,"Asympt. CL_{S} Observed","LP")
-    leg2.AddEntry(curGraph_1s,"Asympt. CL_{S}  Expected #pm 1#sigma","LF")
-    leg2.AddEntry(curGraph_2s,"Asympt. CL_{S}  Expected #pm 2#sigma","LF")
+    leg2.AddEntry(curGraph_1s,"Asympt. CL_{S}  Expected #pm 1 s.d.","LF")
+    leg2.AddEntry(curGraph_2s,"Asympt. CL_{S}  Expected #pm 2 s.d.","LF")
     if options.signalmodel=="BulkGravWW":
-        leg2.AddEntry(curGraph_th,"Graviton","L");
+        leg2.AddEntry(curGraph_th,"#sigma_{TH} #times BR(G_{Bulk}#rightarrow WW#rightarrow l#nuqq')","L");
     elif options.signalmodel=="WprimeWZ":
-        leg2.AddEntry(curGraph_th,"W'","L");
+        leg2.AddEntry(curGraph_th,"#sigma_{TH} #times BR(W'#rightarrow WZ#rightarrow l#nuqq')","L");
+    leg2.AddEntry(curGraph_obs,"Asympt. CL_{S} Observed","LP")
 
     #ROOT.gPad.SetLogx();
     ROOT.gPad.SetLogy();
