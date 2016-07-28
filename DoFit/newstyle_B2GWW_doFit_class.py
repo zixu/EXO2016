@@ -133,10 +133,9 @@ class DoFit:
         if self.signal_model== "WprimeWZHVTA": 
             self.signal_model= "WprimeWZ-HVT-A"
 
-        print self.signal_sample
-        print self.signal_model
-        print self.signal_mass
-        raw_input("haha")
+        #print self.signal_sample
+        #print self.signal_model
+        #print self.signal_mass
 
         ## different code operation mode -> just normal analysis
         if options.closuretest == 0:
