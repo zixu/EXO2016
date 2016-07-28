@@ -3597,7 +3597,7 @@ class DoFit:
 
 
     #### Read the final workspace and produce the latest plots
-    def read_postfit_workspace(self, logy = 0, isTTbarFloating = 1, isVVFloating = 0, isSTopFloating = 0):
+    def read_workspace_postfit(self, logy=1, mode = "sideband_correction_method1", isTTbarFloating=1, isVVFloating=0, isSTopFloating=0):
         print "--------------------- read_workspace -------------------------"
 
         ### Taket the workspace for limits
@@ -3605,17 +3605,6 @@ class DoFit:
         ##workspace = file.Get("workspace4limit_")
         workspace = TFile(self.file_rlt_root).Get("workspace4limit_")
         workspace.Print()
-
-
-        self.file_rlt_root_postfit = self.datacardsDir+"higgsCombinewwlvj_BulkGraviton_newxsec750_em_HP_unbin.Asymptotic.mH750.root"
-        file_postfit = TFile(self.file_rlt_root_postfit)
-        workspace_postfit = file_postfit.Get("w")
-        file_postfit.Print()
-        workspace_postfit.Print()
-        #raw_input("zijun postfit 1")
-        print workspace_postfit.loadSnapshot("clean")
-
-
 
         ### iterate on the workspace element parameters
         print "----------- Parameter Workspace -------------"
@@ -3627,20 +3616,6 @@ class DoFit:
             param.Print()
             param = par.Next()
         print "---------------------------------------------"
-
-
-        ### iterate on the workspace element parameters
-        print "----------- Parameter postfit Workspace -------------"
-        parameters_workspace = workspace_postfit.allVars()
-        par = parameters_workspace.createIterator()
-        par.Reset()
-        param = par.Next()
-        while (param):
-            param.Print()
-            param = par.Next()
-        print "---------------------------------------------"
-        raw_input("zixu postfit")
-
 
         workspace.data("data_obs_xww_%s_%s"%(self.channel, self.wtagger_category)).Print()
 
@@ -3656,14 +3631,14 @@ class DoFit:
 
         rrv_x = workspace.var("rrv_mass_lvj")
         data_obs = workspace.data("data_obs_xww_%s_%s"%(self.channel, self.wtagger_category))
-        ##if TString(self.signal_sample).Contains("RS1G_WW"):
-        ##    model_pdf_signal = workspace.pdf("RSWW_xww_%s_%s"%(self.channel, self.wtagger_category))
-        ##elif TString(self.signal_sample).Contains("BulkGraviton"):
-        ##    model_pdf_signal = workspace.pdf("BulkWW_xww_%s_%s"%(self.channel, self.wtagger_category))
-        ##elif TString(self.signal_sample).Contains("Wprime_WZ"):
-        ##    model_pdf_signal = workspace.pdf("WprimeWZ_xww_%s_%s"%(self.channel, self.wtagger_category))
-        ##else:
-        ##    model_pdf_signal = workspace.pdf("%s_xww_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category))
+        #if TString(self.signal_sample).Contains("RS1G_WW"):
+        #    model_pdf_signal = workspace.pdf("RSWW_xww_%s_%s"%(self.channel, self.wtagger_category))
+        #elif TString(self.signal_sample).Contains("BulkGraviton"):
+        #    model_pdf_signal = workspace.pdf("BulkWW_xww_%s_%s"%(self.channel, self.wtagger_category))
+        #elif TString(self.signal_sample).Contains("Wprime_WZ"):
+        #    model_pdf_signal = workspace.pdf("WprimeWZ_xww_%s_%s"%(self.channel, self.wtagger_category))
+        #else:
+        #    model_pdf_signal = workspace.pdf("%s_xww_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category))
         model_pdf_signal = workspace.pdf("%s_xww_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category))
 
         model_pdf_WJets  = workspace.pdf("WJets_xww_%s_%s"%(self.channel, self.wtagger_category))
@@ -3677,14 +3652,14 @@ class DoFit:
         model_pdf_TTbar.Print()
         model_pdf_STop.Print()
 
-        ##if TString(self.signal_sample).Contains("RS1G_WW"):
-        ##    rrv_number_signal = workspace.var("rate_RSWW_xww_for_unbin")
-        ##elif TString(self.signal_sample).Contains("BulkGraviton"):
-        ##    rrv_number_signal = workspace.var("rate_BulkWW_xww_for_unbin")
-        ##elif TString(self.signal_sample).Contains("Wprime_WZ"):
-        ##    rrv_number_signal = workspace.var("rate_WprimeWZ_xww_for_unbin")
-        ##else:
-        ##    rrv_number_signal = workspace.var("rate_%s_xww_for_unbin"%(self.signal_sample))
+        #if TString(self.signal_sample).Contains("RS1G_WW"):
+        #    rrv_number_signal = workspace.var("rate_RSWW_xww_for_unbin")
+        #elif TString(self.signal_sample).Contains("BulkGraviton"):
+        #    rrv_number_signal = workspace.var("rate_BulkWW_xww_for_unbin")
+        #elif TString(self.signal_sample).Contains("Wprime_WZ"):
+        #    rrv_number_signal = workspace.var("rate_WprimeWZ_xww_for_unbin")
+        #else:
+        #    rrv_number_signal = workspace.var("rate_%s_xww_for_unbin"%(self.signal_sample))
         rrv_number_signal = workspace.var("rate_%s_xww_for_unbin"%(self.signal_sample))
 
 
@@ -3754,105 +3729,14 @@ class DoFit:
 
         datahist = data_obs.binnedClone(data_obs.GetName()+"_binnedClone", data_obs.GetName()+"_binnedClone")
         ### Plot the list of floating parameters and the uncertainty band is draw taking into account this floating list defined in the prepare_limit
-        #draw_error_band(model_Total_background_MC, rrv_x.GetName(), rrv_number_Total_background_MC, self.FloatingParams, workspace , mplot, mplotP, datahist, self.color_palet["Uncertainty"], "F")
-        self.FloatingParams.Print()
-        print self.FloatingParams.getSize()
         if self.FloatingParams.getSize() == 0:
-            if self.MODEL_4_mlvj == "ErfExp_v1" or self.MODEL_4_mlvj == "ErfPow_v1" or self.MODEL_4_mlvj == "2Exp" :
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)))
-
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig4"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig5"%(self.channel, self.wtagger_category)))
-
-                if isTTbarFloating!=0:
-                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
-                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
-                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)))
-
-            elif self.MODEL_4_mlvj == "ErfPow2_v1" or self.MODEL_4_mlvj == "ErfPowExp_v1" :
-
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig4"%(self.channel, self.wtagger_category)))
-
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig4"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig5"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig6"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig7"%(self.channel, self.wtagger_category)))
-
-                if isTTbarFloating!=0:
-                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
-                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
-                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)))
-                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)))
-
-            elif self.MODEL_4_mlvj == "Exp" or self.MODEL_4_mlvj == "Pow" :
-
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
-
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
-
-                if isTTbarFloating!=0:
-                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
-
-            elif self.MODEL_4_mlvj == "ExpN" or self.MODEL_4_mlvj == "ExpTail" or self.MODEL_4_mlvj == "Pow2" :
-                print "Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)
-                workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)).Print()
-                raw_input("haha")
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)))
-
-
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)))
-                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)))
-
-                if isTTbarFloating!=0:
-                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
-
-                if isVVFloating!=0:
-                    self.FloatingParams.add(workspace.var("Deco_VV_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
-                    self.FloatingParams.add(workspace.var("Deco_VV_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
-
-                if isSTopFloating!=0:
-                    self.FloatingParams.add(workspace.var("Deco_STop_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
-            else:
-                raw_input("this self.MODEL_4_mlvj:%s is not support!"%(self.MODEL_4_mlvj))
-            if workspace.var("rrv_mean_CB_%s_xww_signal_region_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category)):
-                if self.channel == "mu":
-                    self.FloatingParams.add(workspace.var("CMS_sig_p1_scale_m"))
-                    self.FloatingParams.add(workspace.var("CMS_sig_p2_scale_m"))
-                elif self.channel == "el":
-                    self.FloatingParams.add(workspace.var("CMS_sig_p1_scale_e"))
-                    self.FloatingParams.add(workspace.var("CMS_sig_p2_scale_e"))
-                elif self.channel == "em":
-                    self.FloatingParams.add(workspace.var("CMS_sig_p1_scale_em"))
-                    self.FloatingParams.add(workspace.var("CMS_sig_p2_scale_em"))
-
-                self.FloatingParams.add(workspace.var("CMS_sig_p1_jes"))
-                self.FloatingParams.add(workspace.var("CMS_sig_p2_jes"))
-                self.FloatingParams.add(workspace.var("CMS_sig_p2_jer"))
-        self.FloatingParams.Print()
+            self.setFloatingParams(workspace, self.FloatingParams, mode, isTTbarFloating, isVVFloating, isSTopFloating)
+        self.FloatingParams.Print("v")
         #raw_input("zixu")
+
         hdata = datahist.createHistogram(rrv_x.GetName(), int(rrv_x.getBins()/self.binwidth_narrow_factor))
-        draw_error_band(model_Total_background_MC, rrv_x.GetName(), rrv_number_Total_background_MC, self.FloatingParams, workspace , mplot, mplotP, hdata, self.color_palet["Uncertainty"], "F")
+        draw_error_band(model_Total_background_MC, rrv_x.GetName(), rrv_number_Total_background_MC, self.FloatingParams,
+                workspace, mplot, mplotP, hdata, self.color_palet["Uncertainty"], "F")
 
         mplot.Print()
         self.leg = self.legend4Plot(mplot, 0, 1,-0.01,-0.05, 0.11, 0.)
@@ -3881,7 +3765,297 @@ class DoFit:
         print "nPar = %s, chiSquare = %s/%s"%(self.nPar_float_in_fitTo, mplot.chiSquare(self.nPar_float_in_fitTo)*ndof, ndof)
 
         parameters_list = RooArgList()
-        self.draw_canvas_with_pull2(rrv_x, datahist, mplot, mplotP, mplot_pull, ndof, parameters_list, "%s/m_lvj_fitting/"%(self.plotsDir), "check_postfit_workspace_for_limit", self.MODEL_4_mlvj, 0, 1)
+        self.draw_canvas_with_pull2(rrv_x, datahist, mplot, mplotP, mplot_pull, ndof, parameters_list, "%s/m_lvj_fitting/"%(self.plotsDir), "check_workspace_for_limit", self.MODEL_4_mlvj, 0, 1)
+
+
+
+##    def read_workspace_postfit(self, logy = 0, isTTbarFloating = 1, isVVFloating = 0, isSTopFloating = 0):
+##        print "--------------------- read_workspace -------------------------"
+##
+##        ### Taket the workspace for limits
+##        ##file = TFile(self.file_rlt_root)
+##        ##workspace = file.Get("workspace4limit_")
+##        workspace = TFile(self.file_rlt_root).Get("workspace4limit_")
+##        workspace.Print()
+##
+##
+##        self.file_rlt_root_postfit = self.datacardsDir+"/higgsCombine_lim_BulkGravWW750_mu_HP.Asymptotic.mH750.root"
+##        file_postfit = TFile(self.file_rlt_root_postfit)
+##        raw_input("zijun postfit 1")
+##        workspace_postfit = file_postfit.Get("w")
+##        raw_input("zijun postfit 1")
+##        file_postfit.Print()
+##        workspace_postfit.Print()
+##        raw_input("zijun postfit 1")
+##        #print workspace_postfit.loadSnapshot("clean")
+##
+##
+##
+##        ### iterate on the workspace element parameters
+##        print "----------- Parameter Workspace -------------"
+##        parameters_workspace = workspace.allVars()
+##        par = parameters_workspace.createIterator()
+##        par.Reset()
+##        param = par.Next()
+##        while (param):
+##            param.Print()
+##            param = par.Next()
+##        print "---------------------------------------------"
+##
+##
+##        ### iterate on the workspace element parameters
+##        print "----------- Parameter postfit Workspace -------------"
+##        parameters_workspace = workspace_postfit.allVars()
+##        par = parameters_workspace.createIterator()
+##        par.Reset()
+##        param = par.Next()
+##        while (param):
+##            param.Print()
+##            param = par.Next()
+##        print "---------------------------------------------"
+##        raw_input("zixu postfit")
+##
+##
+##        workspace.data("data_obs_xww_%s_%s"%(self.channel, self.wtagger_category)).Print()
+##
+##        print "----------- Pdf in the Workspace -------------"
+##        pdfs_workspace = workspace.allPdfs()
+##        par = pdfs_workspace.createIterator()
+##        par.Reset()
+##        param = par.Next()
+##        while (param):
+##            param.Print()
+##            param = par.Next()
+##        print "----------------------------------------------"
+##
+##        rrv_x = workspace.var("rrv_mass_lvj")
+##        data_obs = workspace.data("data_obs_xww_%s_%s"%(self.channel, self.wtagger_category))
+##        ##if TString(self.signal_sample).Contains("RS1G_WW"):
+##        ##    model_pdf_signal = workspace.pdf("RSWW_xww_%s_%s"%(self.channel, self.wtagger_category))
+##        ##elif TString(self.signal_sample).Contains("BulkGraviton"):
+##        ##    model_pdf_signal = workspace.pdf("BulkWW_xww_%s_%s"%(self.channel, self.wtagger_category))
+##        ##elif TString(self.signal_sample).Contains("Wprime_WZ"):
+##        ##    model_pdf_signal = workspace.pdf("WprimeWZ_xww_%s_%s"%(self.channel, self.wtagger_category))
+##        ##else:
+##        ##    model_pdf_signal = workspace.pdf("%s_xww_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category))
+##        model_pdf_signal = workspace.pdf("%s_xww_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category))
+##
+##        model_pdf_WJets  = workspace.pdf("WJets_xww_%s_%s"%(self.channel, self.wtagger_category))
+##        model_pdf_VV     = workspace.pdf("VV_xww_%s_%s"%(self.channel, self.wtagger_category))
+##        model_pdf_TTbar  = workspace.pdf("TTbar_xww_%s_%s"%(self.channel, self.wtagger_category))
+##        model_pdf_STop   = workspace.pdf("STop_xww_%s_%s"%(self.channel, self.wtagger_category))
+##
+##        model_pdf_signal.Print()
+##        model_pdf_WJets.Print()
+##        model_pdf_VV.Print()
+##        model_pdf_TTbar.Print()
+##        model_pdf_STop.Print()
+##
+##        ##if TString(self.signal_sample).Contains("RS1G_WW"):
+##        ##    rrv_number_signal = workspace.var("rate_RSWW_xww_for_unbin")
+##        ##elif TString(self.signal_sample).Contains("BulkGraviton"):
+##        ##    rrv_number_signal = workspace.var("rate_BulkWW_xww_for_unbin")
+##        ##elif TString(self.signal_sample).Contains("Wprime_WZ"):
+##        ##    rrv_number_signal = workspace.var("rate_WprimeWZ_xww_for_unbin")
+##        ##else:
+##        ##    rrv_number_signal = workspace.var("rate_%s_xww_for_unbin"%(self.signal_sample))
+##        rrv_number_signal = workspace.var("rate_%s_xww_for_unbin"%(self.signal_sample))
+##
+##
+##        rrv_number_WJets  = workspace.var("rate_WJets_xww_for_unbin")
+##        rrv_number_VV     = workspace.var("rate_VV_xww_for_unbin")
+##        rrv_number_TTbar  = workspace.var("rate_TTbar_xww_for_unbin")
+##        rrv_number_STop   = workspace.var("rate_STop_xww_for_unbin")
+##
+##        rrv_number_signal.Print()
+##        rrv_number_WJets.Print()
+##        rrv_number_VV.Print()
+##        rrv_number_TTbar.Print()
+##        rrv_number_STop.Print()
+##
+##        #### Prepare the final plot starting from total background
+##        rrv_number_Total_background_MC = RooRealVar("rrv_number_Total_background_MC_xww", "rrv_number_Total_background_MC_xww",
+##                rrv_number_WJets.getVal()+
+##                rrv_number_VV.getVal()+
+##                rrv_number_TTbar.getVal()+
+##                rrv_number_STop.getVal())
+##
+##        rrv_number_Total_background_MC.setError(TMath.Sqrt(
+##            rrv_number_WJets.getError()* rrv_number_WJets.getError()+
+##            rrv_number_VV.getError()* rrv_number_VV.getError()+
+##            rrv_number_TTbar.getError()* rrv_number_TTbar.getError()+
+##            rrv_number_STop.getError() *rrv_number_STop.getError()))
+##
+##        #### Total pdf
+##        model_Total_background_MC = RooAddPdf("model_Total_background_MC_xww", "model_Total_background_MC_xww", RooArgList(model_pdf_WJets, model_pdf_VV, model_pdf_TTbar, model_pdf_STop), RooArgList(rrv_number_WJets, rrv_number_VV, rrv_number_TTbar, rrv_number_STop))
+##
+##        if data_obs.sumEntries() != 0:
+##            #### scale factor in order to scale MC to data in the final plot -> in order to avoid the normalization to data which is done by default in rooFit
+##            scale_number_signal = rrv_number_signal.getVal()/data_obs.sumEntries()
+##            scale_number_Total_background_MC = rrv_number_Total_background_MC.getVal()/data_obs.sumEntries()
+##        else:
+##            scale_number_Total_background_MC = rrv_number_Total_background_MC.getVal()
+##            scale_number_signal = rrv_number_signal.getVal()
+##        #### create the frame
+##        mplot = rrv_x.frame(RooFit.Title("check_workspace"), RooFit.Bins(int(rrv_x.getBins()/self.binwidth_narrow_factor)))
+##        mplotP = rrv_x.frame(RooFit.Title("check_workspaceP"), RooFit.Bins(int(rrv_x.getBins()/self.binwidth_narrow_factor)))
+##        data_obs.plotOn(mplot , RooFit.Name("data_invisible"), RooFit.MarkerSize(1), RooFit.DataError(RooAbsData.Poisson), RooFit.XErrorSize(0), RooFit.MarkerColor(0), RooFit.LineColor(0))
+##        model_Total_background_MC.plotOn(mplot, RooFit.Normalization(scale_number_Total_background_MC), RooFit.Name("WJets"), RooFit.Components("WJets_xww_%s_%s,VV_xww_%s_%s,TTbar_xww_%s_%s,STop_xww_%s_%s"%(self.channel, self.wtagger_category, self.channel, self.wtagger_category, self.channel, self.wtagger_category, self.channel, self.wtagger_category)), RooFit.DrawOption("F"), RooFit.FillColor(self.color_palet["WJets"]), RooFit.LineColor(kBlack), RooFit.VLines())
+##
+##        model_Total_background_MC.plotOn(mplot, RooFit.Normalization(scale_number_Total_background_MC), RooFit.Name("VV"), RooFit.Components("VV_xww_%s_%s,TTbar_xww_%s_%s,STop_xww_%s_%s"%(self.channel, self.wtagger_category, self.channel, self.wtagger_category, self.channel, self.wtagger_category)), RooFit.DrawOption("F"), RooFit.FillColor(self.color_palet["VV"]), RooFit.LineColor(kBlack), RooFit.VLines())
+##
+##        model_Total_background_MC.plotOn(mplot, RooFit.Normalization(scale_number_Total_background_MC), RooFit.Name("TTbar"), RooFit.Components("TTbar_xww_%s_%s,STop_xww_%s_%s"%(self.channel, self.wtagger_category, self.channel, self.wtagger_category)), RooFit.DrawOption("F"), RooFit.FillColor(self.color_palet["TTbar"]), RooFit.LineColor(kBlack), RooFit.VLines())
+##
+##        model_Total_background_MC.plotOn(mplot, RooFit.Normalization(scale_number_Total_background_MC), RooFit.Name("STop"), RooFit.Components("STop_xww_%s_%s"%(self.channel, self.wtagger_category)), RooFit.DrawOption("F"), RooFit.FillColor(self.color_palet["STop"]), RooFit.LineColor(kBlack), RooFit.VLines())
+##
+##        #solid line
+##        model_Total_background_MC.plotOn(mplot, RooFit.Normalization(scale_number_Total_background_MC), RooFit.Name("WJets_line_invisible"), RooFit.Components("WJets_xww_%s_%s,VV_xww_%s_%s,TTbar_xww_%s_%s,STop_xww_%s_%s"%(self.channel, self.wtagger_category, self.channel, self.wtagger_category, self.channel, self.wtagger_category, self.channel, self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines())
+##
+##        model_Total_background_MC.plotOn(mplot, RooFit.Normalization(scale_number_Total_background_MC), RooFit.Name("VV_line_invisible"), RooFit.Components("VV_xww_%s_%s,TTbar_xww_%s_%s,STop_xww_%s_%s"%(self.channel, self.wtagger_category, self.channel, self.wtagger_category, self.channel, self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines())
+##
+##        model_Total_background_MC.plotOn(mplot, RooFit.Normalization(scale_number_Total_background_MC), RooFit.Name("TTbar_line_invisible"), RooFit.Components("TTbar_xww_%s_%s,STop_xww_%s_%s"%(self.channel, self.wtagger_category, self.channel, self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines())
+##
+##        model_Total_background_MC.plotOn(mplot, RooFit.Normalization(scale_number_Total_background_MC), RooFit.Name("STop_line_invisible"), RooFit.Components("STop_xww_%s_%s"%(self.channel, self.wtagger_category)), RooFit.LineColor(kBlack), RooFit.LineWidth(2), RooFit.VLines())
+##
+##        model_pdf_signal.plotOn(mplot, RooFit.Normalization(scale_number_signal*self.signal_scale*self.signal_scale_plot), RooFit.Name("%s #times %s"%(self.signal_sample, self.signal_scale*self.signal_scale_plot)), RooFit.DrawOption("L"), RooFit.LineColor(self.color_palet["Signal"]), RooFit.LineStyle(2), RooFit.VLines())
+##
+##        #### plot the observed data using poissonian error bar
+##        self.plot_data_with_poissoninterval(rrv_x, data_obs, mplot)
+##
+##        model_Total_background_MC.plotOn(mplot, RooFit.Normalization(scale_number_Total_background_MC), RooFit.Invisible())
+##
+##        mplot_pull = self.get_pull(rrv_x, mplot)
+##
+##        datahist = data_obs.binnedClone(data_obs.GetName()+"_binnedClone", data_obs.GetName()+"_binnedClone")
+##        ### Plot the list of floating parameters and the uncertainty band is draw taking into account this floating list defined in the prepare_limit
+##        #draw_error_band(model_Total_background_MC, rrv_x.GetName(), rrv_number_Total_background_MC, self.FloatingParams, workspace , mplot, mplotP, datahist, self.color_palet["Uncertainty"], "F")
+##        self.FloatingParams.Print()
+##        print self.FloatingParams.getSize()
+##        if self.FloatingParams.getSize() == 0:
+##            if self.MODEL_4_mlvj == "ErfExp_v1" or self.MODEL_4_mlvj == "ErfPow_v1" or self.MODEL_4_mlvj == "2Exp" :
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)))
+##
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig4"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig5"%(self.channel, self.wtagger_category)))
+##
+##                if isTTbarFloating!=0:
+##                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
+##                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
+##                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)))
+##
+##            elif self.MODEL_4_mlvj == "ErfPow2_v1" or self.MODEL_4_mlvj == "ErfPowExp_v1" :
+##
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig4"%(self.channel, self.wtagger_category)))
+##
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig4"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig5"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig6"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig7"%(self.channel, self.wtagger_category)))
+##
+##                if isTTbarFloating!=0:
+##                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
+##                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
+##                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)))
+##                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)))
+##
+##            elif self.MODEL_4_mlvj == "Exp" or self.MODEL_4_mlvj == "Pow" :
+##
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
+##
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
+##
+##                if isTTbarFloating!=0:
+##                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
+##
+##            elif self.MODEL_4_mlvj == "ExpN" or self.MODEL_4_mlvj == "ExpTail" or self.MODEL_4_mlvj == "Pow2" :
+##                print "Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)
+##                workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)).Print()
+##                raw_input("haha")
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sb_lo_from_fitting_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)))
+##
+##
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig2"%(self.channel, self.wtagger_category)))
+##                self.FloatingParams.add(workspace.var("Deco_WJets0_xww_sim_%s_%s_mlvj_eig3"%(self.channel, self.wtagger_category)))
+##
+##                if isTTbarFloating!=0:
+##                    self.FloatingParams.add(workspace.var("Deco_TTbar_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
+##
+##                if isVVFloating!=0:
+##                    self.FloatingParams.add(workspace.var("Deco_VV_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
+##                    self.FloatingParams.add(workspace.var("Deco_VV_xww_signal_region_%s_%s_mlvj_eig1"%(self.channel, self.wtagger_category)))
+##
+##                if isSTopFloating!=0:
+##                    self.FloatingParams.add(workspace.var("Deco_STop_xww_signal_region_%s_%s_mlvj_eig0"%(self.channel, self.wtagger_category)))
+##            else:
+##                raw_input("this self.MODEL_4_mlvj:%s is not support!"%(self.MODEL_4_mlvj))
+##            if workspace.var("rrv_mean_CB_%s_xww_signal_region_%s_%s"%(self.signal_sample, self.channel, self.wtagger_category)):
+##                if self.channel == "mu":
+##                    self.FloatingParams.add(workspace.var("CMS_sig_p1_scale_m"))
+##                    self.FloatingParams.add(workspace.var("CMS_sig_p2_scale_m"))
+##                elif self.channel == "el":
+##                    self.FloatingParams.add(workspace.var("CMS_sig_p1_scale_e"))
+##                    self.FloatingParams.add(workspace.var("CMS_sig_p2_scale_e"))
+##                elif self.channel == "em":
+##                    self.FloatingParams.add(workspace.var("CMS_sig_p1_scale_em"))
+##                    self.FloatingParams.add(workspace.var("CMS_sig_p2_scale_em"))
+##
+##                self.FloatingParams.add(workspace.var("CMS_sig_p1_jes"))
+##                self.FloatingParams.add(workspace.var("CMS_sig_p2_jes"))
+##                self.FloatingParams.add(workspace.var("CMS_sig_p2_jer"))
+##        self.FloatingParams.Print()
+##        #raw_input("zixu")
+##        hdata = datahist.createHistogram(rrv_x.GetName(), int(rrv_x.getBins()/self.binwidth_narrow_factor))
+##        draw_error_band(model_Total_background_MC, rrv_x.GetName(), rrv_number_Total_background_MC, self.FloatingParams, workspace , mplot, mplotP, hdata, self.color_palet["Uncertainty"], "F")
+##
+##        mplot.Print()
+##        self.leg = self.legend4Plot(mplot, 0, 1,-0.01,-0.05, 0.11, 0.)
+##        #self.leg.SetTextSize(0.036)
+##        mplot.addObject(self.leg)
+##        #pt1 = ROOT.TPaveText(0.6180905, 0.4355644, 0.8291457, 0.507992, "NDC")
+##        #pt1.SetTextFont(42)
+##        #pt1.SetTextSize(0.05)
+##        #pt1.SetFillColor(0)
+##        #pt1.SetFillStyle(0)
+##        #pt1.SetBorderSize(0)
+##        #text = pt1.AddText("")
+##        #if options.category.find('Z') != -1: text = pt1.AddText("WZ category")
+##        #elif options.category.find('W') != -1: text = pt1.AddText("WW category")
+##        #text.SetTextFont(62)
+##        #mplot.addObject(pt1)
+##
+##        mplot.GetYaxis().SetRangeUser(1e-2, mplot.GetMaximum()*1.2)
+##
+##        if workspace.var("rrv_num_floatparameter_in_last_fitting"):
+##            self.nPar_float_in_fitTo = int(workspace.var("rrv_num_floatparameter_in_last_fitting").getVal())
+##        else:
+##            self.nPar_float_in_fitTo = self.FloatingParams.getSize()
+##        nBinX = mplot.GetNbinsX()
+##        ndof  = nBinX-self.nPar_float_in_fitTo
+##        print "nPar = %s, chiSquare = %s/%s"%(self.nPar_float_in_fitTo, mplot.chiSquare(self.nPar_float_in_fitTo)*ndof, ndof)
+##
+##        parameters_list = RooArgList()
+##        self.draw_canvas_with_pull2(rrv_x, datahist, mplot, mplotP, mplot_pull, ndof, parameters_list, "%s/m_lvj_fitting/"%(self.plotsDir), "check_postfit_workspace_for_limit", self.MODEL_4_mlvj, 0, 1)
 
 
 
@@ -5343,7 +5517,7 @@ def check_workspace(channel, signal):
     """read workspace of el or mu channel, and draw the M_lvj plot"""
     boostedW_fitter = DoFit(channel, signal, 500, 700, 40, 140, 400, 1400, "ExpN", "ExpTail")#all the param is useless. only the pre-fit will be included in the picture name
     boostedW_fitter.read_workspace()
-    #boostedW_fitter.read_postfit_workspace()
+    #boostedW_fitter.read_workspace_postfit()
 
 def combine_el_mu(channel):
     """read workspaces of el and mu channel, and draw the combined M_lvj plot"""
@@ -5387,8 +5561,8 @@ if __name__ == '__main__':
 
     if options.check:
         print '################# check workspace for %s sample'%(options.opt_channel)
-        #check_workspace(options.opt_channel, "BulkGravWW750")
-        check_workspace(options.opt_channel, "BulkGravWW4500")
+        check_workspace(options.opt_channel, "BulkGravWW750")
+        #check_workspace(options.opt_channel, "BulkGravWW4500")
 
     if options.combine:
         print '################# check workspace for %s sample'%(options.opt_channel)
