@@ -32,6 +32,29 @@ python runLimitsB2GWW.py --channel el --plotLimits -b --signalmodel WprimeWZ
 python runLimitsB2GWW.py --channel em --plotLimits -b --signalmodel WprimeWZ
  
 
+##for WprimeWZ-HVT-A
+
+python runLimitsB2GWW.py --channel mu --makeCards -b --signalmodel WprimeWZ-HVT-A --batchMode --lxbatchCern &
+ 
+python runLimitsB2GWW.py --channel el --makeCards -b --signalmodel WprimeWZ-HVT-A --batchMode --lxbatchCern &
+ 
+
+rename datacards direcotory "cards_B2GWW_XXXX" to "cards_B2GWW", for example, ln -s cards_B2GWW_closuretest0_HP_ExpN cards_B2GWW
+
+python runLimitsB2GWW.py --channel mu --computeLimits --signalmodel WprimeWZ-HVT-A
+ 
+python runLimitsB2GWW.py --channel el --computeLimits --signalmodel WprimeWZ-HVT-A
+ 
+python runLimitsB2GWW.py --channel em --computeLimits --signalmodel WprimeWZ-HVT-A
+
+ 
+python runLimitsB2GWW.py --channel mu --plotLimits -b --signalmodel WprimeWZ-HVT-A
+ 
+python runLimitsB2GWW.py --channel el --plotLimits -b --signalmodel WprimeWZ-HVT-A
+ 
+python runLimitsB2GWW.py --channel em --plotLimits -b --signalmodel WprimeWZ-HVT-A
+ 
+
 
 
 # for BulkGravWW
