@@ -1531,12 +1531,12 @@ class DoFit:
         weight_mc_forWJets = "weight*%s*%s"%(tmp_lumi, self.controlplot_WJets_scale)
         weight_mc_forTTBar = "weight*%s*%s*%s"%(tmp_lumi, self.controlplot_TTbar_scale, self.rrv_wtagger_eff_reweight_forT.getVal())
 
-        weightcut_mc_forSignal = "(%s)*(%s)/IDweight"%(weight_mc_forSignal, cut)
-        weightcut_mc_forV = "(%s)*(%s)/IDweight"%(weight_mc_forV, cut)
-        weightcut_mc_forT = "(%s)*(%s)/IDweight"%(weight_mc_forT, cut)
-        weightcut_mc_forG = "(%s)*(%s)/IDweight"%(weight_mc_forG, cut)
-        weightcut_mc_forWJets = "(%s)*(%s)/IDweight"%(weight_mc_forWJets, cut)
-        weightcut_mc_forTTBar = "(%s)*(%s)/IDweight"%(weight_mc_forTTBar, cut)
+        weightcut_mc_forSignal = "(%s)*(%s)"%(weight_mc_forSignal, cut)
+        weightcut_mc_forV = "(%s)*(%s)"%(weight_mc_forV, cut)
+        weightcut_mc_forT = "(%s)*(%s)"%(weight_mc_forT, cut)
+        weightcut_mc_forG = "(%s)*(%s)"%(weight_mc_forG, cut)
+        weightcut_mc_forWJets = "(%s)*(%s)"%(weight_mc_forWJets, cut)
+        weightcut_mc_forTTBar = "(%s)*(%s)"%(weight_mc_forTTBar, cut)
         weightcut_data = "%s"%(cut)
         print "weightcut_mc_forV = "+weightcut_mc_forV
         print "weightcut_mc_forT = "+weightcut_mc_forT
@@ -2839,8 +2839,8 @@ class DoFit:
                 #print "l_pt = %s, l_eta = %s, HLT = %s"%(treeIn.l_pt, treeIn.l_eta, tmp_HLT_weight)
                 #raw_input("zixu")
                 ### weigh MC events
-                tmp_event_weight     = treeIn.weight*tmp_HLT_weight*tmp_lumi/treeIn.IDweight
-                tmp_event_weight4fit = (treeIn.weight/treeIn.IDweight)*tmp_HLT_weight*tmp_lumi/tmp_scale_to_lumi
+                tmp_event_weight     = treeIn.weight*tmp_HLT_weight*tmp_lumi
+                tmp_event_weight4fit = (treeIn.weight)*tmp_HLT_weight*tmp_lumi/tmp_scale_to_lumi
                 #tmp_event_weight4fit = tmp_event_weight
                 ###### wtagger_eff_reweight
                 if label == "_data" or label == "_data_xww" :
