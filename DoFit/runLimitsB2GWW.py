@@ -285,6 +285,7 @@ elif options.signalmodel=="WprimeWZ-HVT-A":
             }
     
     table_signalscale =  {
+                 600: 1, 
                  800: 1, 
                 1000: 1,
                 1200: 1,  
