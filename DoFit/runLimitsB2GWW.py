@@ -36,8 +36,8 @@ parser.add_option('--lvjBR', action='store_true', dest='lvjBR', default=True, he
 parser.add_option('--fitSignal', action='store_true', dest='fitSignal', default=False, help='do signal lineshape fits')
 
 ### other options 
-#parser.add_option('--signalmodel',action="store",type="string",dest="signalmodel",default="BulkGravWW")
-parser.add_option('--signalmodel',action="store",type="string",dest="signalmodel",default="WprimeWZ")
+parser.add_option('--signalmodel',action="store",type="string",dest="signalmodel",default="BulkGravWW")
+#parser.add_option('--signalmodel',action="store",type="string",dest="signalmodel",default="WprimeWZ")
 parser.add_option('--channel',action="store",type="string",dest="channel",default="mu")
 parser.add_option('--massPoint',action="store",type="int",dest="massPoint",default=-1)
 #parser.add_option('--cPrime',action="store",type="int",dest="cPrime",default=-1)
@@ -175,14 +175,6 @@ elif options.signalmodel=="WprimeWZ":
     ### shape to be used for bkg when --makeCards
     shape    = ["ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN"]
     shapeAlt = [ "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow"]
-    #shapeAlt = [ "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp"]
-
-    #shape    = [ "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow"]
-    #shapeAlt = ["ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN"]
-
-
-    #shape    = [ "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp", "Exp"]
-    #shapeAlt = ["ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN"]
 
     ### shape to be used for bkg when --fitSignal
     #shape_sig_width  = ["BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB"]
@@ -219,6 +211,77 @@ elif options.signalmodel=="WprimeWZ":
             3500: 0.19991    *1e-3,  
             4000: 0.064901   *1e-3,  
             4500: 0.021981241*1e-3
+            }
+    
+    table_signalscale =  {
+                 800: 1, 
+                1000: 1,
+                1200: 1,  
+                1400: 1,  
+                1600: 1,  
+                1800: 1,  
+                2000: 1,  
+                2500: 1,  
+                3000: 3,  
+                3500: 20,  
+                4000: 50,  
+                4500: 200 }
+
+elif options.signalmodel=="WprimeWZ-HVT-A":
+    ### mass point for signal to be fitted
+    mass      = [600,800,1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
+    binwidth  = [0,0,0,1,1,1,1,1,1,1,1,1,1]
+    ### mass window for couting analysis
+    ccmlo     = [500, 700, 900,1100,1300,1500,1700,1900,2400,2900,3400,3900,4400 ] 
+    ccmhi     = [700, 900,1100,1300,1500,1700,1900,2100,2600,3100,3600,4100,4600 ]
+    ### jet mass range
+    mjlo      = [ 40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40,  40]
+    mjhi      = [150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150]
+    ### mlvj range min and max used when run with option --makeCards
+    #fit range
+    mlo       = [ 600, 600, 600, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800]
+    mhi       = [1500,1500,1500,5000,5000,5000,5000,5000,5000,5000,5000,5000,5000]
+    ### shape to be used for bkg when --makeCards
+    shape    = ["ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN","ExpN"]
+    shapeAlt = [ "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow", "Pow"]
+
+    ### shape to be used for bkg when --fitSignal
+    #shape_sig_width  = ["BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" ,"BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB", "BWDoubleCB" , "BWDoubleCB" , "BWDoubleCB" ,  "BWDoubleCB"]
+    #shape_sig_narrow = ["DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1","DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1", "DoubleCB_v1"]
+    
+    
+    ##################################################
+    #  cross-sections for HVT and LH model  #
+    ##################################################
+    xsDict =  { # Z->hadron 69.91%, W->lnu 10.8%, W-> hadron 67.67%
+             600:938.7692472 *1e-3/0.2265,
+             800:283.2686754 *1e-3/0.2265, 
+            1000: 110.823309 *1e-3/0.2265, 
+            1200: 47.6329732 *1e-3/0.2265, 
+            1400: 25.2858598 *1e-3/0.2265,   
+            1600: 12.9944181 *1e-3/0.2265, 
+            1800: 7.63895053 *1e-3/0.2265,   
+            2000: 4.33381797 *1e-3/0.2265,   
+            2500: 1.26058651 *1e-3/0.2265,   
+            3000: 0.40236999 *1e-3/0.2265,   
+            3500: 0.13144619 *1e-3/0.2265,   
+            4000: 0.04344501 *1e-3/0.2265,   
+            4500: 0.01424789 *1e-3/0.2265  
+            }
+    xsDict_lvj =  {
+             600:938.7692472 *1e-3,
+             800:283.2686754 *1e-3,
+            1000: 110.823309 *1e-3,
+            1200: 47.6329732 *1e-3,  
+            1400: 25.2858598 *1e-3,  
+            1600: 12.9944181 *1e-3,  
+            1800: 7.63895053 *1e-3,  
+            2000: 4.33381797 *1e-3,  
+            2500: 1.26058651 *1e-3,  
+            3000: 0.40236999 *1e-3,  
+            3500: 0.13144619 *1e-3,  
+            4000: 0.04344501 *1e-3,  
+            4500: 0.01424789 *1e-3
             }
     
     table_signalscale =  {
@@ -537,6 +600,11 @@ def doULPlot( suffix ):
             hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow W' #rightarrow WZ #rightarrow l#nuqq') (pb)");
         else:
             hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow W' #rightarrow WZ) (pb)");
+    elif options.signalmodel=="WprimeWZ-HVT-A":
+        if options.lvjBR:
+            hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow W' #rightarrow WZ #rightarrow l#nuqq') (pb)");
+        else:
+            hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow W' #rightarrow WZ) (pb)");
 
     hrl_SM.GetYaxis().SetTitleOffset(1.35);
     hrl_SM.GetYaxis().SetTitleSize(0.045);
@@ -545,6 +613,8 @@ def doULPlot( suffix ):
     if options.signalmodel=="BulkGravWW":
         hrl_SM.GetXaxis().SetTitle("M_{G_{Bulk}} (TeV)");
     elif options.signalmodel=="WprimeWZ":
+        hrl_SM.GetXaxis().SetTitle("M_{W'} (TeV)");
+    elif options.signalmodel=="WprimeWZ-HVT-A":
         hrl_SM.GetXaxis().SetTitle("M_{W'} (TeV)");
 
 
@@ -575,7 +645,9 @@ def doULPlot( suffix ):
     if options.signalmodel=="BulkGravWW":
         leg2.AddEntry(curGraph_th,"#sigma_{TH} #times BR(G_{Bulk}#rightarrow WW#rightarrow l#nuqq')","L");
     elif options.signalmodel=="WprimeWZ":
-        leg2.AddEntry(curGraph_th,"#sigma_{TH} #times BR(W'#rightarrow WZ#rightarrow l#nuqq')","L");
+        leg2.AddEntry(curGraph_th,"#sigma_{TH} #times BR(W'_{HVT B}#rightarrow WZ#rightarrow l#nuqq')","L");
+    elif options.signalmodel=="WprimeWZ-HVT-A":
+        leg2.AddEntry(curGraph_th,"#sigma_{TH} #times BR(W'_{HVT A}#rightarrow WZ#rightarrow l#nuqq')","L");
     leg2.AddEntry(curGraph_obs,"Asympt. CL_{S} Observed","LP")
 
     #ROOT.gPad.SetLogx();
