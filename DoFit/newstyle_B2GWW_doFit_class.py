@@ -130,9 +130,13 @@ class DoFit:
         self.signal_sample = in_signal_sample
         self.signal_model =  filter(str.isalpha, in_signal_sample)
         self.signal_mass =  int(filter(str.isdigit, in_signal_sample))  #GeV
-        ##print self.signal_sample
-        ##print self.signal_model
-        ##print self.signal_mass
+        if self.signal_model== "WprimeWZHVTA": 
+            self.signal_model= "WprimeWZ-HVT-A"
+
+        print self.signal_sample
+        print self.signal_model
+        print self.signal_mass
+        raw_input("haha")
 
         ## different code operation mode -> just normal analysis
         if options.closuretest == 0:
@@ -142,6 +146,9 @@ class DoFit:
                 self.mj_signal_min = 65
                 self.mj_signal_max = 95
             elif self.signal_model == "WprimeWZ":
+                self.mj_signal_min = 75
+                self.mj_signal_max = 105
+            elif self.signal_model == "WprimeWZ-HVT-A":
                 self.mj_signal_min = 75
                 self.mj_signal_max = 105
             else:
@@ -360,10 +367,26 @@ class DoFit:
                     3500: 20,
                     4000: 50,
                     4500: 200 }
+        elif self.signal_model == "WprimeWZ-HVT-A":
+            table_signalscale =  {
+                    800: 1,
+                    1000: 1,
+                    1200: 1,
+                    1400: 1,
+                    1600: 1,
+                    1800: 1,
+                    2000: 1,
+                    2500: 1,
+                    3000: 3,
+                    3500: 20,
+                    4000: 50,
+                    4500: 200 }
         self.signal_scale     = table_signalscale[self.signal_mass] ## scale factor for datacard and plot
         if self.signal_model == "BulkGravWW":
             self.signal_scale_plot = 20 ## one more scale factor for plot
         elif self.signal_model == "WprimeWZ":
+            self.signal_scale_plot = 10 ## one more scale factor for plot
+        elif self.signal_model == "WprimeWZ-HVT-A":
             self.signal_scale_plot = 10 ## one more scale factor for plot
 
         # parameters of data-driven method to get the WJets background event number.
@@ -393,6 +416,24 @@ class DoFit:
                     4000: 0.78,
                     4500: 1.0   }
         elif self.signal_model == "WprimeWZ":
+            table_signaluncertainty =  {
+                    600 : 0.05,
+                    700 : 0.05,
+                    750 : 0.05,
+                    800 : 0.05,
+                    900 : 0.05,
+                    1000: 0.05,
+                    1200: 0.05,
+                    1400: 0.05,
+                    1600: 0.06,
+                    1800: 0.06,
+                    2000: 0.06,
+                    2500: 0.07,
+                    3000: 0.08,
+                    3500: 0.10,
+                    4000: 0.14,
+                    4500: 0.18  }
+        elif self.signal_model == "WprimeWZ-HVT-A":
             table_signaluncertainty =  {
                     600 : 0.05,
                     700 : 0.05,
