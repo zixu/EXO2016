@@ -750,7 +750,7 @@ if __name__ == '__main__':
             print command_makeCards ;
 
             if options.batchMode :
-                fn = "fitScript_%s_%03d_HP_%s"%(options.channel,mass[i],shape[i]);
+                fn = "fitScript_%s_%s_%03d_HP_%s"%(options.signalmodel, options.channel, mass[i], shape[i])
                 submitBatchJob( command_makeCards, fn );
             if not options.batchMode: 
                 print command_makeCards ;
