@@ -2528,7 +2528,9 @@ class DoFit:
         model_pdf_sb_lo_WJets.getParameters(rdataset_WJets_sb_lo_mlvj).Print("v")
         model_pdf_signal_region_WJets.getParameters(rdataset_WJets_signal_region_mlvj).Print("v")
 
-        #"constrainslist is necessary, otherwhise the alpha uncertainty is over-estimate, because the parameters' error of sb function are much large than before
+        #constrainslist is necessary
+        #without the constrainslist, the parameters' error of sb function are much large than before and the alpha uncertainty band is much large
+        #but the difference is very small when use 1sigma constrain or 3 sigma constrain for the parameters
         rfresult = simPdf.fitTo(combData4fit, RooFit.Save(kTRUE), RooFit.Extended(kFALSE), RooFit.SumW2Error(kTRUE),
                 RooFit.Minimizer("Minuit"), RooFit.ExternalConstraints(alpha_constrains))
         rfresult = simPdf.fitTo(combData4fit, RooFit.Save(kTRUE), RooFit.Extended(kFALSE), RooFit.SumW2Error(kTRUE),
