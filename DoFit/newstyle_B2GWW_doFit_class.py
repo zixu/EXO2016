@@ -104,11 +104,11 @@ class DoFit:
         in_mlvj_max = in_mlvj_min+nbins_mlvj*self.BinWidth_mlvj
 
         ## define jet mass variable
-        rrv_mass_j = RooRealVar("rrv_mass_j", "m_{jet} (GeV)", (in_mj_min+in_mj_max)/2., in_mj_min, in_mj_max, "GeV")
+        rrv_mass_j = RooRealVar("rrv_mass_j", "m_{jet} (GeV)", (in_mj_min+in_mj_max)/2., in_mj_min, in_mj_max)
         rrv_mass_j.setBins(nbins_mj)
 
         ## define invariant mass WW variable
-        rrv_mass_lvj = RooRealVar("rrv_mass_lvj", "m_{WW} (GeV)", (in_mlvj_min+in_mlvj_max)/2., in_mlvj_min, in_mlvj_max, "GeV")
+        rrv_mass_lvj = RooRealVar("rrv_mass_lvj", "m_{WW} (GeV)", (in_mlvj_min+in_mlvj_max)/2., in_mlvj_min, in_mlvj_max)
         rrv_mass_lvj.setBins(nbins_mlvj)
         rrv_mass_lvj.Print("v")
 
@@ -2528,11 +2528,13 @@ class DoFit:
         model_pdf_sb_lo_WJets.getParameters(rdataset_WJets_sb_lo_mlvj).Print("v")
         model_pdf_signal_region_WJets.getParameters(rdataset_WJets_signal_region_mlvj).Print("v")
 
-        rfresult = simPdf.fitTo(combData4fit, RooFit.Save(kTRUE), RooFit.Extended(kFALSE), RooFit.SumW2Error(kTRUE), RooFit.Minimizer("Minuit"), RooFit.ExternalConstraints(alpha_constrains))
-        rfresult = simPdf.fitTo(combData4fit, RooFit.Save(kTRUE), RooFit.Extended(kFALSE), RooFit.SumW2Error(kTRUE), RooFit.Minimizer("Minuit2"), RooFit.ExternalConstraints(alpha_constrains))
-        rfresult.Print()
-        rfresult.covarianceMatrix().Print()
-        #raw_input("ENTER to continue!")
+        #"constrainslist is necessary, otherwhise the alpha uncertainty is over-estimate, because the parameters' error of sb function are much large than before
+        rfresult = simPdf.fitTo(combData4fit, RooFit.Save(kTRUE), RooFit.Extended(kFALSE), RooFit.SumW2Error(kTRUE),
+                RooFit.Minimizer("Minuit"), RooFit.ExternalConstraints(alpha_constrains))
+        rfresult = simPdf.fitTo(combData4fit, RooFit.Save(kTRUE), RooFit.Extended(kFALSE), RooFit.SumW2Error(kTRUE),
+                RooFit.Minimizer("Minuit2"), RooFit.ExternalConstraints(alpha_constrains))
+        rfresult.Print("v")
+        rfresult.covarianceMatrix().Print("v")
 
         #### Decorrelate the parameters in the alpha shape
         wsfit_tmp = RooWorkspace("wsfit_tmp%s_sim_mlvj"%(label))
@@ -2662,7 +2664,7 @@ class DoFit:
         ##    tmp_y_max = 0.30
         ##else:
         ##    tmp_y_max = 0.40
-        tmp_y_max = 0.30
+        tmp_y_max = 0.25
 
         mplot.GetYaxis().SetRangeUser(1e-3, tmp_y_max)
 
