@@ -385,9 +385,9 @@ class DoFit:
         if self.signal_model == "BulkGravWW":
             self.signal_scale_plot = 20 ## one more scale factor for plot
         elif self.signal_model == "WprimeWZ":
-            self.signal_scale_plot = 10 ## one more scale factor for plot
+            self.signal_scale_plot = 4 ## one more scale factor for plot
         elif self.signal_model == "WprimeWZ-HVT-A":
-            self.signal_scale_plot = 10 ## one more scale factor for plot
+            self.signal_scale_plot = 4 ## one more scale factor for plot
 
         # parameters of data-driven method to get the WJets background event number.
         self.number_WJets_insideband = -1
@@ -395,7 +395,7 @@ class DoFit:
         self.datadriven_alpha_WJets_counting = -1
 
         ### uncertainty for datacard
-        self.lumi_uncertainty    = 0.063
+        self.lumi_uncertainty    = 0.062
 
         if self.signal_model == "BulkGravWW":
             table_signaluncertainty =  {
@@ -5562,8 +5562,10 @@ def check_workspace(channel, signal):
 
 def combine_el_mu(channel):
     """read workspaces of el and mu channel, and draw the combined M_lvj plot"""
-    boostedW_fitter = DoFit("em", "BulkGravWW750", 650, 850, 40, 150, 600, 1500, "ExpN", "Pow")
+    #boostedW_fitter = DoFit("em", "BulkGravWW750", 650, 850, 40, 150, 600, 1500, "ExpN", "Pow")
     #boostedW_fitter = DoFit("em", "BulkGravWW4500", 4400, 4600, 40, 150, 800, 5000, "ExpN", "Pow")
+    #boostedW_fitter = DoFit("em", "WprimeWZ-HVT-A800", 700, 900, 40, 150, 600, 1500, "ExpN", "Pow")
+    boostedW_fitter = DoFit("em", "WprimeWZ-HVT-A4500", 4400, 4600, 40, 150, 800, 5000, "ExpN", "Pow")
     boostedW_fitter.combine_2workspaces(1)
     #boostedW_fitter.read_postfit_workspaces()
 
