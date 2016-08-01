@@ -30,7 +30,7 @@ parser.add_option('--computeLimits', action='store_true', dest='computeLimits', 
 
 ### to plot limits
 parser.add_option('--plotLimits', action='store_true', dest='plotLimits', default=False, help='plot limits')
-parser.add_option('--lvjBR', action='store_true', dest='lvjBR', default=True, help='computing with munu BR')
+parser.add_option('--lvqqBR', action='store_true', dest='lvqqBR', default=False, help='computing with munu BR')
 
 ### to do just signal lineshape fits
 parser.add_option('--fitSignal', action='store_true', dest='fitSignal', default=False, help='do signal lineshape fits')
@@ -509,7 +509,7 @@ def doULPlot( suffix ):
     for i in range(len(mass)):
         curFile = "higgsCombine_lim_%s%03d%s.Asymptotic.mH%03d.root"%( options.signalmodel, mass[i], suffix, mass[i]);
         print "curFile: %s"%curFile;
-        if options.lvjBR:
+        if options.lvqqBR:
             sf = table_signalscale[mass[i]]*xsDict_lvj[mass[i]]; #*0.1057*0.577; # BR(W->munu)*BR(H->bb)
         else:
             sf = table_signalscale[mass[i]]*xsDict[mass[i]];
@@ -525,7 +525,7 @@ def doULPlot( suffix ):
         ybins_2s.append( curAsymLimits[1]*sf );
         ybins_1s.append( curAsymLimits[2]*sf );
         #ybins_th.append(sf);#/20.); #*0.25);
-        if options.lvjBR:
+        if options.lvqqBR:
             ybins_th.append(xsDict_lvj[mass[i]]);#/20.); #*0.25);
         else:
             ybins_th.append(xsDict[mass[i]]);#/20.); #*0.25);
@@ -533,7 +533,7 @@ def doULPlot( suffix ):
     for i in range( len(mass)-1, -1, -1 ):
         curFile = "higgsCombine_lim_%s%03d%s.Asymptotic.mH%03d.root"%( options.signalmodel, mass[i], suffix, mass[i]);
         print "curFile: %s"%curFile;
-        if options.lvjBR:
+        if options.lvqqBR:
           sf = table_signalscale[mass[i]]*xsDict_lvj[mass[i]]; #*0.1057*0.577; # BR(W->munu)*BR(H->bb)
         else:
           sf = table_signalscale[mass[i]]*xsDict[mass[i]];
@@ -592,17 +592,17 @@ def doULPlot( suffix ):
     hrl_SM = can_SM.DrawFrame(mass[0]/1000.-0.01,1e-4, mass[nPoints-1]/1000.+0.01, 1e2);
 
     if options.signalmodel=="BulkGravWW":
-        if options.lvjBR:
+        if options.lvqqBR:
             hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{Bulk} #rightarrow WW #rightarrow l#nuqq') (pb)");
         else:
             hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow G_{Bulk} #rightarrow WW) (pb)");
     elif options.signalmodel=="WprimeWZ":
-        if options.lvjBR:
+        if options.lvqqBR:
             hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow W' #rightarrow WZ #rightarrow l#nuqq') (pb)");
         else:
             hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow W' #rightarrow WZ) (pb)");
     elif options.signalmodel=="WprimeWZ-HVT-A":
-        if options.lvjBR:
+        if options.lvqqBR:
             hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow W' #rightarrow WZ #rightarrow l#nuqq') (pb)");
         else:
             hrl_SM.GetYaxis().SetTitle("#sigma_{95%} (pp #rightarrow W' #rightarrow WZ) (pb)");
@@ -644,11 +644,20 @@ def doULPlot( suffix ):
     leg2.AddEntry(curGraph_1s,"Asympt. CL_{S}  Expected #pm 1 s.d.","LF")
     leg2.AddEntry(curGraph_2s,"Asympt. CL_{S}  Expected #pm 2 s.d.","LF")
     if options.signalmodel=="BulkGravWW":
-        leg2.AddEntry(curGraph_th,"#sigma_{TH} #times BR(G_{Bulk}#rightarrow WW#rightarrow l#nuqq')","L");
+        if options.lvqqBR:
+            leg2.AddEntry(curGraph_th,"#sigma_{TH} #times BR(G_{Bulk}#rightarrow WW#rightarrow l#nuqq')","L");
+        else:
+            leg2.AddEntry(curGraph_th,"#sigma_{TH} #times BR(G_{Bulk}#rightarrow WW)","L");
     elif options.signalmodel=="WprimeWZ":
-        leg2.AddEntry(curGraph_th,"#sigma_{TH} #times BR(W'_{HVT B}#rightarrow WZ#rightarrow l#nuqq')","L");
+        if options.lvqqBR:
+            leg2.AddEntry(curGraph_th,"#sigma_{TH} #times BR(W'_{HVT B}#rightarrow WZ#rightarrow l#nuqq')","L");
+        else:
+            leg2.AddEntry(curGraph_th,"#sigma_{TH} #times BR(W'_{HVT B}#rightarrow WZ)","L");
     elif options.signalmodel=="WprimeWZ-HVT-A":
-        leg2.AddEntry(curGraph_th,"#sigma_{TH} #times BR(W'_{HVT A}#rightarrow WZ#rightarrow l#nuqq')","L");
+        if options.lvqqBR:
+            leg2.AddEntry(curGraph_th,"#sigma_{TH} #times BR(W'_{HVT A}#rightarrow WZ#rightarrow l#nuqq')","L");
+        else:
+            leg2.AddEntry(curGraph_th,"#sigma_{TH} #times BR(W'_{HVT A}#rightarrow WZ)","L");
     leg2.AddEntry(curGraph_obs,"Asympt. CL_{S} Observed","LP")
 
     #ROOT.gPad.SetLogx();
@@ -695,6 +704,7 @@ def doULPlot( suffix ):
     can_SM.Update();
     can_SM.RedrawAxis();
     can_SM.RedrawAxis("g");
+    leg2.Draw();
     can_SM.Update();
 
     can_SM.SaveAs("./LimitResult/Limit_%s_sys%s/Lim%s_Logx.png"%(options.signalmodel, options.Sys, suffix));
