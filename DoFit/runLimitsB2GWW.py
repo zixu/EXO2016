@@ -9,7 +9,7 @@ import time
 from array import array
 
 import ROOT
-from ROOT import gROOT, gStyle, gSystem, TLatex, TH1D, TString, TPaveText, TGaxis
+from ROOT import gROOT, gStyle, gSystem, TLatex, TH1D, TString, TPaveText, TGaxis, TLine, kBlack
 #import subprocess
 #from subprocess import Popen
 from optparse import OptionParser
@@ -660,6 +660,9 @@ def doULPlot( suffix ):
             leg2.AddEntry(curGraph_th,"#sigma_{TH} #times BR(W'_{HVT A}#rightarrow WZ)","L");
     leg2.AddEntry(curGraph_obs,"Asympt. CL_{S} Observed","LP")
 
+
+
+
     #ROOT.gPad.SetLogx();
     #hrl_SM.GetXaxis().SetMoreLogLabels()
     #hrl_SM.GetXaxis().SetNoExponent()
@@ -671,6 +674,12 @@ def doULPlot( suffix ):
     can_SM.Update();
 
     leg2.Draw();
+    lowerLine = TLine( 1.1, 1e-4, 1.1, 1e0)
+    lowerLine.SetLineWidth(2)
+    lowerLine.SetLineColor(kBlack)
+    lowerLine.SetLineStyle(9)
+    lowerLine.Draw();
+
 
     banner = TLatex(0.95, 0.96, "12.9 fb^{-1} (13 TeV)");
     banner.SetNDC(); banner.SetTextSize(0.038); banner.SetTextFont(42); banner.SetTextAlign(31); banner.SetLineWidth(2); banner.Draw();
