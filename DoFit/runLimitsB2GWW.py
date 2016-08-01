@@ -634,7 +634,7 @@ def doULPlot( suffix ):
     curGraph_exp.Draw("Lsame");
     curGraph_th.Draw("Csame");
        
-    leg2 = ROOT.TLegend(0.3,0.65,0.9,0.9);
+    leg2 = ROOT.TLegend(0.32,0.67,0.9,0.92);
 
     leg2.SetFillColor(0);
     leg2.SetShadowColor(0);
@@ -674,11 +674,11 @@ def doULPlot( suffix ):
     can_SM.Update();
 
     leg2.Draw();
-    lowerLine = TLine( 1.1, 1e-4, 1.1, 1e0)
-    lowerLine.SetLineWidth(2)
-    lowerLine.SetLineColor(kBlack)
-    lowerLine.SetLineStyle(9)
-    lowerLine.Draw();
+    line = TLine( 1.1, 1e-4, 1.1, 1e0)
+    line.SetLineWidth(2)
+    line.SetLineColor(kBlack)
+    line.SetLineStyle(9)
+    line.Draw();
 
 
     banner = TLatex(0.95, 0.96, "12.9 fb^{-1} (13 TeV)");
