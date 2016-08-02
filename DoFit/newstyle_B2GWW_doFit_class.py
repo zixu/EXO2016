@@ -197,7 +197,7 @@ class DoFit:
         elif self.channel == "em":
             self.Lumi = 12.9
         #self.file_Directory = "PKUTree_final_6p26fb_Jul18/"
-        self.file_Directory = "data_12p9_63mb/"
+        self.file_Directory = "data_12p9_63mb_afterapproval/"
 
 
         if options.realdata == 1:
@@ -2815,6 +2815,8 @@ class DoFit:
                 if TMath.Abs(treeIn.CategoryID)< 3 and treeIn.tau21<=self.tau21_cut and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() and treeIn.passFilter_HBHE>0 and treeIn.passFilter_GlobalHalo>0 and treeIn.passFilter_HBHEIso>0 and treeIn.passFilter_ECALDeadCell>0 and treeIn.passFilter_GoodVtx>0 and treeIn.passFilter_EEBadSc>0 and treeIn.passFilter_badMuon>0 and treeIn.passFilter_badChargedHadron>0:
                     self.isGoodEvent = 1
 
+            if self.channel == "mu" and treeIn.mtVlepnew<50:
+                self.isGoodEvent = 0
 
             if label == "_data" or label == "_data_xww" :
                 if tmp_jet_mass>105 and tmp_jet_mass<135:
