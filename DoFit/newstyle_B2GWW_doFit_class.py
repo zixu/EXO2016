@@ -4660,24 +4660,16 @@ class DoFit:
         hpull = mplot_orig.pullHist()
         x = ROOT.Double(0.)
         y = ROOT.Double(0.)
-        y_max=ROOT.Double(2.00)
-        y_min=ROOT.Double(-2.00)
+        pull_edge=4;
         for ipoint in range(0, hpull.GetN()):
             hpull.GetPoint(ipoint, x, y)
-            #print "ipoint=", ipoint, " x=", x, " y=", y
-            #print "y_max=%s y_min=%s y=%s"%( y_max, y_min, y)
-            if (y/y_max) >1:
-                y_max= (int(y/y_max)+1.0)*2.00
-                y_min= -1.0*y_max
-            if (y/y_min) >1:
-                y_min= (int(y/y_min)+1.0)*-2.00
-                y_max= -1.0*y_min
             if(y == 0):
                 hpull.SetPoint(ipoint, x,-100)#remove from PULL plots
-            #print "y_max=", y_max, " y_min=", y_min, " y=", y
+            if y>4 or y<-4:
+                pull_edge=8
         gt = ROOT.TH1F("gt", "gt", int(rrv_x.getBins()/self.binwidth_narrow_factor), rrv_x.getMin(), rrv_x.getMax())
-        gt.SetMinimum(TMath.Min(-4, y_min)+0.01)
-        gt.SetMaximum(TMath.Max( 4, y_max)-0.01)
+        gt.SetMinimum(-1*pull_edge+0.01)
+        gt.SetMaximum(pull_edge-0.01)
         gt.SetDirectory(0)
         gt.SetStats(0)
         gt.SetLineStyle(0)
