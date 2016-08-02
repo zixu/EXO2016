@@ -469,7 +469,9 @@ class DoFit:
 
         #el and mu trigger and eff uncertainty, B2G-16-4
         self.lep_trigger_uncertainty = 0.05
-        self.btag_scale_uncertainty  = 0.025
+        self.btag_scale_ttbar_uncertainty  = 0.064
+        self.btag_scale_singletop_uncertainty  = 0.051
+        self.btag_scale_wjets_uncertainty  = 0.0
         self.signal_btag_uncertainty = 0.002
 
         if self.channel == "mu":
@@ -3409,7 +3411,9 @@ class DoFit:
             datacard_out.write("\nCMS_eff_vtag_tau21_sf lnN %0.3f/%0.3f - - - %0.3f/%0.3f"%(1-self.rrv_wtagger_eff_reweight_forV.getError(), 1+self.rrv_wtagger_eff_reweight_forV.getError(), 1-self.rrv_wtagger_eff_reweight_forV.getError(), 1+self.rrv_wtagger_eff_reweight_forV.getError()))
 
         ### btag scale factor on the MC background
-        #datacard_out.write("\nCMS_xww_btagger lnN - - %0.3f %0.3f %0.3f"%(self.channel, 1+self.btag_scale_uncertainty, 1+self.btag_scale_uncertainty, 1+self.btag_scale_uncertainty))
+        #calculate wjets btag unc 
+        self.btag_scale_wjets_uncertainty= -1*(self.btag_scale_ttbar_uncertainty* self.workspace4limit_.var("rate_TTbar_xww_for_unbin").getVal() + self.btag_scale_singletop_uncertainty* self.workspace4limit_.var("rate_STop_xww_for_unbin").getVal())/ self.workspace4limit_.var("rate_WJets_xww_for_unbin").getVal() 
+        datacard_out.write("\nCMS_xww_btagger lnN - %0.3f %0.3f %0.3f -"%( 1+self.btag_scale_wjets_uncertainty, 1+self.btag_scale_ttbar_uncertainty, 1+self.btag_scale_singletop_uncertainty))
 
         ### btag scale factor on the MC background
         datacard_out.write("\n#CMS_eff_vtag_model lnN %0.3f - - - %0.3f"%(1+self.eff_vtag_model, 1+self.eff_vtag_model))
@@ -4655,14 +4659,25 @@ class DoFit:
         print "############### draw the pull plot ########################"
         hpull = mplot_orig.pullHist()
         x = ROOT.Double(0.)
-        y = ROOT.Double(0)
+        y = ROOT.Double(0.)
+        y_max=ROOT.Double(2.00)
+        y_min=ROOT.Double(-2.00)
         for ipoint in range(0, hpull.GetN()):
             hpull.GetPoint(ipoint, x, y)
+            #print "ipoint=", ipoint, " x=", x, " y=", y
+            #print "y_max=%s y_min=%s y=%s"%( y_max, y_min, y)
+            if (y/y_max) >1:
+                y_max= (int(y/y_max)+1.0)*2.00
+                y_min= -1.0*y_max
+            if (y/y_min) >1:
+                y_min= (int(y/y_min)+1.0)*-2.00
+                y_max= -1.0*y_min
             if(y == 0):
-                hpull.SetPoint(ipoint, x,-10)#remove from PULL plots
+                hpull.SetPoint(ipoint, x,-100)#remove from PULL plots
+            #print "y_max=", y_max, " y_min=", y_min, " y=", y
         gt = ROOT.TH1F("gt", "gt", int(rrv_x.getBins()/self.binwidth_narrow_factor), rrv_x.getMin(), rrv_x.getMax())
-        gt.SetMinimum(-3.999)
-        gt.SetMaximum(3.999)
+        gt.SetMinimum(TMath.Min(-4, y_min)+0.01)
+        gt.SetMaximum(TMath.Max( 4, y_max)-0.01)
         gt.SetDirectory(0)
         gt.SetStats(0)
         gt.SetLineStyle(0)
