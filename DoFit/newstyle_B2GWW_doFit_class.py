@@ -2815,12 +2815,17 @@ class DoFit:
                 if TMath.Abs(treeIn.CategoryID)< 3 and treeIn.tau21<=self.tau21_cut and treeIn.m_lvj> rrv_mass_lvj.getMin() and treeIn.m_lvj<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax() and treeIn.passFilter_HBHE>0 and treeIn.passFilter_GlobalHalo>0 and treeIn.passFilter_HBHEIso>0 and treeIn.passFilter_ECALDeadCell>0 and treeIn.passFilter_GoodVtx>0 and treeIn.passFilter_EEBadSc>0 and treeIn.passFilter_badMuon>0 and treeIn.passFilter_badChargedHadron>0:
                     self.isGoodEvent = 1
 
+
             if label == "_data" or label == "_data_xww" :
                 if tmp_jet_mass>105 and tmp_jet_mass<135:
                     #keep blind for VH analysis
                     self.isGoodEvent = 0
                 if options.keepblind == 1 and tmp_jet_mass>65 and tmp_jet_mass<135:
                     self.isGoodEvent = 0
+
+                if self.channel == "mu" and treeIn.l_pt> 500 and TMath.Abs(treeIn.l_eta)>1.2:
+                    self.isGoodEvent=0
+
 
             if self.isGoodEvent == 1:
                 ## HLT weight for mu channel
