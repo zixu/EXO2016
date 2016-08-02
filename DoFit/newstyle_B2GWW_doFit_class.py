@@ -471,8 +471,8 @@ class DoFit:
         self.lep_trigger_uncertainty = 0.05
         self.btag_scale_ttbar_uncertainty  = 0.064
         self.btag_scale_singletop_uncertainty  = 0.051
-        self.btag_scale_wjets_uncertainty  = 0.0
-        self.signal_btag_uncertainty = 0.002
+        self.btag_scale_wjets_uncertainty  = 0.0 #need calculate according to the Norm of WJets, TTbar, and Single Top
+        self.btag_scale_signal_uncertainty = 0.006
 
         if self.channel == "mu":
             self.signal_lepton_energy_scale_uncertainty = 0.007
@@ -3455,7 +3455,7 @@ class DoFit:
         ### fat jet energy resolution
         datacard_out.write("\nCMS_res_j  lnN %0.3f - - - -"%(1+self.signal_jet_energy_res_uncertainty))
         ### btag on the signal
-        datacard_out.write("\nCMS_xww_btag_eff lnN %0.3f - - - -"%(1+self.signal_btag_uncertainty))
+        datacard_out.write("\nCMS_xww_btag_eff lnN %0.3f - - - -"%(1+self.btag_scale_signal_uncertainty))
 
         ### print shapes parameter to be taken int account
         if mode == "unbin":
