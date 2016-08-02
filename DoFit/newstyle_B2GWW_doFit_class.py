@@ -398,15 +398,15 @@ class DoFit:
         self.lumi_uncertainty    = 0.062
 
         if self.signal_model == "BulkGravWW":
-            table_signaluncertainty =  {
-                    600 : 0.13,
-                    700 : 0.13,
-                    750 : 0.13,
-                    800 : 0.13,
+            table_signal_pdfuncertainty =  {
+                    600 : 0.09,
+                    700 : 0.10,
+                    750 : 0.10,
+                    800 : 0.11,
                     900 : 0.13,
                     1000: 0.13,
                     1200: 0.14,
-                    1400: 0.16,
+                    1400: 0.17,
                     1600: 0.19,
                     1800: 0.22,
                     2000: 0.25,
@@ -415,49 +415,65 @@ class DoFit:
                     3500: 0.59,
                     4000: 0.78,
                     4500: 1.0   }
-        elif self.signal_model == "WprimeWZ":
-            table_signaluncertainty =  {
-                    600 : 0.05,
-                    700 : 0.05,
-                    750 : 0.05,
-                    800 : 0.05,
-                    900 : 0.05,
-                    1000: 0.05,
-                    1200: 0.05,
+            table_signal_scaleuncertainty =  {
+                    600 : 0.08,
+                    700 : 0.09,
+                    750 : 0.10,
+                    800 : 0.10,
+                    900 : 0.11,
+                    1000: 0.11,
+                    1200: 0.12,
+                    1400: 0.13,
+                    1600: 0.14,
+                    1800: 0.15,
+                    2000: 0.16,
+                    2500: 0.17,
+                    3000: 0.19,
+                    3500: 0.20,
+                    4000: 0.22,
+                    4500: 0.23  }
+        elif self.signal_model == "WprimeWZ" or self.signal_model == "WprimeWZ-HVT-A":
+            table_signal_pdfuncertainty =  {
+                    600 : 0.04,
+                    700 : 0.04,
+                    750 : 0.04,
+                    800 : 0.04,
+                    900 : 0.04,
+                    1000: 0.04,
+                    1200: 0.04,
                     1400: 0.05,
-                    1600: 0.06,
-                    1800: 0.06,
-                    2000: 0.06,
+                    1600: 0.05,
+                    1800: 0.05,
+                    2000: 0.05,
                     2500: 0.07,
                     3000: 0.08,
-                    3500: 0.10,
-                    4000: 0.14,
-                    4500: 0.18  }
-        elif self.signal_model == "WprimeWZ-HVT-A":
-            table_signaluncertainty =  {
-                    600 : 0.05,
-                    700 : 0.05,
-                    750 : 0.05,
-                    800 : 0.05,
-                    900 : 0.05,
-                    1000: 0.05,
+                    3500: 0.12,
+                    4000: 0.18,
+                    4500: 0.31  }
+            table_signal_scaleuncertainty =  {
+                    600 : 0.01,
+                    700 : 0.02,
+                    750 : 0.02,
+                    800 : 0.03,
+                    900 : 0.03,
+                    1000: 0.04,
                     1200: 0.05,
-                    1400: 0.05,
-                    1600: 0.06,
-                    1800: 0.06,
-                    2000: 0.06,
-                    2500: 0.07,
-                    3000: 0.08,
-                    3500: 0.10,
+                    1400: 0.06,
+                    1600: 0.07,
+                    1800: 0.07,
+                    2000: 0.08,
+                    2500: 0.10,
+                    3000: 0.11,
+                    3500: 0.13,
                     4000: 0.14,
-                    4500: 0.18  }
+                    4500: 0.15  }
+
         else:
             print self.signal_model
             raw_input("failed to find the signal model")
 
-        signal_uncertainty_PDF  = table_signaluncertainty[self.signal_mass]
-
-        signal_uncertainty_scale = 0.11
+        signal_uncertainty_PDF  = table_signal_pdfuncertainty[self.signal_mass]
+        signal_uncertainty_scale = table_signal_scaleuncertainty[self.signal_mass]
 
         self.XS_Signal_uncertainty = (signal_uncertainty_PDF**2+ signal_uncertainty_scale**2)**0.5 #pdf uncertainty 13% + scale uncertainty 11%
         self.XS_STop_uncertainty = 0.050
