@@ -5,6 +5,7 @@ import os
 #import array
 #import sys
 import time
+import CMS_lumi
 
 from array import array
 
@@ -62,9 +63,13 @@ parser.add_option('--queque',      action="store", type="string", dest="queque",
 
 (options, args) = parser.parse_args()
 
+
 #########################################
 ### Global Variables for running jobs ###
 #########################################
+
+
+Lumi=12.9
 
 if options.signalmodel=="BulkGravWW":
     ### mass point for signal to be fitted
@@ -645,9 +650,9 @@ def doULPlot( suffix ):
     leg2.AddEntry(curGraph_2s,"Asympt. CL_{S}  Expected #pm 2 s.d.","LF")
     if options.signalmodel=="BulkGravWW":
         if options.lvqqBR:
-            leg2.AddEntry(curGraph_th,"#sigma_{TH} #times BR(G_{Bulk}#rightarrow WW#rightarrow l#nuqq')","L");
+            leg2.AddEntry(curGraph_th,"#sigma_{TH} #times BR(G_{Bulk}#rightarrow WW#rightarrow l#nuqq'), #tilde{k}=0.5","L");
         else:
-            leg2.AddEntry(curGraph_th,"#sigma_{TH} #times BR(G_{Bulk}#rightarrow WW)","L");
+            leg2.AddEntry(curGraph_th,"#sigma_{TH} #times BR(G_{Bulk}#rightarrow WW), #tilde{k}=0.5","L");
     elif options.signalmodel=="WprimeWZ":
         if options.lvqqBR:
             leg2.AddEntry(curGraph_th,"#sigma_{TH} #times BR(W'_{HVT B}#rightarrow WZ#rightarrow l#nuqq')","L");
@@ -694,6 +699,16 @@ def doULPlot( suffix ):
     elif suffix =="_em_HP" :
         Extratext = TLatex(0.241, 0.96, "Preliminary W#rightarrow l#nu");
         Extratext.SetNDC(); Extratext.SetTextSize(0.032); Extratext.SetTextFont(52); Extratext.SetTextAlign(11); Extratext.SetLineWidth(2); Extratext.Draw();
+
+    #CMS_lumi.lumi_13TeV = "%s fb^{-1}"%(Lumi)
+    #CMS_lumi.writeExtraText = 1
+    #CMS_lumi.extraText = "Preliminary"
+
+    #iPos = 11
+    #if(iPos == 0):
+    #    CMS_lumi.relPosX = 0.15
+
+    #CMS_lumi.CMS_lumi(can_SM, 4, 11)
         
     os.system("mkdir -p %s/LimitResult/"%(os.getcwd()));
     os.system("mkdir -p %s/LimitResult/Limit_%s_sys%s/"%(os.getcwd(), options.signalmodel, options.Sys));
