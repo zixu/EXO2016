@@ -247,15 +247,15 @@ class DoFit:
         elif self.wtagger_category == "HP":
 
             if self.tau21_cut == 0.6:
-                self.rrv_wtagger_eff_reweight_forT = RooRealVar("rrv_wtagger_eff_reweight_forT", "rrv_wtagger_eff_reweight_forT", 0.775)
+                self.rrv_wtagger_eff_reweight_forT = RooRealVar("rrv_wtagger_eff_reweight_forT", "rrv_wtagger_eff_reweight_forT", 0.817)
                 self.rrv_wtagger_eff_reweight_forT.setError(0.012)
                 self.rrv_wtagger_eff_reweight_forV = RooRealVar("rrv_wtagger_eff_reweight_forV", "rrv_wtagger_eff_reweight_forV", 1.002)
                 self.rrv_wtagger_eff_reweight_forV.setError(0.019)
             elif self.tau21_cut == 0.45:
-                self.rrv_wtagger_eff_reweight_forT = RooRealVar("rrv_wtagger_eff_reweight_forT", "rrv_wtagger_eff_reweight_forT", 0.753)
-                self.rrv_wtagger_eff_reweight_forT.setError(0.014)
-                self.rrv_wtagger_eff_reweight_forV = RooRealVar("rrv_wtagger_eff_reweight_forV", "rrv_wtagger_eff_reweight_forV", 0.977)
-                self.rrv_wtagger_eff_reweight_forV.setError(0.047)
+                self.rrv_wtagger_eff_reweight_forT = RooRealVar("rrv_wtagger_eff_reweight_forT", "rrv_wtagger_eff_reweight_forT", 0.794)
+                self.rrv_wtagger_eff_reweight_forT.setError(0.015)
+                self.rrv_wtagger_eff_reweight_forV = RooRealVar("rrv_wtagger_eff_reweight_forV", "rrv_wtagger_eff_reweight_forV", 0.968)
+                self.rrv_wtagger_eff_reweight_forV.setError(0.046)
             else:
                 print "self.tau21_cut = %s"%(self.tau21_cut)
                 raw_input("wrong tau21 cut value")
@@ -279,10 +279,10 @@ class DoFit:
         else:
             if self.tau21_cut == 0.6:
                 self.mean_shift = 84.4-83.4
-                self.sigma_scale = 8.6/7.91
+                self.sigma_scale = 8.57/7.93
             elif self.tau21_cut == 0.45:
                 self.mean_shift = 84.9-83.8
-                self.sigma_scale = 7.92/7.52
+                self.sigma_scale = 7.91/7.54
         print " mean correction for the W peak : ", self.mean_shift, " Resolution correction : ", self.sigma_scale
 
         #SF of WJets and TTBar for ControlPlots, and these SF also passed to the final limit calculation
@@ -476,7 +476,7 @@ class DoFit:
         signal_uncertainty_scale = table_signal_scaleuncertainty[self.signal_mass]
 
         self.XS_Signal_uncertainty = (signal_uncertainty_PDF**2+ signal_uncertainty_scale**2)**0.5 #pdf uncertainty 13% + scale uncertainty 11%
-        self.XS_STop_uncertainty = 0.050
+        self.XS_STop_uncertainty = 0.00#  from data-driven (using btag unc)
         self.XS_VV_uncertainty   = 0.20
         #self.XS_TTbar_uncertainty   = 0.12 #0.20 #qun
         #self.XS_TTbar_NLO_uncertainty = 0.063 # from AN-12-368 table8
@@ -3412,7 +3412,7 @@ class DoFit:
         ### Signal XS  nouisance in boosted regime
         datacard_out.write("\nCMS_xww_XS_Signal lnN %0.3f - - - -"%(1+self.XS_Signal_uncertainty))
         ### STop XS  nouisance in boosted regime
-        datacard_out.write("\nCMS_xww_XS_STop lnN - - - %0.3f -"%(1+self.XS_STop_uncertainty))
+        datacard_out.write("\n#CMS_xww_XS_STop lnN - - - %0.3f -"%(1+self.XS_STop_uncertainty))
         ### VV XS  nouisance in boosted regime
         datacard_out.write("\nCMS_xww_XS_VV lnN - - - - %0.3f"%(1+self.XS_VV_uncertainty))
         ### WJets Normalization from data fit -> data driven
@@ -3423,7 +3423,15 @@ class DoFit:
 
         ### Top normalization due to SF in the ttbar CR
         ##datacard_out.write("\nCMS_xww_Top_norm_%s_%s lnN - - %0.3f/%0.3f %0.3f/%0.3f -"%(self.channel, self.wtagger_category, 1+self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal(), 1-self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal(), 1+self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal(), 1-self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal()))
-        datacard_out.write("\nCMS_xww_Top_norm_%s_%s lnN - %0.3f/%0.3f %0.3f/%0.3f %0.3f/%0.3f -"%(self.channel, self.wtagger_category, 1-0.6*self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal(), 1+0.6*self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal(), 1+self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal(), 1-self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal(), 1+self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal(), 1-self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal()))
+        ttbar_top_SF_norm_unc = self.rrv_wtagger_eff_reweight_forT.getError()/self.rrv_wtagger_eff_reweight_forT.getVal() 
+        wjets_top_SF_unc= ttbar_top_SF_norm_unc*( self.workspace4limit_.var("rate_TTbar_xww_for_unbin").getVal() + self.workspace4limit_.var("rate_STop_xww_for_unbin").getVal())/self.workspace4limit_.var("rate_WJets_xww_for_unbin").getVal()  
+        datacard_out.write("\nCMS_xww_vtag_Top_SF_%s_%s lnN - %0.3f/%0.3f %0.3f/%0.3f %0.3f/%0.3f -"%(self.channel, self.wtagger_category,
+            1-wjets_top_SF_unc, 
+            1+wjets_top_SF_unc, 
+            1+ttbar_top_SF_norm_unc, 
+            1-ttbar_top_SF_norm_unc, 
+            1+ttbar_top_SF_norm_unc, 
+            1-ttbar_top_SF_norm_unc))
 
 
 
@@ -3436,7 +3444,8 @@ class DoFit:
         ### btag scale factor on the MC background
         #calculate wjets btag unc 
         self.btag_scale_wjets_uncertainty= -1*(self.btag_scale_ttbar_uncertainty* self.workspace4limit_.var("rate_TTbar_xww_for_unbin").getVal() + self.btag_scale_singletop_uncertainty* self.workspace4limit_.var("rate_STop_xww_for_unbin").getVal())/ self.workspace4limit_.var("rate_WJets_xww_for_unbin").getVal() 
-        datacard_out.write("\nCMS_xww_btagger lnN - %0.3f %0.3f %0.3f -"%( 1+self.btag_scale_wjets_uncertainty, 1+self.btag_scale_ttbar_uncertainty, 1+self.btag_scale_singletop_uncertainty))
+        datacard_out.write("\nCMS_xww_btagger lnN - %0.3f/%0.3f %0.3f/%0.3f %0.3f/%0.3f -"%
+                ( 1+self.btag_scale_wjets_uncertainty, 1-self.btag_scale_wjets_uncertainty, 1+self.btag_scale_ttbar_uncertainty, 1-self.btag_scale_ttbar_uncertainty, 1+self.btag_scale_singletop_uncertainty, 1-self.btag_scale_singletop_uncertainty))
 
         ### btag scale factor on the MC background
         datacard_out.write("\n#CMS_eff_vtag_model lnN %0.3f - - - %0.3f"%(1+self.eff_vtag_model, 1+self.eff_vtag_model))
