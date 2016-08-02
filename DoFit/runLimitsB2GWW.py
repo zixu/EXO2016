@@ -686,7 +686,7 @@ def doULPlot( suffix ):
     line.Draw();
 
 
-    banner = TLatex(0.95, 0.96, "12.9 fb^{-1} (13 TeV)");
+    banner = TLatex(0.95, 0.96, "%s fb^{-1} (13 TeV)"%(Lumi));
     banner.SetNDC(); banner.SetTextSize(0.038); banner.SetTextFont(42); banner.SetTextAlign(31); banner.SetLineWidth(2); banner.Draw();
     CMStext = TLatex(0.15,0.96,"CMS");
     CMStext.SetNDC(); CMStext.SetTextSize(0.041); CMStext.SetTextFont(61); CMStext.SetTextAlign(11); CMStext.SetLineWidth(2); CMStext.Draw();
