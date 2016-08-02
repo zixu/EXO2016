@@ -1042,15 +1042,15 @@ class DoFit:
         if in_model_name == "2_2Gaus":
 
             print "########### 2Gaus +2Gaus for mj fit  ############"
-            mean1_tmp      = 8.3141e+01 #mean1_tmp_err      = 1.63e-01
-            deltamean_tmp  = 9.0e+00 #deltamean_tmp_err  = 1.24e+00
-            sigma1_tmp     = 7.5145e+00 #sigma1_tmp_err     = 1.99e-01
-            scalesigma_tmp = 3.6819e+00 #scalesigma_tmp_err = 2.11e-01
-            frac_tmp       = 6.7125e-01 #frac_tmp_err       = 2.09e-02
+            mean1_tmp      = 83
+            deltamean_tmp  = 10
+            sigma1_tmp     = 8
+            scalesigma_tmp = 3
+            frac_tmp       = 0.6
 
             rrv_shift = RooRealVar("rrv_shift"+label+"_"+self.channel, "rrv_shift"+label+"_"+self.channel, 10.8026) # Z mass: 91.1876 shift=91.1876-80.385=10.8026
 
-            rrv_mean1_gaus = RooRealVar("rrv_mean1_gaus"+label+"_"+self.channel, "rrv_mean1_gaus"+label+"_"+self.channel, mean1_tmp, mean1_tmp-20, mean1_tmp+4)
+            rrv_mean1_gaus = RooRealVar("rrv_mean1_gaus"+label+"_"+self.channel, "rrv_mean1_gaus"+label+"_"+self.channel, mean1_tmp, mean1_tmp-10, mean1_tmp+10)
             rrv_sigma1_gaus = RooRealVar("rrv_sigma1_gaus"+label+"_"+self.channel, "rrv_sigma1_gaus"+label+"_"+self.channel, sigma1_tmp, 0, sigma1_tmp*2)
             gaus1 = RooGaussian("gaus1"+label+"_"+self.channel, "gaus1"+label+"_"+self.channel, rrv_x, rrv_mean1_gaus, rrv_sigma1_gaus)
 
