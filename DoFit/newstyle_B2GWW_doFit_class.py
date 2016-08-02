@@ -461,11 +461,11 @@ class DoFit:
 
         self.XS_Signal_uncertainty = (signal_uncertainty_PDF**2+ signal_uncertainty_scale**2)**0.5 #pdf uncertainty 13% + scale uncertainty 11%
         self.XS_STop_uncertainty = 0.050
-        self.XS_VV_uncertainty   = 0.030
-        self.XS_TTbar_uncertainty   = 0.12 #0.20 #qun
-        self.XS_TTbar_NLO_uncertainty = 0.063 # from AN-12-368 table8
-        self.XS_STop_NLO_uncertainty  = 0.05 # from AN-12-368 table8
-        self.XS_VV_NLO_uncertainty    = 0.10 # from AN-12-368 table8
+        self.XS_VV_uncertainty   = 0.10
+        #self.XS_TTbar_uncertainty   = 0.12 #0.20 #qun
+        #self.XS_TTbar_NLO_uncertainty = 0.063 # from AN-12-368 table8
+        #self.XS_STop_NLO_uncertainty  = 0.05 # from AN-12-368 table8
+        #self.XS_VV_NLO_uncertainty    = 0.10 # from AN-12-368 table8
 
         #el and mu trigger and eff uncertainty, B2G-16-4
         self.lep_trigger_uncertainty = 0.05
