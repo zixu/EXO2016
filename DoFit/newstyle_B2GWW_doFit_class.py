@@ -3475,19 +3475,19 @@ class DoFit:
 
         ############ Evaluated just for signal, in principle also on all the backgrounds with the same topology
         ### Lepton Energy scale
-        datacard_out.write("\nCMS_scale_%s lnN %0.3f - - - -"%(self.channel_short, 1+self.signal_lepton_energy_scale_uncertainty))
+        datacard_out.write("\nCMS_scale_%s lnN %0.3f - - - %0.3f"%(self.channel_short, 1+self.signal_lepton_energy_scale_uncertainty, 1+self.signal_lepton_energy_scale_uncertainty))
         ### Lepton Energy Resolution
-        datacard_out.write("\nCMS_res_%s lnN %0.3f - - - -"%(self.channel_short, 1+self.signal_lepton_energy_res_uncertainty))
+        datacard_out.write("\nCMS_res_%s lnN %0.3f - - - %0.3f"%(self.channel_short, 1+self.signal_lepton_energy_res_uncertainty, 1+self.signal_lepton_energy_res_uncertainty))
         ### fat jet energy scale
-        datacard_out.write("\nCMS_scale_j  lnN %0.3f/%0.3f - - - -"%(self.signal_jet_energy_scale_uncertainty_low, self.signal_jet_energy_scale_uncertainty_high))
+        datacard_out.write("\nCMS_scale_j  lnN %0.3f/%0.3f - - - %0.3f/%0.3f"%(self.signal_jet_energy_scale_uncertainty_low, self.signal_jet_energy_scale_uncertainty_high, self.signal_jet_energy_scale_uncertainty_low, self.signal_jet_energy_scale_uncertainty_high))
         ### fat jet mass scale
-        datacard_out.write("\nCMS_mass_scale_j  lnN %0.3f/%0.3f - - - -"%(self.signal_jet_mass_scale_uncertainty_low, self.signal_jet_mass_scale_uncertainty_high))
+        datacard_out.write("\nCMS_mass_scale_j  lnN %0.3f/%0.3f - - - %0.3f/%0.3f"%(self.signal_jet_mass_scale_uncertainty_low, self.signal_jet_mass_scale_uncertainty_high, self.signal_jet_mass_scale_uncertainty_low, self.signal_jet_mass_scale_uncertainty_high))
         ### fat jet mass res
-        datacard_out.write("\nCMS_mass_res_j  lnN %0.3f/%0.3f - - - -"%(self.signal_jet_mass_res_uncertainty_low, self.signal_jet_mass_res_uncertainty_high))
+        datacard_out.write("\nCMS_mass_res_j  lnN %0.3f/%0.3f - - - %0.3f/%0.3f"%(self.signal_jet_mass_res_uncertainty_low, self.signal_jet_mass_res_uncertainty_high, self.signal_jet_mass_res_uncertainty_low, self.signal_jet_mass_res_uncertainty_high))
         ### fat jet energy resolution
-        datacard_out.write("\nCMS_res_j  lnN %0.3f - - - -"%(1+self.signal_jet_energy_res_uncertainty))
+        datacard_out.write("\nCMS_res_j  lnN %0.3f - - - %0.3f"%(1+self.signal_jet_energy_res_uncertainty, 1+self.signal_jet_energy_res_uncertainty))
         ### btag on the signal
-        datacard_out.write("\nCMS_xww_btag_eff lnN %0.3f - - - -"%(1+self.btag_scale_signal_uncertainty))
+        datacard_out.write("\nCMS_xww_btag_eff lnN %0.3f - - - %0.3f"%(1+self.btag_scale_signal_uncertainty, 1+self.btag_scale_signal_uncertainty))
 
         ### print shapes parameter to be taken int account
         if mode == "unbin":
