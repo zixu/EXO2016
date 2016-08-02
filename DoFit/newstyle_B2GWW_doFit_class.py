@@ -4697,7 +4697,7 @@ class DoFit:
             hpull.GetPoint(ipoint, x, y)
             if(y == 0):
                 hpull.SetPoint(ipoint, x,-100)#remove from PULL plots
-            if y>4 or y<-4:
+            if TMath.Abs(y)>4 and TMath.Abs(y)<100:
                 pull_edge=8
         gt = ROOT.TH1F("gt", "gt", int(rrv_x.getBins()/self.binwidth_narrow_factor), rrv_x.getMin(), rrv_x.getMax())
         gt.SetMinimum(-1*pull_edge+0.01)
