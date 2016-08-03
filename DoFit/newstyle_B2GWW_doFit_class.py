@@ -201,7 +201,8 @@ class DoFit:
         elif self.channel == "em":
             self.Lumi = 12.9
         #self.file_Directory = "PKUTree_final_6p26fb_Jul18/"
-        self.file_Directory = "data_12p9_63mb_afterapproval/"
+        #self.file_Directory = "data_12p9_63mb_afterapproval/"
+        self.file_Directory = "data_12p9_63mb_Jordan/"
 
 
         if options.realdata == 1:
@@ -251,12 +252,12 @@ class DoFit:
         elif self.wtagger_category == "HP":
 
             if self.tau21_cut == 0.6:
-                self.rrv_wtagger_eff_reweight_forT = RooRealVar("rrv_wtagger_eff_reweight_forT", "rrv_wtagger_eff_reweight_forT", 0.817)
+                self.rrv_wtagger_eff_reweight_forT = RooRealVar("rrv_wtagger_eff_reweight_forT", "rrv_wtagger_eff_reweight_forT", 0.825)
                 self.rrv_wtagger_eff_reweight_forT.setError(0.012)
                 self.rrv_wtagger_eff_reweight_forV = RooRealVar("rrv_wtagger_eff_reweight_forV", "rrv_wtagger_eff_reweight_forV", 1.002)
                 self.rrv_wtagger_eff_reweight_forV.setError(0.019)
             elif self.tau21_cut == 0.45:
-                self.rrv_wtagger_eff_reweight_forT = RooRealVar("rrv_wtagger_eff_reweight_forT", "rrv_wtagger_eff_reweight_forT", 0.794)
+                self.rrv_wtagger_eff_reweight_forT = RooRealVar("rrv_wtagger_eff_reweight_forT", "rrv_wtagger_eff_reweight_forT", 0.804)
                 self.rrv_wtagger_eff_reweight_forT.setError(0.015)
                 self.rrv_wtagger_eff_reweight_forV = RooRealVar("rrv_wtagger_eff_reweight_forV", "rrv_wtagger_eff_reweight_forV", 0.968)
                 self.rrv_wtagger_eff_reweight_forV.setError(0.046)
