@@ -67,6 +67,13 @@ class DoFit:
         RooAbsPdf.defaultIntegratorConfig().setEpsRel(1e-9)
         RooAbsPdf.defaultIntegratorConfig().setEpsAbs(1e-9)
 
+        ### set the signal type (WW, WZ) and signal mass 
+        self.signal_sample = in_signal_sample
+        self.signal_model =  filter(str.isalpha, in_signal_sample)
+        self.signal_mass =  int(filter(str.isdigit, in_signal_sample))  #GeV
+        if self.signal_model== "WprimeWZHVTA": 
+            self.signal_model= "WprimeWZ-HVT-A"
+
         ### set the channel type --> electron or muon
         self.channel = in_channel
         self.leg = TLegend()
@@ -111,6 +118,13 @@ class DoFit:
         rrv_mass_lvj = RooRealVar("rrv_mass_lvj", "m_{WW}", (in_mlvj_min+in_mlvj_max)/2., in_mlvj_min, in_mlvj_max, "GeV")
         rrv_mass_lvj.setBins(nbins_mlvj)
         rrv_mass_lvj.Print("v")
+        if self.signal_model== "BulkGravWW": 
+            rrv_mass_lvj.SetTitle("m_{WW}") 
+        elif self.signal_model== "WprimeWZ" or self.signal_model== "WprimeWZ-HVT-A": 
+            rrv_mass_lvj.SetTitle("m_{WZ}") 
+        else:
+            raw_input("fail to recognize the signal model: %"%(self.signal_model))
+
 
         ## set the model used for the background parametrization
         self.MODEL_4_mlvj = fit_model
@@ -126,16 +140,6 @@ class DoFit:
 
         #prepare workspace for unbin-Limit -> just for the stuff on which running the limit
         self.workspace4limit_ = RooWorkspace("workspace4limit_", "workspace4limit_")
-
-        self.signal_sample = in_signal_sample
-        self.signal_model =  filter(str.isalpha, in_signal_sample)
-        self.signal_mass =  int(filter(str.isdigit, in_signal_sample))  #GeV
-        if self.signal_model== "WprimeWZHVTA": 
-            self.signal_model= "WprimeWZ-HVT-A"
-
-        #print self.signal_sample
-        #print self.signal_model
-        #print self.signal_mass
 
         ## different code operation mode -> just normal analysis
         if options.closuretest == 0:
