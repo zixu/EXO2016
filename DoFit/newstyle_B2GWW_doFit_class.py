@@ -252,15 +252,15 @@ class DoFit:
         elif self.wtagger_category == "HP":
 
             if self.tau21_cut == 0.6:
-                self.rrv_wtagger_eff_reweight_forT = RooRealVar("rrv_wtagger_eff_reweight_forT", "rrv_wtagger_eff_reweight_forT", 0.825)
+                self.rrv_wtagger_eff_reweight_forT = RooRealVar("rrv_wtagger_eff_reweight_forT", "rrv_wtagger_eff_reweight_forT", 0.833)
                 self.rrv_wtagger_eff_reweight_forT.setError(0.012)
                 self.rrv_wtagger_eff_reweight_forV = RooRealVar("rrv_wtagger_eff_reweight_forV", "rrv_wtagger_eff_reweight_forV", 1.002)
-                self.rrv_wtagger_eff_reweight_forV.setError(0.019)
+                self.rrv_wtagger_eff_reweight_forV.setError(0.018)
             elif self.tau21_cut == 0.45:
-                self.rrv_wtagger_eff_reweight_forT = RooRealVar("rrv_wtagger_eff_reweight_forT", "rrv_wtagger_eff_reweight_forT", 0.804)
+                self.rrv_wtagger_eff_reweight_forT = RooRealVar("rrv_wtagger_eff_reweight_forT", "rrv_wtagger_eff_reweight_forT", 0.809)
                 self.rrv_wtagger_eff_reweight_forT.setError(0.015)
-                self.rrv_wtagger_eff_reweight_forV = RooRealVar("rrv_wtagger_eff_reweight_forV", "rrv_wtagger_eff_reweight_forV", 0.968)
-                self.rrv_wtagger_eff_reweight_forV.setError(0.046)
+                self.rrv_wtagger_eff_reweight_forV = RooRealVar("rrv_wtagger_eff_reweight_forV", "rrv_wtagger_eff_reweight_forV", 0.976)
+                self.rrv_wtagger_eff_reweight_forV.setError(0.048)
             else:
                 print "self.tau21_cut = %s"%(self.tau21_cut)
                 raw_input("wrong tau21 cut value")
@@ -284,7 +284,7 @@ class DoFit:
         else:
             if self.tau21_cut == 0.6:
                 self.mean_shift = 84.4-83.4
-                self.sigma_scale = 8.57/7.93
+                self.sigma_scale = 8.56/7.93
             elif self.tau21_cut == 0.45:
                 self.mean_shift = 84.9-83.8
                 self.sigma_scale = 7.91/7.54
